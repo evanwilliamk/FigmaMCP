@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js"></script>
+  <title>CTV Export — All States</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+    :root {
+      --font: 'Adobe Clean', 'Source Sans 3', system-ui, sans-serif;
+      --neutral:  #292929;
+      --subdued:  #505050;
+      --gray-25:  #FFFFFF;
+      --gray-100: #E9E9E9;
+      --gray-200: #D0D0D0;
+      --gray-300: #B5B5B5;
+      --gray-400: #9A9A9A;
+      --gray-500: #7E7E7E;
+      --gray-800: #2e2e2e;
+      --blue:     #274dea;
+      --blue-bg:  #eef1fd;
+      --green:    #12805c;
+      --red:      #d7373f;
+      --red-bg:   #fde8e9;
+      --orange:   #cb6f10;
+      --orange-bg: #fef3e6;
+      --layer1:   #f8f8f8;
+      --shadow:   0px 2px 8px 0px rgba(0,0,0,0.16);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #DCDCDC;
+      font-family: var(--font);
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 64px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--neutral);
+      margin-bottom: 32px;
+      padding: 16px 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .state-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, 344px);
+      gap: 40px;
+      justify-content: start;
+    }
+
+    .state-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .state-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--neutral);
+      padding: 0 4px;
+    }
+
+    /* ── Panel ── */
+    .panel {
+      background: var(--gray-25);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      width: 344px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .panel-header h2 {
+      font-size: 20px; font-weight: 700;
+      color: var(--neutral); line-height: 24px;
+    }
+    .panel-header p {
+      font-size: 14px; color: var(--subdued);
+      margin-top: 4px; line-height: 1.45;
+    }
+
+    .asset-info {
+      display: flex; align-items: center;
+      gap: 10px; font-size: 13px; color: var(--neutral);
+    }
+    .info-item { display: flex; align-items: center; gap: 4px; }
+    .info-item svg { color: var(--gray-500); flex-shrink: 0; }
+    .divider-v { width:1px; height:12px; background:var(--gray-200); flex-shrink:0; }
+
+    .divider { height:1px; background:var(--gray-100); }
+
+    .section-label {
+      font-size: 14px; color: var(--subdued);
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding-bottom: 6px;
+    }
+    .section-label .count {
+      font-size: 14px; font-weight: 400; color: var(--neutral);
+    }
+
+    /* ── Platform rows ── */
+    .platform-list {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+
+    .platform-row {
+      border: 1px solid var(--gray-100);
+      border-radius: 8px;
+      background: white;
+      overflow: hidden;
+    }
+    .platform-row:hover { border-color: var(--gray-300); }
+    .platform-row.selected {
+      border-color: var(--gray-200);
+      background: white;
+    }
+
+    .platform-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; cursor: pointer; user-select: none;
+    }
+
+    .platform-check {
+      width: 18px; height: 18px;
+      border-radius: 4px;
+      border: 2px solid var(--gray-300);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      background: white;
+    }
+    .platform-row.selected .platform-check {
+      background: var(--neutral);
+      border-color: var(--neutral);
+    }
+
+    .platform-logo {
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: white;
+      flex-shrink: 0;
+    }
+
+    .platform-name {
+      flex: 1; font-size: 14px; color: var(--neutral);
+      font-weight: 400;
+    }
+    .platform-row.selected .platform-name {
+      font-weight: 400;
+      color: var(--neutral);
+    }
+
+    .platform-chevron {
+      flex-shrink: 0; color: var(--gray-400);
+      transition: transform 0.2s;
+    }
+    .platform-row.expanded .platform-chevron {
+      transform: rotate(90deg);
+    }
+
+    /* ── Specs panel ── */
+    .platform-specs {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+    .platform-row.expanded .platform-specs {
+      max-height: 400px;
+    }
+
+    .specs-content {
+      padding: 16px;
+      background: var(--layer1);
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .spec-row {
+      display: flex; justify-content: space-between;
+      font-size: 13px; padding: 8px 0;
+    }
+    .spec-row:not(:last-child) {
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .spec-label { color: var(--subdued); }
+    .spec-value { color: var(--neutral); font-weight: 500; }
+    .spec-value.warning { color: var(--orange); }
+    .spec-value.error { color: var(--red); }
+
+    /* ── Field ── */
+    .field-label {
+      font-size: 14px; color: var(--subdued);
+      display: block; padding-bottom: 6px;
+    }
+
+    .select {
+      width: 100%; height: 32px;
+      background: var(--gray-100);
+      border: none; border-radius: 8px;
+      padding: 0 32px 0 12px;
+      font-family: var(--font);
+      font-size: 14px; color: var(--neutral);
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23505050' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 11px center;
+      cursor: pointer;
+      text-align: left;
+    }
+    .select:focus { outline: 2px solid var(--blue); outline-offset: 1px; }
+
+    /* ── Note box ── */
+    .note-box {
+      background: var(--layer1);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--subdued);
+      line-height: 1.5;
+    }
+    .note-box-title {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--neutral);
+      font-weight: 600; margin-bottom: 6px;
+    }
+    .note-box ul { padding-left: 18px; }
+    .note-box ul li { margin-bottom: 3px; }
+    .note-box a { color: var(--blue); text-decoration: none; }
+    .note-box a:hover { text-decoration: underline; }
+
+    /* ── Button ── */
+    .btn {
+      width: 100%; height: 36px;
+      background: var(--neutral);
+      color: #fff;
+      border: none; border-radius: 60px;
+      font-family: var(--font);
+      font-size: 14px; font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn:hover { background: #1a1a1a; }
+    .btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* ── Progress bar ── */
+    .progress-container {
+      background: var(--gray-100);
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      background: var(--blue);
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 13px;
+      color: var(--subdued);
+      text-align: center;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================
+       SECTION 1: SELECTION STATES (0-7 platforms)
+       ======================================== -->
+  <div>
+    <div class="section-title">Selection States</div>
+    <div class="state-grid">
+
+      <!-- STATE: 0 selected -->
+      <div class="state-item">
+        <div class="state-label">0 platforms selected</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Export</h2>
+            <p>We'll make sure the export is compliant to the platform you select.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="section-label">
+              <span>Platform</span>
+              <span class="count">0 selected</span>
+            </div>
+            <div class="platform-list">
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#6B2D8B;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M8 7h5c1.7 0 3 1.3 3 3 0 1.1-.6 2.1-1.5 2.6L17 17h-2.5l-2-4H10v4H8V7zm2 2v3h3c.6 0 1-.4 1-1s-.4-1-1-1h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Roku</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#1CE783;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#000">
+                      <path d="M7 7v10h2v-4h4v4h2V7h-2v4H9V7H7z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Hulu</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#00A8E1;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 7l-5 10h2l1-2h4l1 2h2L12 7zm-1.5 6l1.5-3 1.5 3h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Amazon Fire TV</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#000;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 5c-3.9 0-7 3.1-7 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm1 10h-2v-2h2v2zm0-4h-2V7h2v4z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Apple TV+</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#E8001D;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <circle cx="8" cy="8" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="16" cy="8" r="2"/>
+                      <path d="M8 10c0 2 1.5 4 4 6 2.5-2 4-4 4-6"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Peacock</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#1428A0;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <text x="12" y="15" text-anchor="middle" font-size="10" font-weight="700">S</text>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Samsung Ads</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#4F1182;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <text x="12" y="15" text-anchor="middle" font-size="9" font-weight="700">RC</text>
+                    </svg>
+                  </div>
+                  <span class="platform-name">The Roku Channel</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <label class="field-label">File format</label>
+            <select class="select">
+              <option>MP4 (H.264)</option>
+            </select>
+          </div>
+
+          <div class="note-box">
+            <div class="note-box-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Packaging &amp; Credentials
+            </div>
+            <ul>
+              <li>Exported as a single file per platform.</li>
+              <li>Content Credentials (C2PA) will be embedded. <a href="#">Learn more</a></li>
+            </ul>
+          </div>
+
+          <button class="btn" disabled>Export (0 platforms)</button>
+        </div>
+      </div>
+
+      <!-- STATE: 1 selected -->
+      <div class="state-item">
+        <div class="state-label">1 platform selected</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Export</h2>
+            <p>We'll make sure the export is compliant to the platform you select.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="section-label">
+              <span>Platform</span>
+              <span class="count">1 selected</span>
+            </div>
+            <div class="platform-list">
+
+              <div class="platform-row selected">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#6B2D8B;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M8 7h5c1.7 0 3 1.3 3 3 0 1.1-.6 2.1-1.5 2.6L17 17h-2.5l-2-4H10v4H8V7zm2 2v3h3c.6 0 1-.4 1-1s-.4-1-1-1h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Roku</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#1CE783;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#000">
+                      <path d="M7 7v10h2v-4h4v4h2V7h-2v4H9V7H7z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Hulu</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#00A8E1;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 7l-5 10h2l1-2h4l1 2h2L12 7zm-1.5 6l1.5-3 1.5 3h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Amazon Fire TV</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#000;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 5c-3.9 0-7 3.1-7 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm1 10h-2v-2h2v2zm0-4h-2V7h2v4z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Apple TV+</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#E8001D;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <circle cx="8" cy="8" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="16" cy="8" r="2"/>
+                      <path d="M8 10c0 2 1.5 4 4 6 2.5-2 4-4 4-6"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Peacock</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#1428A0;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <text x="12" y="15" text-anchor="middle" font-size="10" font-weight="700">S</text>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Samsung Ads</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#4F1182;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <text x="12" y="15" text-anchor="middle" font-size="9" font-weight="700">RC</text>
+                    </svg>
+                  </div>
+                  <span class="platform-name">The Roku Channel</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <label class="field-label">File format</label>
+            <select class="select">
+              <option>MP4 (H.264)</option>
+            </select>
+          </div>
+
+          <div class="note-box">
+            <div class="note-box-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Packaging &amp; Credentials
+            </div>
+            <ul>
+              <li>Exported as a single file per platform.</li>
+              <li>Content Credentials (C2PA) will be embedded. <a href="#">Learn more</a></li>
+            </ul>
+          </div>
+
+          <button class="btn">Export (1 platform)</button>
+        </div>
+      </div>
+
+      <!-- STATE: 3 selected -->
+      <div class="state-item">
+        <div class="state-label">3 platforms selected</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Export</h2>
+            <p>We'll make sure the export is compliant to the platform you select.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="section-label">
+              <span>Platform</span>
+              <span class="count">3 selected</span>
+            </div>
+            <div class="platform-list">
+
+              <div class="platform-row selected">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#6B2D8B;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M8 7h5c1.7 0 3 1.3 3 3 0 1.1-.6 2.1-1.5 2.6L17 17h-2.5l-2-4H10v4H8V7zm2 2v3h3c.6 0 1-.4 1-1s-.4-1-1-1h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Roku</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row selected">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#1CE783;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#000">
+                      <path d="M7 7v10h2v-4h4v4h2V7h-2v4H9V7H7z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Hulu</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#00A8E1;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 7l-5 10h2l1-2h4l1 2h2L12 7zm-1.5 6l1.5-3 1.5 3h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Amazon Fire TV</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#000;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 5c-3.9 0-7 3.1-7 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm1 10h-2v-2h2v2zm0-4h-2V7h2v4z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Apple TV+</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row selected">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#E8001D;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <circle cx="8" cy="8" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="16" cy="8" r="2"/>
+                      <path d="M8 10c0 2 1.5 4 4 6 2.5-2 4-4 4-6"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Peacock</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#1428A0;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <text x="12" y="15" text-anchor="middle" font-size="10" font-weight="700">S</text>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Samsung Ads</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#4F1182;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <text x="12" y="15" text-anchor="middle" font-size="9" font-weight="700">RC</text>
+                    </svg>
+                  </div>
+                  <span class="platform-name">The Roku Channel</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <label class="field-label">File format</label>
+            <select class="select">
+              <option>MP4 (H.264)</option>
+            </select>
+          </div>
+
+          <div class="note-box">
+            <div class="note-box-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Packaging &amp; Credentials
+            </div>
+            <ul>
+              <li>Exported as a single file per platform.</li>
+              <li>Content Credentials (C2PA) will be embedded. <a href="#">Learn more</a></li>
+            </ul>
+          </div>
+
+          <button class="btn">Export (3 platforms)</button>
+        </div>
+      </div>
+
+      <!-- STATE: All 7 selected -->
+      <div class="state-item">
+        <div class="state-label">All 7 platforms selected</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Export</h2>
+            <p>We'll make sure the export is compliant to the platform you select.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="section-label">
+              <span>Platform</span>
+              <span class="count">7 selected</span>
+            </div>
+            <div class="platform-list">
+
+              <div class="platform-row selected">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#6B2D8B;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M8 7h5c1.7 0 3 1.3 3 3 0 1.1-.6 2.1-1.5 2.6L17 17h-2.5l-2-4H10v4H8V7zm2 2v3h3c.6 0 1-.4 1-1s-.4-1-1-1h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Roku</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row selected">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#1CE783;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#000">
+                      <path d="M7 7v10h2v-4h4v4h2V7h-2v4H9V7H7z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Hulu</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row selected">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#00A8E1;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 7l-5 10h2l1-2h4l1 2h2L12 7zm-1.5 6l1.5-3 1.5 3h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Amazon Fire TV</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row selected">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#000;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 5c-3.9 0-7 3.1-7 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm1 10h-2v-2h2v2zm0-4h-2V7h2v4z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Apple TV+</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row selected">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#E8001D;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <circle cx="8" cy="8" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="16" cy="8" r="2"/>
+                      <path d="M8 10c0 2 1.5 4 4 6 2.5-2 4-4 4-6"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Peacock</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row selected">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#1428A0;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <text x="12" y="15" text-anchor="middle" font-size="10" font-weight="700">S</text>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Samsung Ads</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="platform-row selected">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#4F1182;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <text x="12" y="15" text-anchor="middle" font-size="9" font-weight="700">RC</text>
+                    </svg>
+                  </div>
+                  <span class="platform-name">The Roku Channel</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <label class="field-label">File format</label>
+            <select class="select">
+              <option>MP4 (H.264)</option>
+            </select>
+          </div>
+
+          <div class="note-box">
+            <div class="note-box-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Packaging &amp; Credentials
+            </div>
+            <ul>
+              <li>Exported as a single file per platform.</li>
+              <li>Content Credentials (C2PA) will be embedded. <a href="#">Learn more</a></li>
+            </ul>
+          </div>
+
+          <button class="btn">Export (7 platforms)</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================
+       SECTION 2: EXPANDED STATES
+       ======================================== -->
+  <div>
+    <div class="section-title">Expanded States with Specifications</div>
+    <div class="state-grid">
+
+      <!-- STATE: 1 selected, expanded (no warnings) -->
+      <div class="state-item">
+        <div class="state-label">1 selected, expanded (all specs compliant)</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Export</h2>
+            <p>We'll make sure the export is compliant to the platform you select.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="section-label">
+              <span>Platform</span>
+              <span class="count">1 selected</span>
+            </div>
+            <div class="platform-list">
+
+              <div class="platform-row selected expanded">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#6B2D8B;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M8 7h5c1.7 0 3 1.3 3 3 0 1.1-.6 2.1-1.5 2.6L17 17h-2.5l-2-4H10v4H8V7zm2 2v3h3c.6 0 1-.4 1-1s-.4-1-1-1h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Roku</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="platform-specs">
+                  <div class="specs-content">
+                    <div class="spec-row">
+                      <span class="spec-label">Duration</span>
+                      <span class="spec-value">0:30</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Aspect ratio</span>
+                      <span class="spec-value">16:9</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Resolution</span>
+                      <span class="spec-value">1920×1080</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Frame rate</span>
+                      <span class="spec-value">29.97 fps</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">File size</span>
+                      <span class="spec-value">450 MB</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#1CE783;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#000">
+                      <path d="M7 7v10h2v-4h4v4h2V7h-2v4H9V7H7z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Hulu</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <label class="field-label">File format</label>
+            <select class="select">
+              <option>MP4 (H.264)</option>
+            </select>
+          </div>
+
+          <div class="note-box">
+            <div class="note-box-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Packaging &amp; Credentials
+            </div>
+            <ul>
+              <li>Exported as a single file per platform.</li>
+              <li>Content Credentials (C2PA) will be embedded. <a href="#">Learn more</a></li>
+            </ul>
+          </div>
+
+          <button class="btn">Export (1 platform)</button>
+        </div>
+      </div>
+
+      <!-- STATE: 1 selected, expanded WITH warning -->
+      <div class="state-item">
+        <div class="state-label">1 selected, expanded (file size warning)</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Export</h2>
+            <p>We'll make sure the export is compliant to the platform you select.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="section-label">
+              <span>Platform</span>
+              <span class="count">1 selected</span>
+            </div>
+            <div class="platform-list">
+
+              <div class="platform-row selected expanded">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#1CE783;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#000">
+                      <path d="M7 7v10h2v-4h4v4h2V7h-2v4H9V7H7z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Hulu</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="platform-specs">
+                  <div class="specs-content">
+                    <div class="spec-row">
+                      <span class="spec-label">Duration</span>
+                      <span class="spec-value">0:30</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Aspect ratio</span>
+                      <span class="spec-value">16:9</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Resolution</span>
+                      <span class="spec-value">1920×1080</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Frame rate</span>
+                      <span class="spec-value">29.97 fps</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">File size</span>
+                      <span class="spec-value warning">680 MB (exceeds 500 MB)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="platform-row">
+                <div class="platform-header">
+                  <div class="platform-check"></div>
+                  <div class="platform-logo" style="background:#6B2D8B;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M8 7h5c1.7 0 3 1.3 3 3 0 1.1-.6 2.1-1.5 2.6L17 17h-2.5l-2-4H10v4H8V7zm2 2v3h3c.6 0 1-.4 1-1s-.4-1-1-1h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Roku</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <label class="field-label">File format</label>
+            <select class="select">
+              <option>MP4 (H.264)</option>
+            </select>
+          </div>
+
+          <div class="note-box">
+            <div class="note-box-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Packaging &amp; Credentials
+            </div>
+            <ul>
+              <li>Exported as a single file per platform.</li>
+              <li>Content Credentials (C2PA) will be embedded. <a href="#">Learn more</a></li>
+            </ul>
+          </div>
+
+          <button class="btn">Export (1 platform)</button>
+        </div>
+      </div>
+
+      <!-- STATE: 2 selected, both expanded, one warning -->
+      <div class="state-item">
+        <div class="state-label">2 selected, both expanded (mixed warnings)</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Export</h2>
+            <p>We'll make sure the export is compliant to the platform you select.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="section-label">
+              <span>Platform</span>
+              <span class="count">2 selected</span>
+            </div>
+            <div class="platform-list">
+
+              <div class="platform-row selected expanded">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#6B2D8B;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M8 7h5c1.7 0 3 1.3 3 3 0 1.1-.6 2.1-1.5 2.6L17 17h-2.5l-2-4H10v4H8V7zm2 2v3h3c.6 0 1-.4 1-1s-.4-1-1-1h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Roku</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="platform-specs">
+                  <div class="specs-content">
+                    <div class="spec-row">
+                      <span class="spec-label">Duration</span>
+                      <span class="spec-value">0:30</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Aspect ratio</span>
+                      <span class="spec-value">16:9</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Resolution</span>
+                      <span class="spec-value">1920×1080</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Frame rate</span>
+                      <span class="spec-value">29.97 fps</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">File size</span>
+                      <span class="spec-value">450 MB</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="platform-row selected expanded">
+                <div class="platform-header">
+                  <div class="platform-check">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                      <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="platform-logo" style="background:#00A8E1;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 7l-5 10h2l1-2h4l1 2h2L12 7zm-1.5 6l1.5-3 1.5 3h-3z"/>
+                    </svg>
+                  </div>
+                  <span class="platform-name">Amazon Fire TV</span>
+                  <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="platform-specs">
+                  <div class="specs-content">
+                    <div class="spec-row">
+                      <span class="spec-label">Duration</span>
+                      <span class="spec-value">0:30</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Aspect ratio</span>
+                      <span class="spec-value">16:9</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Resolution</span>
+                      <span class="spec-value">1920×1080</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Frame rate</span>
+                      <span class="spec-value">29.97 fps</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">File size</span>
+                      <span class="spec-value warning">750 MB (exceeds 600 MB)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <label class="field-label">File format</label>
+            <select class="select">
+              <option>MP4 (H.264)</option>
+            </select>
+          </div>
+
+          <div class="note-box">
+            <div class="note-box-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Packaging &amp; Credentials
+            </div>
+            <ul>
+              <li>Exported as a single file per platform.</li>
+              <li>Content Credentials (C2PA) will be embedded. <a href="#">Learn more</a></li>
+            </ul>
+          </div>
+
+          <button class="btn">Export (2 platforms)</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================
+       SECTION 3: EXPORTING STATES (PROGRESS)
+       ======================================== -->
+  <div>
+    <div class="section-title">Exporting Progress States</div>
+    <div class="state-grid">
+
+      <!-- STATE: 0% Progress -->
+      <div class="state-item">
+        <div class="state-label">Export starting (0%)</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Exporting</h2>
+            <p>Preparing your export for 3 platforms.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <div class="progress-text">Initializing export...</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STATE: 25% Progress -->
+      <div class="state-item">
+        <div class="state-label">Export in progress (25%)</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Exporting</h2>
+            <p>Preparing your export for 3 platforms.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 25%;"></div>
+            </div>
+            <div class="progress-text">Encoding for Roku...</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STATE: 50% Progress -->
+      <div class="state-item">
+        <div class="state-label">Export in progress (50%)</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Exporting</h2>
+            <p>Preparing your export for 3 platforms.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 50%;"></div>
+            </div>
+            <div class="progress-text">Encoding for Hulu...</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STATE: 75% Progress -->
+      <div class="state-item">
+        <div class="state-label">Export in progress (75%)</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Exporting</h2>
+            <p>Preparing your export for 3 platforms.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 75%;"></div>
+            </div>
+            <div class="progress-text">Encoding for Amazon Fire TV...</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STATE: 100% Complete -->
+      <div class="state-item">
+        <div class="state-label">Export complete (100%)</div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Export Complete</h2>
+            <p>Your files are ready to download.</p>
+          </div>
+
+          <div class="asset-info">
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <span>0:30</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              <span>16:9</span>
+            </div>
+            <div class="divider-v" aria-hidden="true"></div>
+            <div class="info-item">
+              <span>29.97 fps</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 100%;"></div>
+            </div>
+            <div class="progress-text">3 files exported successfully</div>
+          </div>
+
+          <button class="btn">Download Files</button>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

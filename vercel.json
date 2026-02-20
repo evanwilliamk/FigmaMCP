@@ -1,0 +1,7 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/prototype", "destination": "/export-variations/prototype.html" }
+  ]
+}

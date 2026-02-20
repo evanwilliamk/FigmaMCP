@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <title>CTV Export — Hybrid</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
+
+    /* S2 Design Tokens */
+    :root {
+      --s2-font: 'Adobe Clean', 'Source Sans 3', system-ui, sans-serif;
+      --s2-gray-25:  #FFFFFF;
+      --s2-gray-100: #E9E9E9;
+      --s2-gray-200: #D0D0D0;
+      --s2-gray-300: #B5B5B5;
+      --s2-gray-500: #7E7E7E;
+      --s2-gray-600: #616161;
+      --s2-blue-600: #274dea;
+      --s2-green-600: #12805c;
+      --s2-content-neutral: #292929;
+      --s2-content-subdued: #505050;
+      --s2-bg-layer1: #f8f8f8;
+      --s2-shadow-elevated: 0px 2px 8px 0px rgba(0,0,0,0.16);
+      --s2-radius-sm: 8px;
+      --s2-radius-pill: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #EBEBEB;
+      font-family: var(--s2-font);
+      padding: 48px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    /* ── Panel shell ── */
+    .panel {
+      background: var(--s2-gray-25);
+      border-radius: var(--s2-radius-sm);
+      box-shadow: var(--s2-shadow-elevated);
+      width: 320px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      font-family: var(--s2-font);
+    }
+
+    /* ── Header ── */
+    .panel-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--s2-content-neutral);
+      line-height: 24px;
+    }
+    .panel-header p {
+      font-size: 14px;
+      color: var(--s2-content-subdued);
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    /* ── Asset info bar ── */
+    .asset-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--s2-content-neutral);
+    }
+    .asset-info-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .asset-info-item svg { color: var(--s2-gray-500); flex-shrink: 0; }
+    .asset-info-divider {
+      width: 1px;
+      height: 12px;
+      background: var(--s2-gray-200);
+      flex-shrink: 0;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: var(--s2-gray-100);
+    }
+
+    /* ── Field label ── */
+    .field-label {
+      font-size: 14px;
+      color: var(--s2-content-subdued);
+      display: block;
+      padding-bottom: 6px;
+      padding-top: 4px;
+    }
+
+    /* ── S2 Picker ── */
+    .s2-picker {
+      width: 100%;
+      height: 32px;
+      background: var(--s2-gray-100);
+      border: none;
+      border-radius: var(--s2-radius-sm);
+      padding: 0 10px 0 12px;
+      font-family: var(--s2-font);
+      font-size: 14px;
+      color: var(--s2-content-neutral);
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23505050' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 11px center;
+      cursor: pointer;
+    }
+    .s2-picker:focus { outline: 2px solid var(--s2-blue-600); outline-offset: 1px; }
+
+    /* ── Platform accordion list (from B, simplified) ── */
+    .platform-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .platform-row {
+      border: 1.5px solid var(--s2-gray-100);
+      border-radius: 8px;
+      background: var(--s2-gray-25);
+      overflow: hidden;
+    }
+    .platform-row-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .platform-row:hover { border-color: var(--s2-gray-300); }
+    .platform-row.selected {
+      border-color: var(--s2-blue-600);
+      background: #eef1fd;
+    }
+
+    /* Checkbox */
+    .platform-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid var(--s2-gray-300);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: white;
+    }
+    .platform-row.selected .platform-check {
+      background: var(--s2-blue-600);
+      border-color: var(--s2-blue-600);
+    }
+
+    /* Platform logo pill */
+    .platform-logo {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    /* Platform name */
+    .platform-name {
+      flex: 1;
+      font-size: 14px;
+      color: var(--s2-content-neutral);
+    }
+    .platform-row.selected .platform-name {
+      font-weight: 600;
+      color: var(--s2-blue-600);
+    }
+
+    /* Chevron arrow (replaces warnings) */
+    .platform-chevron {
+      flex-shrink: 0;
+      color: var(--s2-gray-400);
+      transition: transform 0.15s;
+    }
+
+    /* ── Note / packaging info box (from C) ── */
+    .note-box {
+      background: var(--s2-bg-layer1);
+      border-radius: var(--s2-radius-sm);
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--s2-content-subdued);
+      line-height: 1.5;
+    }
+    .note-box-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--s2-content-neutral);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .note-box ul {
+      padding-left: 18px;
+    }
+    .note-box ul li { margin-bottom: 3px; }
+    .note-box a { color: var(--s2-blue-600); text-decoration: none; }
+    .note-box a:hover { text-decoration: underline; }
+
+    /* ── Primary button (from B — count label) ── */
+    .btn-primary {
+      width: 100%;
+      height: 36px;
+      background: var(--s2-content-neutral);
+      color: #fff;
+      border: none;
+      border-radius: var(--s2-radius-pill);
+      font-family: var(--s2-font);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: #1a1a1a; }
+    .btn-primary:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="panel">
+
+    <!-- Header -->
+    <div class="panel-header">
+      <h2>Export</h2>
+      <p>We'll make sure the export is compliant to the platform you select.</p>
+    </div>
+
+    <!-- Asset info bar: duration · aspect ratio · fps only -->
+    <div class="asset-info">
+      <div class="asset-info-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <span>0:30</span>
+      </div>
+      <div class="asset-info-divider"></div>
+      <div class="asset-info-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        <span>16:9</span>
+      </div>
+      <div class="asset-info-divider"></div>
+      <div class="asset-info-item">
+        <span>29.97 fps</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Platform selector — B style, no spec rows, chevron only -->
+    <div>
+      <label class="field-label">Platform</label>
+      <div class="platform-list">
+
+        <div class="platform-row selected">
+          <div class="platform-row-header">
+            <div class="platform-check">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                <path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="platform-logo" style="background:#6B2D8B;">R</div>
+            <span class="platform-name">Roku</span>
+            <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="platform-row">
+          <div class="platform-row-header">
+            <div class="platform-check"></div>
+            <div class="platform-logo" style="background:#1CE783; color:#000;">H</div>
+            <span class="platform-name">Hulu</span>
+            <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="platform-row">
+          <div class="platform-row-header">
+            <div class="platform-check"></div>
+            <div class="platform-logo" style="background:#00A8E1;">A</div>
+            <span class="platform-name">Amazon Fire TV</span>
+            <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="platform-row">
+          <div class="platform-row-header">
+            <div class="platform-check"></div>
+            <div class="platform-logo" style="background:#000;">⊕</div>
+            <span class="platform-name">Apple TV+</span>
+            <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="platform-row">
+          <div class="platform-row-header">
+            <div class="platform-check"></div>
+            <div class="platform-logo" style="background:#E8001D;">P</div>
+            <span class="platform-name">Peacock</span>
+            <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="platform-row">
+          <div class="platform-row-header">
+            <div class="platform-check"></div>
+            <div class="platform-logo" style="background:#0057B7;">S</div>
+            <span class="platform-name">Samsung Ads</span>
+            <svg class="platform-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- File format dropdown only (no resolution) -->
+    <div>
+      <label class="field-label">File format</label>
+      <select class="s2-picker">
+        <option>MP4 (H.264)</option>
+        <option>MP4 (H.265 / HEVC)</option>
+        <option>MOV</option>
+      </select>
+    </div>
+
+    <!-- Packaging + Content Credentials info box (from C) -->
+    <div class="note-box">
+      <div class="note-box-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Packaging &amp; Credentials
+      </div>
+      <ul>
+        <li>Exported as a single file per platform.</li>
+        <li>Content Credentials (C2PA) will be embedded. <a href="#">Learn more</a></li>
+      </ul>
+    </div>
+
+    <!-- Export button with platform count (from B) -->
+    <button class="btn-primary">Export (1 platform)</button>
+
+  </div>
+
+</body>
+</html>

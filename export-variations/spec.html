@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js"></script>
+  <title>CTV Export — States & Accessibility Spec</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
+    :root {
+      --font: 'Adobe Clean', 'Source Sans 3', system-ui, sans-serif;
+      --neutral:  #292929;
+      --subdued:  #505050;
+      --gray-25:  #FFFFFF;
+      --gray-100: #E9E9E9;
+      --gray-200: #D0D0D0;
+      --gray-300: #B5B5B5;
+      --blue:     #274dea;
+      --blue-bg:  #eef1fd;
+      --blue-border: #c5cdf5;
+      --accent:   #3b63fb;
+      --green:    #12805c;
+      --red:      #d7373f;
+      --orange:   #cb6f10;
+      --layer1:   #f8f8f8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #FAFAFA;
+      font-family: var(--font);
+      color: var(--neutral);
+      padding: 48px;
+      max-width: 1200px;
+    }
+
+    /* Page header */
+    .doc-title { font-size: 28px; font-weight: 700; color: var(--neutral); margin-bottom: 4px; }
+    .doc-sub { font-size: 14px; color: var(--subdued); margin-bottom: 48px; }
+
+    /* Section */
+    .section { margin-bottom: 56px; }
+    .section-title {
+      font-size: 18px; font-weight: 700; color: var(--neutral);
+      padding-bottom: 10px; border-bottom: 2px solid var(--gray-100);
+      margin-bottom: 20px;
+    }
+    .section-intro { font-size: 14px; color: var(--subdued); margin-bottom: 20px; line-height: 1.6; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      background: var(--gray-100); text-align: left;
+      padding: 10px 14px; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase; color: var(--subdued);
+    }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--gray-100); vertical-align: top; line-height: 1.5; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #FAFAFA; }
+
+    /* Tags */
+    .tag {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 10px; white-space: nowrap;
+    }
+    .tag-state   { background: #E8F4FD; color: #1565C0; }
+    .tag-a11y    { background: #E8F5E9; color: #2E7D32; }
+    .tag-motion  { background: #FFF3E0; color: #E65100; }
+    .tag-error   { background: #FFEBEE; color: #C62828; }
+    .tag-warning { background: #FFF8E1; color: #F57F17; }
+    .tag-neutral { background: var(--gray-100); color: var(--subdued); }
+
+    /* Component label */
+    .component-name {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--subdued);
+      background: var(--gray-100); padding: 2px 8px; border-radius: 4px;
+      display: inline-block; margin-bottom: 6px;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px; background: var(--gray-100);
+      padding: 1px 5px; border-radius: 3px; color: var(--neutral);
+    }
+
+    ul.spec-list { padding-left: 18px; }
+    ul.spec-list li { margin-bottom: 3px; }
+
+    .kbd {
+      display: inline-block; font-family: monospace; font-size: 11px;
+      background: var(--gray-100); border: 1px solid var(--gray-300);
+      border-radius: 3px; padding: 1px 5px; color: var(--neutral);
+    }
+
+    .color-swatch {
+      display: inline-block; width: 12px; height: 12px;
+      border-radius: 2px; vertical-align: middle;
+      margin-right: 4px; border: 1px solid rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+<h1 class="doc-title">CTV Export Panel — States & Accessibility Spec</h1>
+<p class="doc-sub">Adobe GenStudio · CTV Ads · Export Feature · H1 2026</p>
+
+<!-- =============================================
+     1. COMPONENT INVENTORY
+============================================== -->
+<div class="section">
+  <h2 class="section-title">1. Component Inventory</h2>
+  <table>
+    <thead>
+      <tr><th>Component</th><th>S2 Reference</th><th>Role</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="component-name">Panel</span></td><td>Custom</td><td><code>role="dialog"</code> or side panel</td><td>Contains all export controls. Not modal in current design — acts as a sidebar panel.</td></tr>
+      <tr><td><span class="component-name">Asset Info Bar</span></td><td>Custom</td><td><code>role="region"</code></td><td>Read-only metadata: duration, aspect ratio, file size. Estimated file size updates dynamically.</td></tr>
+      <tr><td><span class="component-name">Platform Thumbnail Strip</span></td><td>Custom (checkbox group)</td><td><code>role="group"</code> + <code>role="checkbox"</code></td><td>Horizontally scrollable. Each tile is a checkbox. Chevron button scrolls right.</td></tr>
+      <tr><td><span class="component-name">Resolution Picker</span></td><td>S2 Picker (M)</td><td><code>role="combobox"</code> / <code>listbox</code></td><td>Dropdown. Default: 1080p. Auto-updates based on platform selection (future).</td></tr>
+      <tr><td><span class="component-name">File Format Picker</span></td><td>S2 Picker (M)</td><td><code>role="combobox"</code> / <code>listbox</code></td><td>Dropdown. Default: MP4 (H.264). Shows "Recommended" badge when optimal selection.</td></tr>
+      <tr><td><span class="component-name">Recommended Badge</span></td><td>Custom</td><td><code>aria-live="polite"</code></td><td>Visible only when MP4 + 1080p selected. Updates contextually with platform name.</td></tr>
+      <tr><td><span class="component-name">Note Box</span></td><td>Custom</td><td><code>role="note"</code></td><td>Non-interactive. Shows packaging and Content Credentials info. Content changes when multi-platform selected.</td></tr>
+      <tr><td><span class="component-name">Progress Bar</span></td><td>S2 ProgressBar</td><td><code>role="progressbar"</code></td><td>Hidden until export starts. Animates 0→100%.</td></tr>
+      <tr><td><span class="component-name">Success Banner</span></td><td>S2 InlineAlert</td><td><code>role="status"</code> + <code>aria-live="polite"</code></td><td>Appears after successful export. Contains download link.</td></tr>
+      <tr><td><span class="component-name">Error Banner</span></td><td>S2 InlineAlert</td><td><code>role="alert"</code> + <code>aria-live="assertive"</code></td><td>Appears on export failure. Contains retry link.</td></tr>
+      <tr><td><span class="component-name">Download / Export Button</span></td><td>S2 Button (M, Primary)</td><td><code>&lt;button&gt;</code></td><td>Pill shape. Disabled until ≥1 platform selected. Label updates with count.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================================
+     2. ALL STATES — PLATFORM STRIP
+============================================== -->
+<div class="section">
+  <h2 class="section-title">2. Platform Thumbnail Strip — All States</h2>
+  <table>
+    <thead>
+      <tr><th width="20%">State</th><th width="30%">Visual</th><th width="25%">Behavior</th><th width="25%">Accessibility</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-state">Default</span><br><small>No selection</small></td>
+        <td>All tiles: 1.5px <span class="color-swatch" style="background:#D0D0D0"></span><code>#D0D0D0</code> border, white background. No checkboxes visible.</td>
+        <td>Scroll strip shows 3–4 tiles. Chevron button visible at right. Scrollable left/right.</td>
+        <td><code>aria-checked="false"</code> on each tile. Group labeled "Platform".</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Hover</span></td>
+        <td>Border darkens to <span class="color-swatch" style="background:#9A9A9A"></span><code>#9A9A9A</code>. Background <code>#F8F8F8</code>. Cursor: pointer.</td>
+        <td>Single tile highlights. No other change.</td>
+        <td>No ARIA change. Relies on pointer events only — keyboard uses focus state instead.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Focus</span></td>
+        <td>2px <span class="color-swatch" style="background:#274dea"></span><code>#274dea</code> outline, 2px offset. Visible on keyboard navigation.</td>
+        <td>Tile receives focus via Tab / arrow keys.</td>
+        <td><code>tabindex="0"</code> on each tile. Focus ring meets WCAG 2.2 Focus Appearance (3px min area). Space/Enter toggles selection.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Selected</span></td>
+        <td>2px <span class="color-swatch" style="background:#3b63fb"></span><code>#3b63fb</code> border. Blue checkbox overlay top-left. Background <code>#FFFFFF</code>.</td>
+        <td>Checkbox appears. Platform count badge updates. Button enables. Note box updates for zip if >1.</td>
+        <td><code>aria-checked="true"</code>. Live region on count badge announces "(N selected)".</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Selected + Hover</span></td>
+        <td>Border stays <code>#3b63fb</code>. Background lightens to <code>#EEF1FD</code>.</td>
+        <td>Visual feedback only. Selection persists.</td>
+        <td>No ARIA change.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Scroll — More Available</span></td>
+        <td>Right fade gradient visible. Chevron button shown.</td>
+        <td>User can scroll right. Chevron button scrolls 180px per click.</td>
+        <td>Chevron: <code>aria-label="Scroll platform list right"</code>. Strip: <code>role="group"</code>. Keyboard: Tab navigates through tiles; horizontal scroll follows focus.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Scroll — At End</span></td>
+        <td>Fade gradient hidden. Chevron button hidden.</td>
+        <td>Indicates no more tiles to scroll to.</td>
+        <td>Chevron hidden from tab order when not needed (<code>display:none</code>).</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-error">Disabled</span><br><small>Future: no asset loaded</small></td>
+        <td>All tiles 40% opacity. Cursor: not-allowed.</td>
+        <td>No interaction possible.</td>
+        <td><code>aria-disabled="true"</code> on group. Tiles removed from tab order (<code>tabindex="-1"</code>).</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================================
+     3. ALL STATES — PICKERS
+============================================== -->
+<div class="section">
+  <h2 class="section-title">3. Resolution & File Format Pickers — All States</h2>
+  <table>
+    <thead>
+      <tr><th width="20%">State</th><th width="30%">Visual</th><th width="25%">Behavior</th><th width="25%">Accessibility</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-state">Default / Closed</span></td>
+        <td>Background <span class="color-swatch" style="background:#E9E9E9"></span><code>#E9E9E9</code>. Chevron points down. No border.</td>
+        <td>Displays current value. Click opens listbox.</td>
+        <td><code>aria-haspopup="listbox"</code>, <code>aria-expanded="false"</code>. Label associated via <code>aria-labelledby</code>.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Hover</span></td>
+        <td>Background darkens to <span class="color-swatch" style="background:#D0D0D0"></span><code>#D0D0D0</code>. Cursor: pointer.</td>
+        <td>Visual affordance.</td>
+        <td>No ARIA change needed.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Focus</span></td>
+        <td>2px <code>#274dea</code> outline, 1px offset.</td>
+        <td>Tab to focus. Enter or Space opens menu. ArrowDown also opens and focuses first option.</td>
+        <td><code>:focus-visible</code> ring. Does not show on mouse focus.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Open</span></td>
+        <td>Trigger outlined <code>#274dea</code>. Chevron rotates 180°. Listbox appears below with shadow. Selected option shown with checkmark + blue highlight.</td>
+        <td>Click option or Enter/Space to select. Escape closes. Click outside closes. Tab closes and moves focus forward.</td>
+        <td><code>aria-expanded="true"</code> on trigger. Listbox: <code>role="listbox"</code>. Options: <code>role="option"</code>. ArrowUp/Down navigate options. Escape returns focus to trigger.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Option — Default</span></td>
+        <td>White background, neutral text.</td>
+        <td>Hover highlights <code>#F8F8F8</code>.</td>
+        <td><code>aria-selected="false"</code>.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Option — Selected</span></td>
+        <td>Background <code>#EEF1FD</code>. Text <code>#274dea</code> bold. Checkmark icon visible.</td>
+        <td>Reflects current value.</td>
+        <td><code>aria-selected="true"</code>.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Option — Hover</span></td>
+        <td>Background <code>#F8F8F8</code>.</td>
+        <td>Visual affordance.</td>
+        <td>Focus ring when keyboard navigating. No ARIA change on mouse hover.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-warning">Option — Disabled</span><br><small>Incompatible format</small></td>
+        <td>40% opacity. Cursor: not-allowed. Tooltip on hover explaining why.</td>
+        <td>Not selectable. Tooltip: "Not supported by [Platform]".</td>
+        <td><code>aria-disabled="true"</code>. Include tooltip text as <code>title</code> or linked <code>aria-describedby</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================================
+     4. ALL STATES — RECOMMENDED BADGE
+============================================== -->
+<div class="section">
+  <h2 class="section-title">4. Recommended Badge — All States</h2>
+  <table>
+    <thead>
+      <tr><th width="20%">State</th><th width="30%">Visual</th><th width="25%">Behavior</th><th width="25%">Accessibility</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-state">Visible — No platform</span></td>
+        <td>Green checkmark + "Recommended". Shown when MP4 + 1080p selected.</td>
+        <td>Static. No platform context yet.</td>
+        <td><code>aria-live="polite"</code> region. Announces when it appears.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Visible — With platform</span></td>
+        <td>"Recommended for Roku" (updates with platform name).</td>
+        <td>Text updates as platforms are selected/deselected.</td>
+        <td>Live region announces change. Multiple platforms: "Recommended for Roku, Hulu".</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-neutral">Hidden</span></td>
+        <td>Not rendered (<code>display:none</code>).</td>
+        <td>Non-optimal format/resolution combination selected.</td>
+        <td>Hidden from AT when <code>display:none</code>. No announcement needed on hide.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================================
+     5. ALL STATES — EXPORT BUTTON
+============================================== -->
+<div class="section">
+  <h2 class="section-title">5. Export Button — All States</h2>
+  <table>
+    <thead>
+      <tr><th width="20%">State</th><th width="30%">Visual</th><th width="25%">Behavior</th><th width="25%">Accessibility</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-state">Disabled</span><br><small>No platform selected</small></td>
+        <td>Background <code>#292929</code> at 35% opacity. Cursor: not-allowed. Label: "Download".</td>
+        <td>Non-interactive. Click does nothing.</td>
+        <td><code>disabled</code> attribute + <code>aria-disabled="true"</code>. AT announces button as dimmed/unavailable. Do not remove from tab order — keep focusable so screen reader users can discover it.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Enabled</span><br><small>1 platform</small></td>
+        <td>Background <code>#292929</code>. Label: "Download (1 platform)".</td>
+        <td>Click initiates export.</td>
+        <td><code>aria-disabled="false"</code>. Focusable. Enter/Space activates.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Enabled</span><br><small>N platforms</small></td>
+        <td>Background <code>#292929</code>. Label: "Download (N platforms)".</td>
+        <td>Same as above. Label updates dynamically.</td>
+        <td>Label change announced via button text update (AT reads new text on focus).</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Hover</span></td>
+        <td>Background darkens to <code>#2E2E2E</code>.</td>
+        <td>Visual affordance.</td>
+        <td>No ARIA change.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Focus</span></td>
+        <td>2px <code>#274dea</code> outline, 2px offset.</td>
+        <td>Keyboard navigable.</td>
+        <td><code>:focus-visible</code> only. Meets WCAG 2.2 Focus Appearance.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-motion">Loading</span></td>
+        <td>Background <code>#7E7E7E</code>. Spinner icon + "Exporting…" label. Pointer-events: none.</td>
+        <td>Not re-clickable. Progress bar appears above button.</td>
+        <td>Button remains in DOM. <code>aria-disabled="true"</code>. Progress bar has <code>role="progressbar"</code> with live <code>aria-valuenow</code>. AT announces "Exporting…" status via progress region.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-a11y">Success</span></td>
+        <td>Background <code>#12805c</code>. Checkmark + "Export complete". Non-interactive.</td>
+        <td>Button frozen. Success banner shown above.</td>
+        <td>Banner: <code>role="status"</code> + <code>aria-live="polite"</code>. Announces filename and download link. Button label change also read on next focus.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-error">Error</span></td>
+        <td>Background <code>#d7373f</code>. Warning icon + "Export failed — Try again". Re-clickable.</td>
+        <td>Click retries export. Error banner shown.</td>
+        <td>Error banner: <code>role="alert"</code> + <code>aria-live="assertive"</code>. Immediately announced. Retry link in banner is separately focusable.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================================
+     6. ALL STATES — FULL PANEL
+============================================== -->
+<div class="section">
+  <h2 class="section-title">6. Full Panel — All States</h2>
+  <table>
+    <thead>
+      <tr><th width="22%">State</th><th width="40%">What Changes</th><th width="38%">Accessibility Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-state">Default</span><br>No platform, no interaction</td>
+        <td>Button disabled. Note shows "single file". File size shows default estimate. Count badge hidden. Recommended badge shows (MP4 + 1080p default).</td>
+        <td>All controls focusable. Reading order: Title → description → info bar → platform group → resolution → format → note → button.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Platform Selected (1)</span></td>
+        <td>Tile selected state. Count badge shows "(1 selected)". Button enabled → "Download (1 platform)". Recommended badge contextualizes.</td>
+        <td>Count badge live region announces. Button label change read on focus.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Platform Selected (Multi)</span></td>
+        <td>Multiple tiles selected. Count badge updates. Note switches to zip packaging. File size shows multiplied estimate. Button: "Download (N platforms)".</td>
+        <td>Note content changes — not announced (role="note" not live). Acceptable as user can re-read. File size change in <code>aria-live</code> region announces estimate.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Format/Resolution Changed</span></td>
+        <td>File size estimate updates. Recommended badge shows/hides. Picker displays new value.</td>
+        <td>File size live region announces new value. Recommended badge live region announces if it appears.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-motion">Exporting</span></td>
+        <td>Button → loading. Progress bar appears. Platform tiles and pickers disabled (pointer-events none + opacity). Progress label updates per platform.</td>
+        <td>Progress bar <code>aria-valuenow</code> updates. Progress label changes announced by progress region. Focus stays on button area. Disabled controls not keyboard-reachable.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-a11y">Export Success</span></td>
+        <td>Progress bar disappears. Success banner appears. Button → green "Export complete". Download link active in banner.</td>
+        <td>Banner announced immediately via <code>aria-live="polite"</code>. Focus not forcibly moved — user completes reading. Download link is new keyboard target.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-error">Export Error</span></td>
+        <td>Progress bar disappears. Error banner appears. Button → red "Export failed — Try again".</td>
+        <td>Error banner <code>aria-live="assertive"</code> interrupts. Focus not moved but next Tab will reach retry link. Both button and banner retry link work.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-state">Reset / Retry</span></td>
+        <td>All states reset to idle with current selections preserved. Banners hidden. Button re-enabled.</td>
+        <td>Banners hidden via <code>display:none</code> — removed from AT. No announcement needed on hide.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================================
+     7. KEYBOARD NAVIGATION MAP
+============================================== -->
+<div class="section">
+  <h2 class="section-title">7. Keyboard Navigation Map</h2>
+  <table>
+    <thead>
+      <tr><th width="20%">Key</th><th width="35%">Context</th><th width="45%">Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="kbd">Tab</span></td><td>Anywhere</td><td>Move focus forward through: info bar (skip, not interactive) → platform tiles → scroll button → resolution picker → format picker → note (skip) → export button → success/error links if visible.</td></tr>
+      <tr><td><span class="kbd">Shift+Tab</span></td><td>Anywhere</td><td>Move focus backward.</td></tr>
+      <tr><td><span class="kbd">Space</span> / <span class="kbd">Enter</span></td><td>Platform tile</td><td>Toggle selection on/off.</td></tr>
+      <tr><td><span class="kbd">Space</span> / <span class="kbd">Enter</span></td><td>Picker trigger</td><td>Open listbox.</td></tr>
+      <tr><td><span class="kbd">↑</span> <span class="kbd">↓</span></td><td>Picker open</td><td>Navigate options. ↑ from first option returns focus to trigger.</td></tr>
+      <tr><td><span class="kbd">Enter</span> / <span class="kbd">Space</span></td><td>Picker option</td><td>Select option, close menu, return focus to trigger.</td></tr>
+      <tr><td><span class="kbd">Escape</span></td><td>Picker open</td><td>Close without changing selection. Return focus to trigger.</td></tr>
+      <tr><td><span class="kbd">Enter</span> / <span class="kbd">Space</span></td><td>Export button (enabled)</td><td>Trigger export.</td></tr>
+      <tr><td><span class="kbd">Enter</span> / <span class="kbd">Space</span></td><td>Strip scroll button</td><td>Scroll platform list right.</td></tr>
+      <tr><td><span class="kbd">Tab</span></td><td>Last tile in strip</td><td>Focus moves to scroll button (if visible) then to resolution picker.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================================
+     8. ARIA ROLES & ATTRIBUTES SUMMARY
+============================================== -->
+<div class="section">
+  <h2 class="section-title">8. ARIA Roles & Attributes Summary</h2>
+  <table>
+    <thead>
+      <tr><th width="25%">Element</th><th width="25%">Role / Tag</th><th width="50%">Required ARIA</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Panel</td><td><code>&lt;div role="dialog"&gt;</code> or <code>&lt;aside&gt;</code></td><td><code>aria-labelledby="panel-title"</code></td></tr>
+      <tr><td>Asset info bar</td><td><code>&lt;div role="region"&gt;</code></td><td><code>aria-label="Asset information"</code></td></tr>
+      <tr><td>File size value</td><td><code>&lt;span aria-live="polite"&gt;</code></td><td>Updates when format/resolution changes</td></tr>
+      <tr><td>Platform strip wrapper</td><td><code>&lt;div role="group"&gt;</code></td><td><code>aria-labelledby="platform-label"</code></td></tr>
+      <tr><td>Platform tile</td><td><code>&lt;div role="checkbox"&gt;</code></td><td><code>aria-checked</code>, <code>tabindex="0"</code>, <code>aria-label="[Platform name]"</code></td></tr>
+      <tr><td>Platform count</td><td><code>&lt;span aria-live="polite"&gt;</code></td><td>Announces "(N selected)" on change</td></tr>
+      <tr><td>Scroll button</td><td><code>&lt;button&gt;</code></td><td><code>aria-label="Scroll platform list right"</code></td></tr>
+      <tr><td>Picker trigger</td><td><code>&lt;button&gt;</code></td><td><code>aria-haspopup="listbox"</code>, <code>aria-expanded</code>, <code>aria-labelledby</code></td></tr>
+      <tr><td>Picker listbox</td><td><code>&lt;ul role="listbox"&gt;</code></td><td><code>aria-labelledby</code></td></tr>
+      <tr><td>Picker option</td><td><code>&lt;li role="option"&gt;</code></td><td><code>aria-selected</code>, <code>tabindex="-1"</code></td></tr>
+      <tr><td>Recommended badge</td><td><code>&lt;div aria-live="polite"&gt;</code></td><td>Hidden via <code>display:none</code> when not applicable</td></tr>
+      <tr><td>Note box</td><td><code>&lt;div role="note"&gt;</code></td><td>No live region needed — static info</td></tr>
+      <tr><td>Progress bar</td><td><code>&lt;div role="progressbar"&gt;</code></td><td><code>aria-valuenow</code>, <code>aria-valuemin="0"</code>, <code>aria-valuemax="100"</code>, <code>aria-label="Export progress"</code></td></tr>
+      <tr><td>Success banner</td><td><code>&lt;div role="status"&gt;</code></td><td><code>aria-live="polite"</code></td></tr>
+      <tr><td>Error banner</td><td><code>&lt;div role="alert"&gt;</code></td><td><code>aria-live="assertive"</code></td></tr>
+      <tr><td>Export button</td><td><code>&lt;button&gt;</code></td><td><code>disabled</code> + <code>aria-disabled</code> when inactive</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================================
+     9. COLOR CONTRAST
+============================================== -->
+<div class="section">
+  <h2 class="section-title">9. Color Contrast (WCAG AA)</h2>
+  <table>
+    <thead>
+      <tr><th>Pairing</th><th>Ratio</th><th>WCAG AA</th><th>Usage</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="color-swatch" style="background:#292929"></span><code>#292929</code> on <span class="color-swatch" style="background:#FFFFFF"></span><code>#FFFFFF</code></td><td>14.7:1</td><td><span class="tag tag-a11y">AAA</span></td><td>Body text, picker values</td></tr>
+      <tr><td><span class="color-swatch" style="background:#505050"></span><code>#505050</code> on <span class="color-swatch" style="background:#FFFFFF"></span><code>#FFFFFF</code></td><td>7.0:1</td><td><span class="tag tag-a11y">AAA</span></td><td>Labels, subdued text</td></tr>
+      <tr><td><span class="color-swatch" style="background:#505050"></span><code>#505050</code> on <span class="color-swatch" style="background:#E9E9E9"></span><code>#E9E9E9</code></td><td>4.6:1</td><td><span class="tag tag-a11y">AA</span></td><td>Picker field labels on gray background</td></tr>
+      <tr><td><span class="color-swatch" style="background:#FFFFFF"></span><code>#FFFFFF</code> on <span class="color-swatch" style="background:#292929"></span><code>#292929</code></td><td>14.7:1</td><td><span class="tag tag-a11y">AAA</span></td><td>Button label</td></tr>
+      <tr><td><span class="color-swatch" style="background:#FFFFFF"></span><code>#FFFFFF</code> on <span class="color-swatch" style="background:#12805c"></span><code>#12805c</code></td><td>4.8:1</td><td><span class="tag tag-a11y">AA</span></td><td>Success button label</td></tr>
+      <tr><td><span class="color-swatch" style="background:#FFFFFF"></span><code>#FFFFFF</code> on <span class="color-swatch" style="background:#d7373f"></span><code>#d7373f</code></td><td>4.6:1</td><td><span class="tag tag-a11y">AA</span></td><td>Error button label</td></tr>
+      <tr><td><span class="color-swatch" style="background:#274dea"></span><code>#274dea</code> on <span class="color-swatch" style="background:#FFFFFF"></span><code>#FFFFFF</code></td><td>5.9:1</td><td><span class="tag tag-a11y">AA</span></td><td>Links, count badge, selected option text</td></tr>
+      <tr><td><span class="color-swatch" style="background:#274dea"></span><code>#274dea</code> on <span class="color-swatch" style="background:#eef1fd"></span><code>#eef1fd</code></td><td>5.1:1</td><td><span class="tag tag-a11y">AA</span></td><td>Selected option in picker menu</td></tr>
+      <tr><td><span class="color-swatch" style="background:#12805c"></span><code>#12805c</code> on <span class="color-swatch" style="background:#d4edda"></span><code>#d4edda</code></td><td>4.5:1</td><td><span class="tag tag-a11y">AA</span></td><td>Success banner text</td></tr>
+      <tr><td><span class="color-swatch" style="background:#d7373f"></span><code>#d7373f</code> on <span class="color-swatch" style="background:#fde8e9"></span><code>#fde8e9</code></td><td>4.6:1</td><td><span class="tag tag-a11y">AA</span></td><td>Error banner text</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- =============================================
+     10. MOTION & ANIMATION
+============================================== -->
+<div class="section">
+  <h2 class="section-title">10. Motion & Animation</h2>
+  <table>
+    <thead>
+      <tr><th width="25%">Element</th><th width="30%">Animation</th><th width="45%">prefers-reduced-motion</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Platform tile selection</td><td>Border color transition 120ms ease</td><td>Instant. No transition.</td></tr>
+      <tr><td>Picker chevron</td><td>rotate 180° over 150ms</td><td>Instant rotation.</td></tr>
+      <tr><td>Picker menu open</td><td>No animation in current design</td><td>N/A</td></tr>
+      <tr><td>Strip scroll</td><td><code>scroll-behavior: smooth</code></td><td>Use <code>scroll-behavior: auto</code>.</td></tr>
+      <tr><td>Progress bar fill</td><td>width transition 400ms ease</td><td>Instant jump to new value.</td></tr>
+      <tr><td>Button spinner</td><td>360° spin 700ms linear infinite</td><td>Replace with static icon or pulsing opacity only.</td></tr>
+      <tr><td>Fade gradient on strip</td><td>Opacity transition on scroll end</td><td>Instant.</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;color:var(--subdued);margin-top:12px;">All animations should be wrapped in <code>@media (prefers-reduced-motion: no-preference) { ... }</code> or disabled with <code>@media (prefers-reduced-motion: reduce)</code>.</p>
+</div>
+
+<!-- =============================================
+     11. EDGE CASES & OPEN QUESTIONS
+============================================== -->
+<div class="section">
+  <h2 class="section-title">11. Edge Cases & Open Questions</h2>
+  <table>
+    <thead>
+      <tr><th width="30%">Scenario</th><th width="35%">Current Behavior</th><th width="35%">Recommendation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>All platforms selected</td><td>All 7 tiles selected, zip note shown, large file estimate.</td><td>Consider a "Select all / Clear all" control for efficiency. Not in current design.</td></tr>
+      <tr><td>Platform + format incompatibility</td><td>Not yet implemented. All formats always shown.</td><td>Disable incompatible formats with tooltip. Announce via <code>aria-describedby</code>.</td></tr>
+      <tr><td>Export in progress — user tries to close panel</td><td>Not handled in prototype.</td><td>Show confirmation dialog: "Export in progress. Are you sure you want to cancel?" <code>role="alertdialog"</code>.</td></tr>
+      <tr><td>Very long platform name</td><td>Text truncates in tile (<code>overflow:hidden</code>).</td><td>Tile <code>aria-label</code> always carries full name. Tooltip on hover for visual users.</td></tr>
+      <tr><td>File size exceeds platform limit</td><td>Not yet implemented.</td><td>Show inline warning adjacent to file size value. Announce via <code>aria-live="polite"</code>.</td></tr>
+      <tr><td>Network failure mid-export</td><td>Error state shown.</td><td>Error message should be specific where possible ("Connection lost") vs generic. Retry resends.</td></tr>
+      <tr><td>Screen width < 320px</td><td>Panel fixed at 344px — may clip.</td><td>Ensure minimum 320px viewport support per WCAG 1.4.10 (Reflow).</td></tr>
+      <tr><td>High contrast mode</td><td>Not specifically tested.</td><td>Use CSS <code>forced-colors: active</code> media query. Replace background-color selection indicators with border-based ones.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

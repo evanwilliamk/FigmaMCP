@@ -1,0 +1,420 @@
+/**
+ * CTV Export Panel Styles
+ * Based on Adobe Spectrum design system
+ */
+
+:root {
+  --spectrum-neutral: #292929;
+  --spectrum-subdued: #505050;
+  --spectrum-gray-25: #ffffff;
+  --spectrum-gray-100: #e9e9e9;
+  --spectrum-gray-200: #d0d0d0;
+  --spectrum-gray-300: #b5b5b5;
+  --spectrum-gray-400: #9a9a9a;
+  --spectrum-gray-500: #7e7e7e;
+  --spectrum-gray-800: #2e2e2e;
+  --spectrum-blue: #274dea;
+  --spectrum-blue-bg: #eef1fd;
+  --spectrum-green: #12805c;
+  --spectrum-red: #d7373f;
+  --spectrum-orange: #cb6f10;
+  --spectrum-layer1: #f8f8f8;
+  --spectrum-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.16);
+}
+
+/* ═══════════════════════════════════════════════
+   Export Panel Container
+   ═══════════════════════════════════════════════ */
+
+.export-panel {
+  background: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: var(--spectrum-shadow);
+  width: 344px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: 'Adobe Clean', 'Source Sans 3', system-ui, sans-serif;
+  position: relative;
+}
+
+.export-panel__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #505050;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.export-panel__close:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.export-panel__close:active {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ── Header ── */
+.panel-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--spectrum-neutral);
+  line-height: 24px;
+}
+
+.panel-header p {
+  font-size: 14px;
+  color: var(--spectrum-subdued);
+  margin-top: 4px;
+  line-height: 1.45;
+}
+
+/* ═══════════════════════════════════════════════
+   Asset Info Bar
+   ═══════════════════════════════════════════════ */
+
+.asset-info-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--spectrum-neutral);
+}
+
+.asset-info-bar__item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.asset-info-bar__icon {
+  color: var(--spectrum-global-color-gray-700);
+  flex-shrink: 0;
+}
+
+.asset-info-bar__divider {
+  width: 1px;
+  height: 12px;
+  background: var(--spectrum-gray-200);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   Platform Selector
+   ═══════════════════════════════════════════════ */
+
+.platform-selector__header {
+  font-size: 14px;
+  color: var(--spectrum-subdued);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 6px;
+}
+
+.platform-selector__count {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--spectrum-neutral);
+}
+
+.platform-selector__count.hidden {
+  display: none;
+}
+
+.platform-selector__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ═══════════════════════════════════════════════
+   Platform Row
+   ═══════════════════════════════════════════════ */
+
+.platform-row {
+  border: 1px solid #E9E9E9;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.12s;
+  background: white;
+  cursor: pointer;
+  user-select: none;
+}
+
+.platform-row--selected {
+  border-color: #D0D0D0;
+}
+
+.platform-row--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.platform-row:focus-visible {
+  outline: 2px solid var(--spectrum-blue);
+  outline-offset: 2px;
+}
+
+.platform-row__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  min-height: 58px;
+}
+
+/* Checkbox */
+.platform-row__checkbox {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1.5px solid #9A9A9A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: white;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.platform-row--selected .platform-row__checkbox {
+  background: var(--spectrum-neutral);
+  border-color: var(--spectrum-neutral);
+}
+
+.platform-row__checkmark {
+  color: white;
+}
+
+/* Logo */
+.platform-row__logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.platform-row__logo-text {
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  line-height: 1.2;
+  white-space: pre-line;
+}
+
+/* Name */
+.platform-row__name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--spectrum-neutral);
+}
+
+/* Chevron — only visible when selected */
+.platform-row__chevron {
+  flex-shrink: 0;
+  color: var(--spectrum-gray-500);
+  transition: transform 0.18s, opacity 0.12s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.platform-row--selected .platform-row__chevron {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.platform-row--expanded .platform-row__chevron {
+  transform: rotate(180deg);
+}
+
+/* Specs Panel */
+.platform-row__specs {
+  border-top: 1px solid var(--spectrum-gray-100);
+  padding: 10px 12px 12px 12px;
+  background: white;
+}
+
+.platform-row__spec {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 12px;
+  padding: 3px 0;
+}
+
+.platform-row__spec-label {
+  color: var(--spectrum-subdued);
+}
+
+.platform-row__spec-value {
+  font-weight: 600;
+  color: var(--spectrum-neutral);
+  text-align: right;
+}
+
+/* ═══════════════════════════════════════════════
+   Progress Bar
+   ═══════════════════════════════════════════════ */
+
+.progress-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-bar__label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--spectrum-subdued);
+}
+
+.progress-bar__percentage {
+  color: var(--spectrum-blue);
+  font-weight: 600;
+}
+
+.progress-bar__track {
+  width: 100%;
+  height: 4px;
+  background: var(--spectrum-gray-100);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: var(--spectrum-blue);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar__fill {
+    transition: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   Note Box
+   ═══════════════════════════════════════════════ */
+
+.note-box {
+  background: var(--spectrum-layer1);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: var(--spectrum-subdued);
+  line-height: 1.5;
+}
+
+.note-box__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--spectrum-neutral);
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.note-box__list {
+  padding-left: 20px;
+}
+
+.note-box__list li {
+  margin-bottom: 4px;
+}
+
+/* ═══════════════════════════════════════════════
+   Export Button
+   ═══════════════════════════════════════════════ */
+
+.export-button {
+  width: 100%;
+  height: 36px;
+  background: var(--spectrum-neutral);
+  color: #fff;
+  border: none;
+  border-radius: 60px;
+  font-family: 'Adobe Clean', 'Source Sans 3', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.export-button:hover:not(:disabled) {
+  background: var(--spectrum-gray-800);
+}
+
+.export-button:focus-visible {
+  outline: 2px solid var(--spectrum-blue);
+  outline-offset: 2px;
+}
+
+.export-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.export-button--loading {
+  background: var(--spectrum-gray-500);
+  cursor: default;
+  pointer-events: none;
+}
+
+.export-button--success {
+  background: var(--spectrum-green);
+  pointer-events: none;
+}
+
+.export-button--error {
+  background: var(--spectrum-red);
+}
+
+/* Spinner */
+.export-button__spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .export-button__spinner {
+    animation: none;
+    opacity: 0.5;
+  }
+}
