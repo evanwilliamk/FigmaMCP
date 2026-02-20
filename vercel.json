@@ -1,6 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/", "destination": "/export-variations/prototype.html" },
-    { "source": "/prototype", "destination": "/export-variations/prototype.html" }
-  ]
-}
