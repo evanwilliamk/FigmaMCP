@@ -1,0 +1,61 @@
+{
+  "name": "@adobe/genstudio-ctv-export",
+  "version": "1.0.0",
+  "description": "CTV Export Panel - Multi-platform export interface for Adobe GenStudio",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "type-check": "tsc --noEmit",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@adobe/react-spectrum": "^3.34.1",
+    "@react-aria/interactions": "^3.21.1",
+    "@react-spectrum/progress": "^3.7.3",
+    "@react-spectrum/provider": "^3.9.5",
+    "@react-spectrum/theme-default": "^3.5.7",
+    "@spectrum-icons/ui": "^3.6.22",
+    "@spectrum-icons/workflow": "^4.2.27",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "^7.6.7",
+    "@storybook/addon-essentials": "^7.6.7",
+    "@storybook/addon-interactions": "^7.6.7",
+    "@storybook/addon-links": "^7.6.7",
+    "@storybook/blocks": "^7.6.7",
+    "@storybook/react": "^7.6.7",
+    "@storybook/react-vite": "^7.6.7",
+    "@storybook/testing-library": "^0.2.2",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/ui": "^1.0.4",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "eslint-plugin-storybook": "^0.6.15",
+    "jsdom": "^23.0.1",
+    "storybook": "^7.6.7",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vitest": "^1.0.4"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
