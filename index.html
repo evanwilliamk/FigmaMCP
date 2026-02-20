@@ -1,13 +1,629 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CTV Export Panel - Adobe GenStudio</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js"></script>
+  <title>CTV Export — Working Prototype</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+    :root {
+      --font: 'Adobe Clean', 'Source Sans 3', system-ui, sans-serif;
+      --neutral:  #292929;
+      --subdued:  #505050;
+      --gray-25:  #FFFFFF;
+      --gray-100: #E9E9E9;
+      --gray-200: #D0D0D0;
+      --gray-300: #B5B5B5;
+      --gray-400: #9A9A9A;
+      --gray-500: #7E7E7E;
+      --gray-800: #2e2e2e;
+      --blue:     #274dea;
+      --blue-bg:  #eef1fd;
+      --green:    #12805c;
+      --red:      #d7373f;
+      --red-bg:   #fde8e9;
+      --orange:   #cb6f10;
+      --layer1:   #f8f8f8;
+      --shadow:   0px 2px 8px 0px rgba(0,0,0,0.16);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #DCDCDC;
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    /* ── Panel ── */
+    .panel {
+      background: var(--gray-25);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      width: 344px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── Header ── */
+    .panel-header h2 {
+      font-size: 20px; font-weight: 700;
+      color: var(--neutral); line-height: 24px;
+      margin-bottom: 8px;
+    }
+    .panel-header p {
+      font-size: 14px; color: var(--subdued);
+      line-height: 1.45;
+    }
+
+    /* ── Asset info bar ── */
+    .asset-info {
+      display: flex; align-items: center;
+      gap: 10px; font-size: 13px; color: var(--neutral);
+    }
+    .info-item { display: flex; align-items: center; gap: 4px; }
+    .info-item svg { color: var(--gray-500); flex-shrink: 0; }
+    .divider-v { width:1px; height:12px; background:var(--gray-200); flex-shrink:0; }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 14px; color: var(--subdued);
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding-bottom: 6px;
+    }
+    .section-label .count {
+      font-size: 14px; font-weight: 400; color: var(--neutral);
+    }
+
+    /* ── Platform accordion list ── */
+    .platform-list {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+
+    .platform-row {
+      border: 2px solid #E9E9E9;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.12s;
+      background: white;
+    }
+    .platform-row.selected {
+      border-color: var(--gray-200);
+      background: white;
+    }
+
+    .platform-row-header {
+      display: flex; align-items: center;
+      gap: 10px; padding: 9px 12px;
+      cursor: pointer; user-select: none;
+      min-height: 58px;
+    }
+
+    /* Checkbox */
+    .platform-check {
+      width: 18px; height: 18px;
+      border-radius: 4px;
+      border: 2px solid var(--gray-300);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      background: white;
+      transition: background 0.1s, border-color 0.1s;
+    }
+    .platform-row.selected .platform-check {
+      background: var(--neutral);
+      border-color: var(--neutral);
+    }
+    .platform-check svg { display: none; }
+    .platform-row.selected .platform-check svg { display: block; }
+
+    /* Logo */
+    .platform-logo {
+      width: 40px; height: 40px;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .platform-logo img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+    }
+
+    /* Name */
+    .platform-name {
+      flex: 1;
+      font-size: 14px; font-weight: 400;
+      color: var(--neutral);
+    }
+
+    /* Chevron — only visible when selected */
+    .platform-chevron {
+      flex-shrink: 0;
+      color: var(--gray-500);
+      transition: transform 0.18s, opacity 0.12s;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .platform-row.selected .platform-chevron {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .platform-row.open .platform-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Spec panel (expanded) */
+    .platform-specs {
+      display: none;
+      border-top: 1px solid var(--gray-100);
+      padding: 10px 12px 12px 12px;
+      background: white;
+    }
+    .platform-row.open .platform-specs {
+      display: block;
+    }
+    .spec-row {
+      display: flex; justify-content: space-between;
+      align-items: baseline;
+      font-size: 12px;
+      padding: 3px 0;
+    }
+    .spec-label { color: var(--subdued); }
+    .spec-value { font-weight: 600; color: var(--neutral); text-align: right; }
+    .spec-value.warning { color: var(--orange); }
+
+    /* ── Divider ── */
+    .divider { height:1px; background:var(--gray-100); }
+
+    /* ── Note box ── */
+    .note-box {
+      background: var(--layer1); border-radius: 8px;
+      padding: 14px 16px; font-size: 14px;
+      color: var(--subdued); line-height: 1.5;
+    }
+    .note-box-title {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; color: var(--neutral);
+      font-weight: 400; margin-bottom: 8px;
+    }
+    .note-box ul { padding-left: 20px; }
+    .note-box ul li { margin-bottom: 4px; }
+    .note-box a { color: var(--blue); text-decoration: none; }
+    .note-box a:hover { text-decoration: underline; }
+
+    /* ── Button ── */
+    .btn-primary {
+      width: 100%; height: 36px;
+      background: var(--neutral); color: #fff;
+      border: none; border-radius: 60px;
+      font-family: var(--font); font-size: 14px; font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background 0.15s, opacity 0.15s;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--gray-800); }
+    .btn-primary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-primary.loading { background: var(--gray-500); cursor: default; pointer-events: none; }
+    .btn-primary.success { background: var(--green); pointer-events: none; }
+    .btn-primary.error   { background: var(--red); }
+
+    /* Spinner */
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 0.7s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      display: none; flex-direction: column; gap: 6px;
+    }
+    .progress-wrap.visible { display: flex; }
+    .progress-label {
+      display: flex; justify-content: space-between;
+      font-size: 12px; color: var(--subdued);
+    }
+    .progress-label span:last-child { color: var(--blue); font-weight: 600; }
+    .progress-bar {
+      width: 100%; height: 4px;
+      background: var(--gray-100); border-radius: 2px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; background: var(--blue); border-radius: 2px;
+      transition: width 0.4s ease; width: 0%;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="panel" role="dialog" aria-modal="false" aria-labelledby="panel-title">
+
+  <!-- Header -->
+  <div class="panel-header">
+    <h2 id="panel-title">Export</h2>
+    <p>We'll make sure the export is compliant to the platform you select.</p>
+  </div>
+
+  <!-- Asset info bar -->
+  <div class="asset-info" role="region" aria-label="Asset information">
+    <div class="info-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <span>0:30</span>
+    </div>
+    <div class="divider-v" aria-hidden="true"></div>
+    <div class="info-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+      </svg>
+      <span>16:9</span>
+    </div>
+    <div class="divider-v" aria-hidden="true"></div>
+    <div class="info-item">
+      <span>29.97 fps</span>
+    </div>
+  </div>
+
+  <!-- Platform list -->
+  <div>
+    <div class="section-label">
+      <span>Platforms</span>
+      <span class="count hidden" id="platform-count" aria-live="polite"></span>
+    </div>
+    <div class="platform-list" id="platform-list" role="group" aria-label="Platform selection">
+
+      <div class="platform-row" role="checkbox" aria-checked="false" tabindex="0" data-platform="roku" aria-label="Roku" aria-expanded="false">
+        <div class="platform-row-header">
+          <div class="platform-check" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="platform-logo" style="background:#6B2D8B;">
+            <img src="export-variations/logos/roku.svg" alt="Roku logo" />
+          </div>
+          <span class="platform-name">Roku</span>
+          <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="platform-specs" aria-hidden="true">
+          <div class="spec-row"><span class="spec-label">Format</span><span class="spec-value">MP4 (H.264)</span></div>
+          <div class="spec-row"><span class="spec-label">Resolution</span><span class="spec-value">1080p</span></div>
+          <div class="spec-row"><span class="spec-label">Max file size</span><span class="spec-value">42 MB / 1 GB</span></div>
+        </div>
+      </div>
+
+      <div class="platform-row" role="checkbox" aria-checked="false" tabindex="0" data-platform="hulu" aria-label="Hulu" aria-expanded="false">
+        <div class="platform-row-header">
+          <div class="platform-check" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="platform-logo" style="background:#1CE783;">
+            <img src="export-variations/logos/hulu.svg" alt="Hulu logo" />
+          </div>
+          <span class="platform-name">Hulu</span>
+          <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="platform-specs" aria-hidden="true">
+          <div class="spec-row"><span class="spec-label">Format</span><span class="spec-value">MP4 (H.264)</span></div>
+          <div class="spec-row"><span class="spec-label">Resolution</span><span class="spec-value">1080p</span></div>
+          <div class="spec-row"><span class="spec-label">Max file size</span><span class="spec-value warning">142 MB / 200 MB</span></div>
+        </div>
+      </div>
+
+      <div class="platform-row" role="checkbox" aria-checked="false" tabindex="0" data-platform="amazon" aria-label="Amazon Fire TV" aria-expanded="false">
+        <div class="platform-row-header">
+          <div class="platform-check" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="platform-logo" style="background:#FF9900;">
+            <img src="export-variations/logos/amazon-fire-tv.svg" alt="Amazon Fire TV logo" />
+          </div>
+          <span class="platform-name">Amazon Fire TV</span>
+          <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="platform-specs" aria-hidden="true">
+          <div class="spec-row"><span class="spec-label">Format</span><span class="spec-value">MP4 (H.264)</span></div>
+          <div class="spec-row"><span class="spec-label">Resolution</span><span class="spec-value">1080p</span></div>
+          <div class="spec-row"><span class="spec-label">Max file size</span><span class="spec-value">500 MB / 2 GB</span></div>
+        </div>
+      </div>
+
+      <div class="platform-row" role="checkbox" aria-checked="false" tabindex="0" data-platform="appletv" aria-label="Apple TV+" aria-expanded="false">
+        <div class="platform-row-header">
+          <div class="platform-check" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="platform-logo" style="background:#000;">
+            <img src="export-variations/logos/apple-tv-plus.svg" alt="Apple TV+ logo" />
+          </div>
+          <span class="platform-name">Apple TV+</span>
+          <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="platform-specs" aria-hidden="true">
+          <div class="spec-row"><span class="spec-label">Format</span><span class="spec-value">MP4 (H.264)</span></div>
+          <div class="spec-row"><span class="spec-label">Resolution</span><span class="spec-value">1080p</span></div>
+          <div class="spec-row"><span class="spec-label">Max file size</span><span class="spec-value">100 MB / 1 GB</span></div>
+        </div>
+      </div>
+
+      <div class="platform-row" role="checkbox" aria-checked="false" tabindex="0" data-platform="peacock" aria-label="Peacock" aria-expanded="false">
+        <div class="platform-row-header">
+          <div class="platform-check" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="platform-logo" style="background:#000;">
+            <img src="export-variations/logos/peacock.svg" alt="Peacock logo" />
+          </div>
+          <span class="platform-name">Peacock</span>
+          <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="platform-specs" aria-hidden="true">
+          <div class="spec-row"><span class="spec-label">Format</span><span class="spec-value">MP4 (H.264)</span></div>
+          <div class="spec-row"><span class="spec-label">Resolution</span><span class="spec-value">1080p</span></div>
+          <div class="spec-row"><span class="spec-label">Max file size</span><span class="spec-value">200 MB / 1 GB</span></div>
+        </div>
+      </div>
+
+      <div class="platform-row" role="checkbox" aria-checked="false" tabindex="0" data-platform="samsung" aria-label="Samsung Ads" aria-expanded="false">
+        <div class="platform-row-header">
+          <div class="platform-check" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="platform-logo" style="background:#000;">
+            <img src="export-variations/logos/samsung-ads.svg" alt="Samsung Ads logo" />
+          </div>
+          <span class="platform-name">Samsung Ads</span>
+          <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="platform-specs" aria-hidden="true">
+          <div class="spec-row"><span class="spec-label">Format</span><span class="spec-value">MP4 (H.264)</span></div>
+          <div class="spec-row"><span class="spec-label">Resolution</span><span class="spec-value">1080p</span></div>
+          <div class="spec-row"><span class="spec-label">Max file size</span><span class="spec-value">150 MB / 500 MB</span></div>
+        </div>
+      </div>
+
+      <div class="platform-row" role="checkbox" aria-checked="false" tabindex="0" data-platform="roku-channel" aria-label="The Roku Channel" aria-expanded="false">
+        <div class="platform-row-header">
+          <div class="platform-check" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="platform-logo" style="background:#4F1182;">
+            <img src="export-variations/logos/roku-channel.svg" alt="The Roku Channel logo" />
+          </div>
+          <span class="platform-name">The Roku Channel</span>
+          <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="platform-specs" aria-hidden="true">
+          <div class="spec-row"><span class="spec-label">Format</span><span class="spec-value">MP4 (H.264)</span></div>
+          <div class="spec-row"><span class="spec-label">Resolution</span><span class="spec-value">1080p</span></div>
+          <div class="spec-row"><span class="spec-label">Max file size</span><span class="spec-value">300 MB / 1 GB</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-wrap" id="progress-wrap" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Export progress">
+    <div class="progress-label">
+      <span id="progress-text">Exporting…</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+
+  <!-- CTA button -->
+  <button class="btn-primary" id="export-btn" disabled aria-disabled="true">
+    <span id="btn-label">Download</span>
+  </button>
+
+</div>
+
+<script>
+  // ── State ──
+  const state = {
+    selected: new Set(),
+    phase: 'idle',
+  };
+
+  const platformNames = {
+    roku: 'Roku', hulu: 'Hulu', amazon: 'Amazon Fire TV',
+    appletv: 'Apple TV+', peacock: 'Peacock',
+    samsung: 'Samsung Ads', 'roku-channel': 'The Roku Channel',
+  };
+
+  // ── DOM refs ──
+  const exportBtn     = document.getElementById('export-btn');
+  const btnLabel      = document.getElementById('btn-label');
+  const platformCount = document.getElementById('platform-count');
+  const fileSizeLabel = document.getElementById('file-size-label');
+  const progressWrap  = document.getElementById('progress-wrap');
+  const progressFill  = document.getElementById('progress-fill');
+  const progressPct   = document.getElementById('progress-pct');
+  const progressText  = document.getElementById('progress-text');
+
+  // ── Update UI ──
+  function update() {
+    const count = state.selected.size;
+
+    // Count badge
+    if (count > 0) {
+      platformCount.textContent = `${count} selected`;
+      platformCount.classList.remove('hidden');
+    } else {
+      platformCount.classList.add('hidden');
+    }
+
+    // Note single vs zip (removed)
+
+    // Button label
+    if (state.phase === 'idle') {
+      if (count === 0) btnLabel.textContent = 'Download';
+      else if (count === 1) btnLabel.textContent = 'Download (1 platform)';
+      else btnLabel.textContent = `Download (${count} platforms)`;
+    }
+
+    const canExport = count > 0 && state.phase === 'idle';
+    exportBtn.disabled = !canExport;
+    exportBtn.setAttribute('aria-disabled', String(!canExport));
+  }
+
+  // ── Platform row interaction ──
+  document.querySelectorAll('.platform-row').forEach(row => {
+    const checkbox = row.querySelector('.platform-check');
+    const chevron  = row.querySelector('.platform-chevron');
+
+    function handleClick(e) {
+      const p = row.dataset.platform;
+      const isSelected = state.selected.has(p);
+      const specs = row.querySelector('.platform-specs');
+
+      // Clicking the checkbox (or anything left of the name) toggles selection
+      const clickedCheckbox = e.target.closest('.platform-check') || e.target.closest('.platform-logo');
+
+      if (!isSelected) {
+        // Unselected → select it, do NOT expand
+        state.selected.add(p);
+        row.classList.add('selected');
+        row.classList.remove('open');
+        row.setAttribute('aria-checked', 'true');
+        row.setAttribute('aria-expanded', 'false');
+        if (specs) specs.setAttribute('aria-hidden', 'true');
+      } else {
+        // Already selected
+        if (clickedCheckbox) {
+          // Clicking the checkbox deselects and collapses
+          state.selected.delete(p);
+          row.classList.remove('selected', 'open');
+          row.setAttribute('aria-checked', 'false');
+          row.setAttribute('aria-expanded', 'false');
+          if (specs) specs.setAttribute('aria-hidden', 'true');
+        } else {
+          // Clicking anywhere else on the row header toggles expand/collapse
+          const isOpen = row.classList.contains('open');
+          if (isOpen) {
+            row.classList.remove('open');
+            row.setAttribute('aria-expanded', 'false');
+            if (specs) specs.setAttribute('aria-hidden', 'true');
+          } else {
+            row.classList.add('open');
+            row.setAttribute('aria-expanded', 'true');
+            if (specs) specs.setAttribute('aria-hidden', 'false');
+          }
+        }
+      }
+      update();
+    }
+
+    row.addEventListener('click', handleClick);
+    row.addEventListener('keydown', e => {
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); handleClick(e); }
+    });
+  });
+
+  // ── Export flow ──
+  function startExport() {
+    if (state.phase !== 'idle' || state.selected.size === 0) return;
+    state.phase = 'loading';
+
+    exportBtn.classList.add('loading');
+    exportBtn.disabled = true;
+    exportBtn.setAttribute('aria-disabled', 'true');
+    btnLabel.innerHTML = '<div class="spinner"></div><span>Exporting…</span>';
+
+    progressWrap.classList.add('visible');
+    let pct = 0;
+    const platforms = [...state.selected];
+    const interval = setInterval(() => {
+      pct += Math.random() * 18 + 4;
+      if (pct > 97) pct = 97;
+      progressFill.style.width = pct + '%';
+      progressPct.textContent = Math.round(pct) + '%';
+      progressWrap.setAttribute('aria-valuenow', Math.round(pct));
+      const idx = Math.floor((pct / 100) * platforms.length);
+      const name = platformNames[platforms[Math.min(idx, platforms.length - 1)]];
+      progressText.textContent = `Exporting for ${name}…`;
+    }, 300);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      progressFill.style.width = '100%';
+      progressPct.textContent = '100%';
+      setTimeout(() => {
+        progressWrap.classList.remove('visible');
+        exportBtn.classList.remove('loading');
+        const success = Math.random() > 0.1;
+        if (success) {
+          state.phase = 'success';
+          exportBtn.classList.add('success');
+          exportBtn.disabled = true;
+          btnLabel.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Export complete</span>`;
+          // External toast will show: "Adobe Sleek audio added" (or export success message)
+        } else {
+          state.phase = 'error';
+          exportBtn.classList.add('error');
+          exportBtn.disabled = false;
+          exportBtn.setAttribute('aria-disabled', 'false');
+          btnLabel.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+              <path d="M12 9v4M12 16h.01" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Export failed — Try again</span>`;
+          // External toast will show error message
+        }
+      }, 400);
+    }, 3200);
+  }
+
+  exportBtn.addEventListener('click', () => {
+    if (state.phase === 'error') { resetToIdle(); startExport(); }
+    else startExport();
+  });
+
+  function resetToIdle() {
+    state.phase = 'idle';
+    exportBtn.classList.remove('success', 'error', 'loading');
+    progressWrap.classList.remove('visible');
+    progressFill.style.width = '0%';
+    update();
+  }
+
+  // ── Init ──
+  update();
+</script>
+</body>
 </html>
