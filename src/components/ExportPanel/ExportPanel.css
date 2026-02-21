@@ -208,6 +208,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .platform-row__logo-text {
@@ -217,6 +218,13 @@
   text-align: center;
   line-height: 1.2;
   white-space: pre-line;
+}
+
+.platform-row__logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* Name */

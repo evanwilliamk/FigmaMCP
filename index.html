@@ -31,6 +31,8 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    .hidden { display: none !important; }
+
     body {
       background: #DCDCDC;
       font-family: var(--font);
@@ -50,7 +52,7 @@
       padding: 24px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 8px;
     }
 
     /* ── Header ── */
@@ -72,6 +74,11 @@
     .info-item { display: flex; align-items: center; gap: 4px; }
     .info-item svg { color: var(--gray-500); flex-shrink: 0; }
     .divider-v { width:1px; height:12px; background:var(--gray-200); flex-shrink:0; }
+
+    /* ── Platform section ── */
+    .platform-section {
+      margin: 20px 0;
+    }
 
     /* ── Section label ── */
     .section-label {
@@ -279,7 +286,7 @@
   </div>
 
   <!-- Platform list -->
-  <div>
+  <div class="platform-section">
     <div class="section-label">
       <span>Platforms</span>
       <span class="count hidden" id="platform-count" aria-live="polite"></span>
@@ -291,8 +298,8 @@
           <div class="platform-check" aria-hidden="true">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <div class="platform-logo" style="background:#6B2D8B;">
-            <img src="export-variations/logos/roku.svg" alt="Roku logo" />
+          <div class="platform-logo">
+            <img src="logos/roku.png" alt="Roku logo" />
           </div>
           <span class="platform-name">Roku</span>
           <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -311,8 +318,8 @@
           <div class="platform-check" aria-hidden="true">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <div class="platform-logo" style="background:#1CE783;">
-            <img src="export-variations/logos/hulu.svg" alt="Hulu logo" />
+          <div class="platform-logo">
+            <img src="logos/hulu.png" alt="Hulu logo" />
           </div>
           <span class="platform-name">Hulu</span>
           <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -331,8 +338,8 @@
           <div class="platform-check" aria-hidden="true">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <div class="platform-logo" style="background:#FF9900;">
-            <img src="export-variations/logos/amazon-fire-tv.svg" alt="Amazon Fire TV logo" />
+          <div class="platform-logo">
+            <img src="logos/fire.png" alt="Amazon Fire TV logo" />
           </div>
           <span class="platform-name">Amazon Fire TV</span>
           <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -351,8 +358,8 @@
           <div class="platform-check" aria-hidden="true">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <div class="platform-logo" style="background:#000;">
-            <img src="export-variations/logos/apple-tv-plus.svg" alt="Apple TV+ logo" />
+          <div class="platform-logo">
+            <img src="logos/apple.png" alt="Apple TV+ logo" />
           </div>
           <span class="platform-name">Apple TV+</span>
           <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -371,8 +378,8 @@
           <div class="platform-check" aria-hidden="true">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <div class="platform-logo" style="background:#000;">
-            <img src="export-variations/logos/peacock.svg" alt="Peacock logo" />
+          <div class="platform-logo">
+            <img src="logos/peacock.png" alt="Peacock logo" />
           </div>
           <span class="platform-name">Peacock</span>
           <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -391,8 +398,8 @@
           <div class="platform-check" aria-hidden="true">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <div class="platform-logo" style="background:#000;">
-            <img src="export-variations/logos/samsung-ads.svg" alt="Samsung Ads logo" />
+          <div class="platform-logo">
+            <img src="logos/samsung.png" alt="Samsung Ads logo" />
           </div>
           <span class="platform-name">Samsung Ads</span>
           <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -411,8 +418,8 @@
           <div class="platform-check" aria-hidden="true">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <div class="platform-logo" style="background:#4F1182;">
-            <img src="export-variations/logos/roku-channel.svg" alt="The Roku Channel logo" />
+          <div class="platform-logo">
+            <img src="logos/roku.png" alt="The Roku Channel logo" />
           </div>
           <span class="platform-name">The Roku Channel</span>
           <svg class="platform-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -507,28 +514,28 @@
       const isSelected = state.selected.has(p);
       const specs = row.querySelector('.platform-specs');
 
-      // Clicking the checkbox (or anything left of the name) toggles selection
+      // Check if checkbox was clicked
       const clickedCheckbox = e.target.closest('.platform-check') || e.target.closest('.platform-logo');
 
-      if (!isSelected) {
-        // Unselected → select it, do NOT expand
-        state.selected.add(p);
-        row.classList.add('selected');
-        row.classList.remove('open');
-        row.setAttribute('aria-checked', 'true');
-        row.setAttribute('aria-expanded', 'false');
-        if (specs) specs.setAttribute('aria-hidden', 'true');
-      } else {
-        // Already selected
-        if (clickedCheckbox) {
-          // Clicking the checkbox deselects and collapses
+      if (clickedCheckbox) {
+        // Clicking checkbox always toggles selection
+        if (isSelected) {
           state.selected.delete(p);
           row.classList.remove('selected', 'open');
           row.setAttribute('aria-checked', 'false');
           row.setAttribute('aria-expanded', 'false');
           if (specs) specs.setAttribute('aria-hidden', 'true');
         } else {
-          // Clicking anywhere else on the row header toggles expand/collapse
+          state.selected.add(p);
+          row.classList.add('selected');
+          row.classList.remove('open');
+          row.setAttribute('aria-checked', 'true');
+          row.setAttribute('aria-expanded', 'false');
+          if (specs) specs.setAttribute('aria-hidden', 'true');
+        }
+      } else {
+        // Clicking elsewhere on selected row toggles expand
+        if (isSelected) {
           const isOpen = row.classList.contains('open');
           if (isOpen) {
             row.classList.remove('open');
@@ -539,6 +546,13 @@
             row.setAttribute('aria-expanded', 'true');
             if (specs) specs.setAttribute('aria-hidden', 'false');
           }
+        } else {
+          // Clicking unselected row selects it
+          state.selected.add(p);
+          row.classList.add('selected');
+          row.setAttribute('aria-checked', 'true');
+          row.setAttribute('aria-expanded', 'false');
+          if (specs) specs.setAttribute('aria-hidden', 'true');
         }
       }
       update();

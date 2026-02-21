@@ -31,6 +31,7 @@ export interface Platform {
   name: string;
   logoColor: string;
   logoText: string;
+  logoUrl?: string;
   specs: PlatformSpec;
 }
 

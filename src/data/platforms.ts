@@ -10,6 +10,7 @@ export const PLATFORMS: Record<PlatformId, Platform> = {
     name: 'Roku',
     logoColor: '#6B2D8B',
     logoText: 'ROKU',
+    logoUrl: '/logos/roku.png',
     specs: {
       format: 'MP4_H264',
       resolution: '1080p',
@@ -23,6 +24,7 @@ export const PLATFORMS: Record<PlatformId, Platform> = {
     name: 'Hulu',
     logoColor: '#1CE783',
     logoText: 'hulu',
+    logoUrl: '/logos/hulu.png',
     specs: {
       format: 'MP4_H264',
       resolution: '1080p',
@@ -36,6 +38,7 @@ export const PLATFORMS: Record<PlatformId, Platform> = {
     name: 'Amazon Fire TV',
     logoColor: '#FF9900',
     logoText: 'fire\ntv',
+    logoUrl: '/logos/fire.png',
     specs: {
       format: 'MP4_H264',
       resolution: '1080p',
@@ -49,6 +52,7 @@ export const PLATFORMS: Record<PlatformId, Platform> = {
     name: 'Apple TV+',
     logoColor: '#000000',
     logoText: 'tv\n+',
+    logoUrl: '/logos/apple.png',
     specs: {
       format: 'MP4_H264',
       resolution: '1080p',
@@ -62,6 +66,7 @@ export const PLATFORMS: Record<PlatformId, Platform> = {
     name: 'Peacock',
     logoColor: '#000000',
     logoText: 'P',
+    logoUrl: '/logos/peacock.png',
     specs: {
       format: 'MP4_H264',
       resolution: '1080p',
@@ -75,6 +80,7 @@ export const PLATFORMS: Record<PlatformId, Platform> = {
     name: 'Samsung Ads',
     logoColor: '#000000',
     logoText: 'SAMSUNG\nads',
+    logoUrl: '/logos/samsung.png',
     specs: {
       format: 'MP4_H264',
       resolution: '1080p',
@@ -88,6 +94,7 @@ export const PLATFORMS: Record<PlatformId, Platform> = {
     name: 'The Roku Channel',
     logoColor: '#4F1182',
     logoText: 'RC',
+    logoUrl: '/logos/roku.png',
     specs: {
       format: 'MP4_H264',
       resolution: '1080p',

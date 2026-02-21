@@ -56,11 +56,20 @@ export function PlatformRow_S2({
 
         <div
           className="platform-row-s2__logo"
-          style={{ backgroundColor: platform.logoColor }}
+          style={{ backgroundColor: platform.logoUrl ? 'transparent' : platform.logoColor }}
         >
-          <span className="platform-row-s2__logo-text">
-            {platform.logoText}
-          </span>
+          {platform.logoUrl ? (
+            <img
+              src={platform.logoUrl}
+              alt={`${platform.name} logo`}
+              className="platform-row-s2__logo-image"
+              style={{ width: '40px', height: '40px', objectFit: 'cover', display: 'block' }}
+            />
+          ) : (
+            <span className="platform-row-s2__logo-text">
+              {platform.logoText}
+            </span>
+          )}
         </div>
 
         <span className="platform-row-s2__name">{platform.name}</span>
