@@ -54,14 +54,23 @@
     }
 
     /* ── Header ── */
+    .panel-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
     .panel-header h2 {
       font-size: 20px; font-weight: 700;
       color: var(--neutral); line-height: 24px;
-      margin-bottom: 8px;
     }
     .panel-header p {
       font-size: 14px; color: var(--subdued);
       line-height: 1.45;
+    }
+
+    /* ── Utility classes ── */
+    .hidden {
+      display: none;
     }
 
     /* ── Asset info bar ── */
@@ -255,10 +264,8 @@
   <div class="panel-header">
     <h2 id="panel-title">Export</h2>
     <p>We'll make sure the export is compliant to the platform you select.</p>
-  </div>
-
-  <!-- Asset info bar -->
-  <div class="asset-info" role="region" aria-label="Asset information">
+    <!-- Asset info bar -->
+    <div class="asset-info" role="region" aria-label="Asset information">
     <div class="info-item">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
@@ -276,6 +283,7 @@
     <div class="divider-v" aria-hidden="true"></div>
     <div class="info-item">
       <span>29.97 fps</span>
+    </div>
     </div>
   </div>
 
