@@ -38,9 +38,35 @@
       font-family: var(--font);
       min-height: 100vh;
       display: flex;
-      align-items: flex-start;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
       padding: 40px;
+      gap: 40px;
+    }
+
+    .container {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+    }
+
+    .option-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .option-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--neutral);
+      background: var(--gray-100);
+      padding: 4px 12px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
     }
 
     /* ── Panel ── */
@@ -307,6 +333,193 @@
       color: var(--neutral);
     }
 
+    /* ── Option B Styles ── */
+    .panel-b .asset-info-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--neutral);
+    }
+
+    .panel-b .asset-info-bar__item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .panel-b .asset-info-bar__icon {
+      color: var(--subdued);
+      flex-shrink: 0;
+    }
+
+    .panel-b .asset-info-bar__divider {
+      width: 1px;
+      height: 12px;
+      background: var(--gray-200);
+      flex-shrink: 0;
+    }
+
+    .panel-b__options {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .options-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .back-button {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: none;
+      color: var(--neutral);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      padding: 0;
+      transition: background 0.13s;
+    }
+
+    .back-button:hover {
+      background: var(--layer1);
+    }
+
+    .options-header h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--neutral);
+      margin: 0;
+    }
+
+    .options-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Option B scrollable list */
+    .platform-list-b {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 290px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 4px;
+      padding-bottom: 60px;
+    }
+
+    .platform-list-b::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .platform-list-b::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 4px;
+    }
+
+    .platform-list-b::-webkit-scrollbar-thumb {
+      background: var(--gray-400);
+      border-radius: 4px;
+    }
+
+    .platform-list-b::-webkit-scrollbar-thumb:hover {
+      background: var(--gray-500);
+    }
+
+    /* Option B Platform Rows - right-aligned logos like Option A */
+    .platform-list-b .platform-row {
+      border: 2px solid #E9E9E9;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.12s, background 0.12s;
+      background: white;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .platform-list-b .platform-row:hover {
+      background: #F8F8F8;
+    }
+
+    .platform-list-b .platform-row.selected {
+      border-color: var(--neutral);
+    }
+
+    .platform-list-b .platform-row__header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      min-height: 58px;
+    }
+
+    .platform-list-b .platform-row__checkbox {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      border: 1.5px solid #9A9A9A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: white;
+      transition: background 0.1s, border-color 0.1s;
+    }
+
+    .platform-list-b .platform-row.selected .platform-row__checkbox {
+      background: var(--neutral);
+      border-color: var(--neutral);
+    }
+
+    .platform-list-b .platform-row__name {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--neutral);
+    }
+
+    .platform-list-b .platform-row__logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .platform-list-b .platform-row__logo-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .platform-list-b .platform-row__options-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--subdued);
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.13s;
+      cursor: pointer;
+    }
+
+    .platform-list-b .platform-row.selected .platform-row__options-icon {
+      opacity: 1;
+    }
+
     /* ── Divider ── */
     .divider { height:1px; background:var(--gray-100); }
 
@@ -478,7 +691,11 @@
 </head>
 <body>
 
-<div class="panel" role="dialog" aria-modal="false" aria-labelledby="panel-title">
+<div class="container">
+  <!-- Option A -->
+  <div class="option-wrapper">
+    <div class="option-label">Option A</div>
+    <div class="panel" role="dialog" aria-modal="false" aria-labelledby="panel-title-a">
 
   <!-- Header -->
   <div class="panel-header">
@@ -772,6 +989,202 @@
   </button>
 
 </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="option-wrapper">
+    <div class="option-label">Option B</div>
+    <div class="panel panel-b" id="panel-b" role="dialog" aria-modal="false" aria-labelledby="panel-title-b">
+
+      <!-- Main Panel State -->
+      <div class="panel-b__main" id="panel-b-main">
+        <div class="panel-header">
+          <h2 id="panel-title-b">Export</h2>
+          <p>We'll make sure the export is compliant to the platform you select.</p>
+        </div>
+
+        <!-- Asset Info -->
+        <div class="asset-info-bar">
+          <div class="asset-info-bar__item">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="asset-info-bar__icon"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 4v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span>0:30</span>
+          </div>
+          <div class="asset-info-bar__divider"></div>
+          <div class="asset-info-bar__item">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="asset-info-bar__icon"><rect x="2" y="3" width="12" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span>16:9</span>
+          </div>
+          <div class="asset-info-bar__divider"></div>
+          <div class="asset-info-bar__item">
+            <span>29.97 fps</span>
+          </div>
+        </div>
+
+        <!-- Platform List -->
+        <div class="platform-section">
+          <div class="platform-selector__header">
+            <span>Platform</span>
+            <span id="platform-count-b" class="platform-selector__count hidden">0 selected</span>
+          </div>
+          <div class="platform-list platform-list-b" id="platform-list-b">
+            <div class="platform-row" data-platform-b="roku">
+              <div class="platform-row__header">
+                <div class="platform-row__checkbox">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span class="platform-row__name">Roku</span>
+                <div class="platform-row__logo">
+                  <img src="logos/roku.png" alt="Roku logo" class="platform-row__logo-image" />
+                </div>
+                <svg class="platform-row__options-icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <circle cx="4" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="14" cy="9" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="platform-row" data-platform-b="hulu">
+              <div class="platform-row__header">
+                <div class="platform-row__checkbox">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span class="platform-row__name">Hulu</span>
+                <div class="platform-row__logo">
+                  <img src="logos/hulu.png" alt="Hulu logo" class="platform-row__logo-image" />
+                </div>
+                <svg class="platform-row__options-icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <circle cx="4" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="14" cy="9" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="platform-row" data-platform-b="amazon">
+              <div class="platform-row__header">
+                <div class="platform-row__checkbox">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span class="platform-row__name">Amazon Fire TV</span>
+                <div class="platform-row__logo">
+                  <img src="logos/fire.png" alt="Amazon Fire TV logo" class="platform-row__logo-image" />
+                </div>
+                <svg class="platform-row__options-icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <circle cx="4" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="14" cy="9" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="platform-row" data-platform-b="appletv">
+              <div class="platform-row__header">
+                <div class="platform-row__checkbox">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span class="platform-row__name">Apple TV+</span>
+                <div class="platform-row__logo">
+                  <img src="logos/apple.png" alt="Apple TV+ logo" class="platform-row__logo-image" />
+                </div>
+                <svg class="platform-row__options-icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <circle cx="4" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="14" cy="9" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="platform-row" data-platform-b="peacock">
+              <div class="platform-row__header">
+                <div class="platform-row__checkbox">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span class="platform-row__name">Peacock</span>
+                <div class="platform-row__logo">
+                  <img src="logos/peacock.png" alt="Peacock logo" class="platform-row__logo-image" />
+                </div>
+                <svg class="platform-row__options-icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <circle cx="4" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="14" cy="9" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="platform-row" data-platform-b="samsung">
+              <div class="platform-row__header">
+                <div class="platform-row__checkbox">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span class="platform-row__name">Samsung Ads</span>
+                <div class="platform-row__logo">
+                  <img src="logos/samsung.png" alt="Samsung Ads logo" class="platform-row__logo-image" />
+                </div>
+                <svg class="platform-row__options-icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <circle cx="4" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="14" cy="9" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="platform-row" data-platform-b="roku-channel">
+              <div class="platform-row__header">
+                <div class="platform-row__checkbox">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span class="platform-row__name">The Roku Channel</span>
+                <div class="platform-row__logo">
+                  <img src="logos/roku.png" alt="The Roku Channel logo" class="platform-row__logo-image" />
+                </div>
+                <svg class="platform-row__options-icon" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <circle cx="4" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                  <circle cx="14" cy="9" r="1.5" fill="currentColor"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Credentials -->
+        <div class="content-credentials">
+          <div class="content-credentials__header">
+            <label class="toggle-label">
+              <input type="checkbox" id="content-credentials-toggle-b" class="toggle-input" checked>
+              <span class="toggle-switch"></span>
+              <span class="toggle-text">Apply Content Credentials</span>
+            </label>
+          </div>
+          <a href="#" class="content-credentials__link">Learn more about Content Credentials</a>
+        </div>
+
+        <!-- Export Button -->
+        <button class="btn-primary" id="export-btn-b" disabled aria-disabled="true">
+          <span id="btn-label-b">Download</span>
+        </button>
+      </div>
+
+      <!-- Options Panel State (hidden by default) -->
+      <div class="panel-b__options hidden" id="panel-b-options">
+        <div class="options-header">
+          <button class="back-button" id="back-button-b" aria-label="Back to platform list">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M12 4L6 10L12 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <h2 id="options-title-b">Platform Name</h2>
+        </div>
+
+        <div class="options-content" id="options-content-b">
+          <!-- Options content will be dynamically populated -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <script>
   // ── State ──
@@ -978,6 +1391,90 @@
 
   // ── Init ──
   update();
+
+  // ═══════════════════════════════════════════════
+  // OPTION B - Separate state and logic
+  // ═══════════════════════════════════════════════
+
+  const stateB = {
+    selected: new Set(),
+    phase: 'idle',
+  };
+
+  const exportBtnB = document.getElementById('export-btn-b');
+  const btnLabelB = document.getElementById('btn-label-b');
+  const platformCountB = document.getElementById('platform-count-b');
+
+  function updateB() {
+    const count = stateB.selected.size;
+
+    // Count badge
+    if (count > 0) {
+      platformCountB.textContent = `${count} selected`;
+      platformCountB.classList.remove('hidden');
+    } else {
+      platformCountB.classList.add('hidden');
+    }
+
+    // Button label
+    if (stateB.phase === 'idle') {
+      if (count === 0) btnLabelB.textContent = 'Download';
+      else if (count === 1) btnLabelB.textContent = 'Download (1 platform)';
+      else btnLabelB.textContent = `Download (${count} platforms)`;
+    }
+
+    const canExport = count > 0 && stateB.phase === 'idle';
+    exportBtnB.disabled = !canExport;
+    exportBtnB.setAttribute('aria-disabled', String(!canExport));
+  }
+
+  // Platform row interaction for Option B
+  document.querySelectorAll('[data-platform-b]').forEach(row => {
+    const platformId = row.dataset.platformB;
+
+    function handleClickB(e) {
+      const isSelected = stateB.selected.has(platformId);
+
+      // Check if options icon was clicked
+      const clickedOptions = e.target.closest('.platform-row__options-icon');
+
+      // Check if checkbox or logo was clicked
+      const clickedCheckbox = e.target.closest('.platform-row__checkbox') || e.target.closest('.platform-row__logo');
+
+      if (clickedOptions && isSelected) {
+        // Options icon clicked - navigate to options panel (TODO: implement later)
+        console.log('Options clicked for:', platformId);
+        return;
+      }
+
+      if (clickedCheckbox) {
+        // Clicking checkbox always toggles selection
+        if (isSelected) {
+          stateB.selected.delete(platformId);
+          row.classList.remove('selected');
+        } else {
+          stateB.selected.add(platformId);
+          row.classList.add('selected');
+        }
+      } else {
+        // Clicking row body (but not options icon)
+        if (isSelected) {
+          // Already selected - do nothing (only checkbox can deselect)
+        } else {
+          // Not selected - select it
+          stateB.selected.add(platformId);
+          row.classList.add('selected');
+        }
+      }
+
+      updateB();
+    }
+
+    row.addEventListener('click', handleClickB);
+  });
+
+  // Init Option B
+  updateB();
 </script>
 </body>
 </html>
