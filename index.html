@@ -520,13 +520,18 @@
     }
 
     .platform-list-b .platform-row__options-icon {
-      width: 20px;
-      height: 20px;
+      width: 40px;
+      height: 40px;
+      padding: 11px;
+      border: 1px solid var(--gray-300);
+      border-radius: 4px;
+      background: white;
       color: var(--subdued);
       flex-shrink: 0;
       opacity: 0;
       transition: opacity 0.13s;
       cursor: pointer;
+      box-sizing: border-box;
     }
 
     .platform-list-b .platform-row.selected .platform-row__options-icon {
