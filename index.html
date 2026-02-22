@@ -479,9 +479,17 @@
       transition: background 0.1s, border-color 0.1s;
     }
 
+    .platform-list-b .platform-row__checkbox svg {
+      display: none;
+    }
+
     .platform-list-b .platform-row.selected .platform-row__checkbox {
       background: var(--neutral);
       border-color: var(--neutral);
+    }
+
+    .platform-list-b .platform-row.selected .platform-row__checkbox svg {
+      display: block;
     }
 
     .platform-list-b .platform-row__name {
