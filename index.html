@@ -478,12 +478,25 @@
       transition: opacity 0.25s ease, transform 0.25s ease;
     }
 
+    /* Main panel states */
     #panel-b-main.hiding {
       opacity: 0;
       transform: translateX(-20px);
       pointer-events: none;
     }
 
+    #panel-b-main.hidden {
+      opacity: 0;
+      transform: translateX(-20px);
+      pointer-events: none;
+    }
+
+    #panel-b-main.showing {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Options panel states */
     .panel-b__options.showing {
       opacity: 1;
       transform: translateX(0);
@@ -1689,10 +1702,11 @@
     const platformName = platformNames[platformId];
     optionsTitleB.textContent = platformName;
 
-    // Animate out main panel
+    // Animate out main panel (slides left)
+    panelBMain.classList.remove('showing');
     panelBMain.classList.add('hiding');
 
-    // After fade out, show options panel
+    // After fade out, show and animate in options panel (slides in from right)
     setTimeout(() => {
       panelBMain.classList.add('hidden');
       panelBOptions.classList.remove('hidden');
@@ -1706,13 +1720,17 @@
     stateB.showingOptions = false;
     stateB.currentPlatform = null;
 
-    // Animate out options panel
+    // Animate out options panel (slides right)
     panelBOptions.classList.remove('showing');
 
-    // After fade out, show main panel
+    // After fade out, show and animate in main panel (slides in from left)
     setTimeout(() => {
       panelBOptions.classList.add('hidden');
-      panelBMain.classList.remove('hidden', 'hiding');
+      panelBMain.classList.remove('hidden');
+      // Trigger reflow
+      panelBMain.offsetHeight;
+      panelBMain.classList.remove('hiding');
+      panelBMain.classList.add('showing');
     }, 250);
   }
 
