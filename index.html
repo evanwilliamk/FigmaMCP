@@ -472,6 +472,29 @@
       color: var(--neutral);
     }
 
+    /* Panel transitions */
+    #panel-b-main,
+    .panel-b__options {
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    #panel-b-main.hiding {
+      opacity: 0;
+      transform: translateX(-20px);
+      pointer-events: none;
+    }
+
+    .panel-b__options.showing {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .panel-b__options.hidden {
+      opacity: 0;
+      transform: translateX(20px);
+      pointer-events: none;
+    }
+
     /* Option B scrollable list */
     .platform-list-b {
       display: flex;
@@ -1657,7 +1680,7 @@
     row.addEventListener('click', handleClickB);
   });
 
-  // Show/hide options panel
+  // Show/hide options panel with transitions
   function showOptionsPanel(platformId) {
     stateB.showingOptions = true;
     stateB.currentPlatform = platformId;
@@ -1666,18 +1689,31 @@
     const platformName = platformNames[platformId];
     optionsTitleB.textContent = platformName;
 
-    // Hide main content, show options panel
-    panelBMain.classList.add('hidden');
-    panelBOptions.classList.remove('hidden');
+    // Animate out main panel
+    panelBMain.classList.add('hiding');
+
+    // After fade out, show options panel
+    setTimeout(() => {
+      panelBMain.classList.add('hidden');
+      panelBOptions.classList.remove('hidden');
+      // Trigger reflow
+      panelBOptions.offsetHeight;
+      panelBOptions.classList.add('showing');
+    }, 250);
   }
 
   function hideOptionsPanel() {
     stateB.showingOptions = false;
     stateB.currentPlatform = null;
 
-    // Show main content, hide options panel
-    panelBMain.classList.remove('hidden');
-    panelBOptions.classList.add('hidden');
+    // Animate out options panel
+    panelBOptions.classList.remove('showing');
+
+    // After fade out, show main panel
+    setTimeout(() => {
+      panelBOptions.classList.add('hidden');
+      panelBMain.classList.remove('hidden', 'hiding');
+    }, 250);
   }
 
   // Back button handler
