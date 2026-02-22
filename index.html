@@ -1440,8 +1440,12 @@
   }
 
   // Platform row interaction for Option B
-  document.querySelectorAll('[data-platform-b]').forEach(row => {
+  const optionBRows = document.querySelectorAll('[data-platform-b]');
+  console.log('Found Option B rows:', optionBRows.length);
+
+  optionBRows.forEach(row => {
     const platformId = row.dataset.platformB;
+    console.log('Attaching listener to:', platformId);
 
     function handleClickB(e) {
       const isSelected = stateB.selected.has(platformId);
