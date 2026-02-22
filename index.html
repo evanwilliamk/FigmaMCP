@@ -1080,11 +1080,13 @@
     <div class="option-label">Option B</div>
     <div class="panel panel-b" id="panel-b" role="dialog" aria-modal="false" aria-labelledby="panel-title-b">
 
-      <!-- Header -->
-      <div class="panel-header">
-        <h2 id="panel-title-b">Export</h2>
-        <p>We'll make sure the export is compliant to the platform you select.</p>
-      </div>
+      <!-- Main Content (can be hidden when showing options) -->
+      <div id="panel-b-main">
+        <!-- Header -->
+        <div class="panel-header">
+          <h2 id="panel-title-b">Export</h2>
+          <p>We'll make sure the export is compliant to the platform you select.</p>
+        </div>
 
       <!-- Asset Info -->
       <div class="asset-info-bar">
@@ -1268,6 +1270,8 @@
         <button class="btn-primary" id="export-btn-b" disabled aria-disabled="true">
           <span id="btn-label-b">Download</span>
         </button>
+      </div>
+      <!-- End panel-b-main -->
 
       <!-- Options Panel State (hidden by default) -->
       <div class="panel-b__options hidden" id="panel-b-options">
@@ -1567,7 +1571,15 @@
   const panelBMain = document.getElementById('panel-b-main');
   const panelBOptions = document.getElementById('panel-b-options');
   const optionsTitleB = document.getElementById('options-title-b');
-  const optionsBackBtn = document.getElementById('options-back-b');
+  const optionsBackBtn = document.getElementById('back-button-b');
+
+  // Debug: verify elements exist
+  console.log('Panel B elements:', {
+    panelBMain: !!panelBMain,
+    panelBOptions: !!panelBOptions,
+    optionsTitleB: !!optionsTitleB,
+    optionsBackBtn: !!optionsBackBtn
+  });
 
   function updateB() {
     const count = stateB.selected.size;
