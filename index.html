@@ -1326,7 +1326,7 @@
                 </div>
               </div>
             </div>
-            <div class="custom-recommended">
+            <div class="custom-recommended" id="custom-resolution-recommended">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="8" r="7" stroke="#1473E6" stroke-width="1.5" fill="none"/>
                 <path d="M5 8l2 2 4-4" stroke="#1473E6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -1695,7 +1695,7 @@
                 </div>
               </div>
             </div>
-            <div class="option-field__recommended">
+            <div class="option-field__recommended" id="option-resolution-recommended">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
                 <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -1732,7 +1732,7 @@
                 </div>
               </div>
             </div>
-            <div class="option-field__recommended">
+            <div class="option-field__recommended" id="option-format-recommended">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
                 <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -1769,7 +1769,7 @@
                 </div>
               </div>
             </div>
-            <div class="option-field__recommended">
+            <div class="option-field__recommended" id="option-audio-recommended">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
                 <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -1909,7 +1909,7 @@
                 </div>
               </div>
             </div>
-            <div class="option-field__recommended" style="display: flex; align-items: center; gap: 6px;">
+            <div class="option-field__recommended" id="custom-resolution-recommended-c" style="display: flex; align-items: center; gap: 6px;">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
                 <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -1946,7 +1946,7 @@
                 </div>
               </div>
             </div>
-            <div class="option-field__recommended" style="display: flex; align-items: center; gap: 6px;">
+            <div class="option-field__recommended" id="custom-format-recommended-c" style="display: flex; align-items: center; gap: 6px;">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
                 <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -2008,10 +2008,11 @@
   });
 
   // ── Custom Dropdown Logic ──
-  function initCustomDropdown(triggerId, menuId, valueId) {
+  function initCustomDropdown(triggerId, menuId, valueId, recommendedId = null) {
     const trigger = document.getElementById(triggerId);
     const menu = document.getElementById(menuId);
     const valueEl = document.getElementById(valueId);
+    const recommendedEl = recommendedId ? document.getElementById(recommendedId) : null;
 
     if (!trigger || !menu || !valueEl) return;
 
@@ -2034,6 +2035,12 @@
         // Update displayed value
         valueEl.textContent = text;
 
+        // Hide recommended label if non-default option selected
+        if (recommendedEl) {
+          const isDefault = text.toLowerCase().includes('default');
+          recommendedEl.style.display = isDefault ? 'flex' : 'none';
+        }
+
         // Close menu
         menu.classList.remove('open');
       });
@@ -2048,12 +2055,12 @@
   }
 
   // Initialize Option A dropdowns
-  initCustomDropdown('custom-resolution-trigger', 'custom-resolution-menu', 'custom-resolution-value');
+  initCustomDropdown('custom-resolution-trigger', 'custom-resolution-menu', 'custom-resolution-value', 'custom-resolution-recommended');
 
   // Initialize Option B dropdowns
-  initCustomDropdown('option-resolution-trigger', 'option-resolution-menu', 'option-resolution-value');
-  initCustomDropdown('option-format-trigger', 'option-format-menu', 'option-format-value');
-  initCustomDropdown('option-audio-trigger', 'option-audio-menu', 'option-audio-value');
+  initCustomDropdown('option-resolution-trigger', 'option-resolution-menu', 'option-resolution-value', 'option-resolution-recommended');
+  initCustomDropdown('option-format-trigger', 'option-format-menu', 'option-format-value', 'option-format-recommended');
+  initCustomDropdown('option-audio-trigger', 'option-audio-menu', 'option-audio-value', 'option-audio-recommended');
 
   // ── State ──
   const state = {
@@ -2570,8 +2577,8 @@
   });
 
   // Initialize custom dropdowns
-  initCustomDropdown('custom-resolution-trigger-c', 'custom-resolution-menu-c', 'custom-resolution-value-c');
-  initCustomDropdown('custom-format-trigger-c', 'custom-format-menu-c', 'custom-format-value-c');
+  initCustomDropdown('custom-resolution-trigger-c', 'custom-resolution-menu-c', 'custom-resolution-value-c', 'custom-resolution-recommended-c');
+  initCustomDropdown('custom-format-trigger-c', 'custom-format-menu-c', 'custom-format-value-c', 'custom-format-recommended-c');
 
   // Export simulation
   function startExportC() {
