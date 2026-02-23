@@ -134,7 +134,7 @@
 
     /* ── Platform section ── */
     .platform-section {
-      margin: 20px 0 12px 0;
+      margin: 12px 0 12px 0;
       position: relative;
     }
 
@@ -163,7 +163,7 @@
     /* ── Platform accordion list ── */
     .platform-list {
       display: flex; flex-direction: column; gap: 6px;
-      max-height: 290px; /* ~4.5 rows to ensure scroll shows */
+      max-height: 390px; /* 6 rows × 60px + 5 gaps × 6px = 390px */
       overflow-y: auto;
       overflow-x: hidden;
       padding-right: 4px;
@@ -370,7 +370,7 @@
     }
 
     .custom-dropdown__option {
-      padding: 8px 12px;
+      padding: 6px 12px;
       border-radius: 6px;
       cursor: pointer;
       display: flex;
@@ -379,6 +379,8 @@
       font-size: 14px;
       color: var(--neutral);
       transition: background 0.13s;
+      text-align: left;
+      min-height: 32px;
     }
 
     .custom-dropdown__option:hover {
@@ -529,7 +531,7 @@
 
     .option-field__select {
       width: 100%;
-      height: 40px;
+      height: 32px;
       padding: 0 36px 0 12px;
       border: none;
       border-radius: 6px;
@@ -544,6 +546,7 @@
       cursor: pointer;
       appearance: none;
       transition: background-color 0.13s;
+      text-align: left;
     }
 
     .option-field__select:hover {
@@ -633,7 +636,7 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      max-height: 290px;
+      max-height: 390px; /* 6 rows × 60px + 5 gaps × 6px = 390px */
       overflow-y: auto;
       overflow-x: hidden;
       padding-right: 4px;
@@ -900,7 +903,11 @@
     }
     .btn-primary:hover:not(:disabled) { background: var(--gray-800); }
     .btn-primary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-primary:disabled {
+      background: var(--gray-100);
+      color: var(--gray-400);
+      cursor: not-allowed;
+    }
     .btn-primary.loading { background: var(--gray-500); cursor: default; pointer-events: none; }
     .btn-primary.success { background: var(--green); pointer-events: none; }
     .btn-primary.error   { background: var(--red); }
@@ -934,6 +941,169 @@
       transition: width 0.4s ease; width: 0%;
     }
 
+    /* ══════════════════════════════════════════════
+       Option C - Grid Layout
+       ══════════════════════════════════════════════ */
+
+    /* Remove gradient fade for Option C */
+    #panel-c .platform-section::after {
+      display: none;
+    }
+
+    /* Scrollable container for Option C when custom is expanded */
+    #panel-c .platform-section {
+      max-height: 390px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 4px;
+    }
+
+    #panel-c .platform-section::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #panel-c .platform-section::-webkit-scrollbar-track {
+      background: var(--gray-100);
+      border-radius: 4px;
+    }
+
+    #panel-c .platform-section::-webkit-scrollbar-thumb {
+      background: var(--gray-400);
+      border-radius: 4px;
+    }
+
+    #panel-c .platform-section::-webkit-scrollbar-thumb:hover {
+      background: var(--gray-500);
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .platform-card {
+      background: white;
+      border: 2px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+      height: 60px;
+    }
+
+    .platform-card:hover {
+      border-color: var(--gray-300);
+      background: var(--gray-25);
+    }
+
+    .platform-card.selected {
+      border-color: var(--neutral);
+      border-width: 2px;
+    }
+
+    .platform-card__logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .platform-card__logo-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .platform-card__logo-text {
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      line-height: 1.2;
+      white-space: pre-line;
+    }
+
+    .platform-card__name {
+      display: none;
+    }
+
+    .platform-card--custom {
+      grid-column: 1 / -1;
+    }
+
+    .platform-card--custom .platform-card__name {
+      display: block;
+      font-size: 14px;
+      color: var(--neutral);
+    }
+
+    /* Custom settings panel */
+    .custom-settings {
+      display: none;
+      margin-top: 8px;
+      background: white;
+      border: 2px solid var(--neutral);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .custom-settings.open {
+      display: block;
+    }
+
+    .custom-settings__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--neutral);
+      margin-bottom: 16px;
+    }
+
+    .custom-settings__field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .custom-settings__field:last-child {
+      margin-bottom: 0;
+    }
+
+    .custom-settings__label {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--subdued);
+    }
+
+    .custom-settings__filesize {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .custom-settings__filesize-label {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--subdued);
+    }
+
+    .custom-settings__filesize-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--neutral);
+    }
+
   </style>
 </head>
 <body>
@@ -965,10 +1135,6 @@
         <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
       </svg>
       <span>16:9</span>
-    </div>
-    <div class="divider-v" aria-hidden="true"></div>
-    <div class="info-item">
-      <span>29.97 fps</span>
     </div>
   </div>
 
@@ -1252,7 +1418,7 @@
 
   <!-- CTA button -->
   <button class="btn-primary" id="export-btn" disabled aria-disabled="true">
-    <span id="btn-label">Download</span>
+    <span id="btn-label">Export</span>
   </button>
 
 </div>
@@ -1286,10 +1452,6 @@
               <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
             </svg>
             <span>16:9</span>
-          </div>
-          <div class="asset-info-bar__divider"></div>
-          <div class="asset-info-bar__item">
-            <span>29.97 fps</span>
           </div>
         </div>
 
@@ -1488,7 +1650,7 @@
 
         <!-- Export Button -->
         <button class="btn-primary" id="export-btn-b" disabled aria-disabled="true">
-          <span id="btn-label-b">Download</span>
+          <span id="btn-label-b">Export</span>
         </button>
       </div>
       <!-- End panel-b-main -->
@@ -1626,14 +1788,209 @@
 
     </div>
   </div>
+
+  <!-- Option C -->
+  <div class="option-wrapper">
+    <div class="option-label" id="label-c">Option C</div>
+    <div class="panel" id="panel-c" role="dialog" aria-modal="false" aria-labelledby="panel-title-c">
+
+      <!-- Header -->
+      <div class="panel-header">
+        <h2 id="panel-title-c">Export</h2>
+        <p>We'll make sure the export is compliant to the platform you select.</p>
+      </div>
+
+      <!-- Asset info bar -->
+      <div class="asset-info" role="region" aria-label="Asset information">
+        <div class="info-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span>0:30</span>
+        </div>
+        <div class="divider-v"></div>
+        <div class="info-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+          </svg>
+          <span>16:9</span>
+        </div>
+      </div>
+
+      <!-- Platform Grid -->
+      <div class="platform-section">
+        <div class="section-label">
+          <span>Platform</span>
+          <span class="count" id="platform-count-c">(1 selected)</span>
+        </div>
+        <div class="platform-grid" id="platform-grid-c">
+          <!-- Roku -->
+          <div class="platform-card" data-platform-c="roku">
+            <div class="platform-card__logo" style="background-color: transparent;">
+              <img src="logos/roku.png" alt="Roku" class="platform-card__logo-image">
+            </div>
+            <span class="platform-card__name">Roku</span>
+          </div>
+
+          <!-- Apple TV -->
+          <div class="platform-card" data-platform-c="appletv">
+            <div class="platform-card__logo" style="background-color: transparent;">
+              <img src="logos/apple.png" alt="Apple TV" class="platform-card__logo-image">
+            </div>
+            <span class="platform-card__name">Apple TV</span>
+          </div>
+
+          <!-- Fire TV -->
+          <div class="platform-card" data-platform-c="firetv">
+            <div class="platform-card__logo" style="background-color: transparent;">
+              <img src="logos/fire.png" alt="Fire TV" class="platform-card__logo-image">
+            </div>
+            <span class="platform-card__name">Fire TV</span>
+          </div>
+
+          <!-- Hulu -->
+          <div class="platform-card" data-platform-c="hulu">
+            <div class="platform-card__logo" style="background-color: transparent;">
+              <img src="logos/hulu.png" alt="Hulu" class="platform-card__logo-image">
+            </div>
+            <span class="platform-card__name">Hulu</span>
+          </div>
+
+          <!-- Samsung Ads -->
+          <div class="platform-card" data-platform-c="samsung">
+            <div class="platform-card__logo" style="background-color: transparent;">
+              <img src="logos/samsung.png" alt="Samsung Ads" class="platform-card__logo-image">
+            </div>
+            <span class="platform-card__name">Samsung Ads</span>
+          </div>
+
+          <!-- Peacock -->
+          <div class="platform-card" data-platform-c="peacock">
+            <div class="platform-card__logo" style="background-color: transparent;">
+              <img src="logos/peacock.png" alt="Peacock" class="platform-card__logo-image">
+            </div>
+            <span class="platform-card__name">Peacock</span>
+          </div>
+
+          <!-- Custom (full width) -->
+          <div class="platform-card platform-card--custom" data-platform-c="custom" id="custom-card-c">
+            <span class="platform-card__name">Custom</span>
+          </div>
+        </div>
+
+        <!-- Custom Settings Panel -->
+        <div class="custom-settings" id="custom-settings-c">
+          <!-- Resolution -->
+          <div class="custom-settings__field">
+            <label class="custom-settings__label">Resolution</label>
+            <div class="custom-dropdown">
+              <button type="button" class="option-field__select" id="custom-resolution-trigger-c">
+                <span id="custom-resolution-value-c">1080p (default)</span>
+              </button>
+              <div class="custom-dropdown__menu" id="custom-resolution-menu-c">
+                <div class="custom-dropdown__option selected" data-value="1080p">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="custom-dropdown__option-check">
+                    <path d="M3 8l4 4 6-6" stroke="#1473E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>1080p (default)</span>
+                </div>
+                <div class="custom-dropdown__option" data-value="720p">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="custom-dropdown__option-check">
+                    <path d="M3 8l4 4 6-6" stroke="#1473E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>720p</span>
+                </div>
+                <div class="custom-dropdown__option" data-value="2160p">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="custom-dropdown__option-check">
+                    <path d="M3 8l4 4 6-6" stroke="#1473E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>2160p (4K)</span>
+                </div>
+              </div>
+            </div>
+            <div class="option-field__recommended" style="display: flex; align-items: center; gap: 6px;">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
+                <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+              <span style="font-size: 13px; color: var(--subdued);">Recommended</span>
+            </div>
+          </div>
+
+          <!-- File Format -->
+          <div class="custom-settings__field">
+            <label class="custom-settings__label">File format</label>
+            <div class="custom-dropdown">
+              <button type="button" class="option-field__select" id="custom-format-trigger-c">
+                <span id="custom-format-value-c">MP4 (H.264)</span>
+              </button>
+              <div class="custom-dropdown__menu" id="custom-format-menu-c">
+                <div class="custom-dropdown__option selected" data-value="mp4">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="custom-dropdown__option-check">
+                    <path d="M3 8l4 4 6-6" stroke="#1473E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>MP4 (H.264)</span>
+                </div>
+                <div class="custom-dropdown__option" data-value="mov">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="custom-dropdown__option-check">
+                    <path d="M3 8l4 4 6-6" stroke="#1473E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>MOV</span>
+                </div>
+                <div class="custom-dropdown__option" data-value="webm">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="custom-dropdown__option-check">
+                    <path d="M3 8l4 4 6-6" stroke="#1473E6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>WebM</span>
+                </div>
+              </div>
+            </div>
+            <div class="option-field__recommended" style="display: flex; align-items: center; gap: 6px;">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
+                <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+              <span style="font-size: 13px; color: var(--subdued);">Recommended</span>
+            </div>
+          </div>
+
+          <!-- File Size -->
+          <div class="custom-settings__filesize">
+            <span class="custom-settings__filesize-label">File size</span>
+            <span class="custom-settings__filesize-value">150 MB / 500 MB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-container hidden" id="progress-container-c">
+        <div class="progress-label">
+          <span>Exporting...</span>
+          <span id="progress-percent-c">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill-c"></div>
+        </div>
+      </div>
+
+      <!-- Export Button -->
+      <button class="btn-primary" id="export-btn-c" aria-disabled="false">
+        <span id="btn-label-c">Export (1 platform)</span>
+      </button>
+
+    </div>
+  </div>
 </div>
 
 <script>
   // ── Flyout Menu Toggles ──
   const labelA = document.getElementById('label-a');
   const labelB = document.getElementById('label-b');
+  const labelC = document.getElementById('label-c');
   const panelA = document.getElementById('panel-a');
   const panelB = document.getElementById('panel-b');
+  const panelC = document.getElementById('panel-c');
 
   labelA.addEventListener('click', () => {
     panelA.classList.toggle('visible');
@@ -1643,6 +2000,11 @@
   labelB.addEventListener('click', () => {
     panelB.classList.toggle('visible');
     labelB.classList.toggle('active');
+  });
+
+  labelC.addEventListener('click', () => {
+    panelC.classList.toggle('visible');
+    labelC.classList.toggle('active');
   });
 
   // ── Custom Dropdown Logic ──
@@ -1732,9 +2094,9 @@
 
     // Button label
     if (state.phase === 'idle') {
-      if (count === 0) btnLabel.textContent = 'Download';
-      else if (count === 1) btnLabel.textContent = 'Download (1 platform)';
-      else btnLabel.textContent = `Download (${count} platforms)`;
+      if (count === 0) btnLabel.textContent = 'Export';
+      else if (count === 1) btnLabel.textContent = 'Export (1 platform)';
+      else btnLabel.textContent = `Export (${count} platforms)`;
     }
 
     const canExport = count > 0 && state.phase === 'idle';
@@ -1942,9 +2304,9 @@
 
     // Button label
     if (stateB.phase === 'idle') {
-      if (count === 0) btnLabelB.textContent = 'Download';
-      else if (count === 1) btnLabelB.textContent = 'Download (1 platform)';
-      else btnLabelB.textContent = `Download (${count} platforms)`;
+      if (count === 0) btnLabelB.textContent = 'Export';
+      else if (count === 1) btnLabelB.textContent = 'Export (1 platform)';
+      else btnLabelB.textContent = `Export (${count} platforms)`;
     }
 
     const canExport = count > 0 && stateB.phase === 'idle';
@@ -2130,6 +2492,130 @@
 
   // Init Option B
   updateB();
+
+  // ══════════════════════════════════════════════════════════════
+  // OPTION C - Grid Layout
+  // ══════════════════════════════════════════════════════════════
+
+  const platformCountC = document.getElementById('platform-count-c');
+  const btnLabelC = document.getElementById('btn-label-c');
+  const exportBtnC = document.getElementById('export-btn-c');
+  const progressContainerC = document.getElementById('progress-container-c');
+  const progressFillC = document.getElementById('progress-fill-c');
+  const progressPercentC = document.getElementById('progress-percent-c');
+
+  const stateC = {
+    selected: new Set(), // Start with no selection
+    phase: 'idle',
+    progress: 0
+  };
+
+  function updateC() {
+    const count = stateC.selected.size;
+
+    // Platform count
+    if (count === 0) {
+      platformCountC.textContent = '';
+      platformCountC.classList.add('hidden');
+    } else if (count === 1) {
+      platformCountC.textContent = '(1 selected)';
+      platformCountC.classList.remove('hidden');
+    } else {
+      platformCountC.textContent = `(${count} selected)`;
+      platformCountC.classList.remove('hidden');
+    }
+
+    // Button label
+    if (stateC.phase === 'idle') {
+      if (count === 0) btnLabelC.textContent = 'Export';
+      else if (count === 1) btnLabelC.textContent = 'Export (1 platform)';
+      else btnLabelC.textContent = `Export (${count} platforms)`;
+    }
+
+    const canExport = count > 0 && stateC.phase === 'idle';
+    exportBtnC.disabled = !canExport;
+    exportBtnC.setAttribute('aria-disabled', String(!canExport));
+  }
+
+  // Custom settings toggle
+  const customCardC = document.getElementById('custom-card-c');
+  const customSettingsC = document.getElementById('custom-settings-c');
+  let customSettingsOpen = false;
+
+  customCardC.addEventListener('click', () => {
+    customSettingsOpen = !customSettingsOpen;
+    customSettingsC.classList.toggle('open', customSettingsOpen);
+
+    // Auto-select custom when opened
+    if (customSettingsOpen && !stateC.selected.has('custom')) {
+      stateC.selected.add('custom');
+      customCardC.classList.add('selected');
+      updateC();
+    }
+  });
+
+  // Platform card clicks (non-custom)
+  document.querySelectorAll('[data-platform-c]:not(#custom-card-c)').forEach(card => {
+    card.addEventListener('click', () => {
+      const p = card.dataset.platformC;
+      if (stateC.selected.has(p)) {
+        stateC.selected.delete(p);
+        card.classList.remove('selected');
+      } else {
+        stateC.selected.add(p);
+        card.classList.add('selected');
+      }
+      updateC();
+    });
+  });
+
+  // Initialize custom dropdowns
+  initCustomDropdown('custom-resolution-trigger-c', 'custom-resolution-menu-c', 'custom-resolution-value-c');
+  initCustomDropdown('custom-format-trigger-c', 'custom-format-menu-c', 'custom-format-value-c');
+
+  // Export simulation
+  function startExportC() {
+    stateC.phase = 'exporting';
+    stateC.progress = 0;
+    btnLabelC.textContent = 'Exporting...';
+    exportBtnC.classList.add('loading');
+    progressContainerC.classList.remove('hidden');
+
+    const interval = setInterval(() => {
+      stateC.progress += 2;
+      progressFillC.style.width = stateC.progress + '%';
+      progressPercentC.textContent = stateC.progress + '%';
+
+      if (stateC.progress >= 100) {
+        clearInterval(interval);
+        stateC.phase = 'success';
+        btnLabelC.textContent = 'Complete!';
+        exportBtnC.classList.remove('loading');
+        exportBtnC.classList.add('success');
+
+        setTimeout(() => {
+          resetToIdleC();
+        }, 2000);
+      }
+    }, 50);
+  }
+
+  function resetToIdleC() {
+    stateC.phase = 'idle';
+    stateC.progress = 0;
+    progressContainerC.classList.add('hidden');
+    progressFillC.style.width = '0%';
+    exportBtnC.classList.remove('loading', 'success', 'error');
+    updateC();
+  }
+
+  exportBtnC.addEventListener('click', () => {
+    if (stateC.phase === 'error') { resetToIdleC(); startExportC(); }
+    else startExportC();
+  });
+
+  // Init Option C
+  updateC();
 </script>
 </body>
 </html>
