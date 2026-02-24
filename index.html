@@ -1087,6 +1087,73 @@
       color: var(--neutral);
     }
 
+    /* Export Modal */
+    .export-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .export-modal.visible {
+      display: flex;
+    }
+
+    .export-modal__content {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      min-width: 400px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .export-modal__title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--neutral);
+      margin: 0 0 8px 0;
+    }
+
+    .export-modal__message {
+      font-size: 14px;
+      color: var(--subdued);
+      margin: 0 0 24px 0;
+    }
+
+    .export-modal__progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .export-modal__percentage {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--neutral);
+    }
+
+    .export-modal__bar {
+      width: 100%;
+      height: 8px;
+      background: var(--gray-200);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .export-modal__bar-fill {
+      height: 100%;
+      background: var(--spectrum-blue);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
   </style>
 </head>
 <body>
@@ -1405,6 +1472,20 @@
   </button>
 
 </div>
+  </div>
+
+  <!-- Export Modal for Option A -->
+  <div class="export-modal" id="export-modal-a">
+    <div class="export-modal__content">
+      <h2 class="export-modal__title">Export in progress</h2>
+      <p class="export-modal__message" id="export-modal-message">Starting export...</p>
+      <div class="export-modal__progress">
+        <span class="export-modal__percentage" id="export-modal-percentage">0%</span>
+      </div>
+      <div class="export-modal__bar">
+        <div class="export-modal__bar-fill" id="export-modal-bar-fill"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Option B -->
@@ -2067,6 +2148,11 @@
   const progressFill  = document.getElementById('progress-fill');
   const progressPct   = document.getElementById('progress-pct');
   const progressText  = document.getElementById('progress-text');
+  const panelA        = document.getElementById('panel-a');
+  const exportModal   = document.getElementById('export-modal-a');
+  const modalMessage  = document.getElementById('export-modal-message');
+  const modalPercentage = document.getElementById('export-modal-percentage');
+  const modalBarFill  = document.getElementById('export-modal-bar-fill');
 
   // ── Update UI ──
   function update() {
@@ -2180,33 +2266,38 @@
     if (state.phase !== 'idle' || state.selected.size === 0) return;
     state.phase = 'loading';
 
-    exportBtn.classList.add('loading');
-    exportBtn.disabled = true;
-    exportBtn.setAttribute('aria-disabled', 'true');
-    btnLabel.innerHTML = '<div class="spinner"></div><span>Exporting…</span>';
+    // Hide the panel and show the export modal
+    panelA.style.display = 'none';
+    exportModal.classList.add('visible');
 
-    progressWrap.classList.add('visible');
+    // Reset modal state
+    modalMessage.textContent = 'Starting export...';
+    modalPercentage.textContent = '0%';
+    modalBarFill.style.width = '0%';
+
     let pct = 0;
     const platforms = [...state.selected];
     const interval = setInterval(() => {
       pct += Math.random() * 18 + 4;
       if (pct > 97) pct = 97;
-      progressFill.style.width = pct + '%';
-      progressPct.textContent = Math.round(pct) + '%';
-      progressWrap.setAttribute('aria-valuenow', Math.round(pct));
+      modalBarFill.style.width = pct + '%';
+      modalPercentage.textContent = Math.round(pct) + '%';
       const idx = Math.floor((pct / 100) * platforms.length);
       const name = platformNames[platforms[Math.min(idx, platforms.length - 1)]];
-      progressText.textContent = `Exporting for ${name}…`;
+      modalMessage.textContent = `Exporting for ${name}...`;
     }, 300);
 
     setTimeout(() => {
       clearInterval(interval);
-      progressFill.style.width = '100%';
-      progressPct.textContent = '100%';
+      modalBarFill.style.width = '100%';
+      modalPercentage.textContent = '100%';
       setTimeout(() => {
-        progressWrap.classList.remove('visible');
-        exportBtn.classList.remove('loading');
         const success = Math.random() > 0.1;
+
+        // Close modal and show panel again
+        exportModal.classList.remove('visible');
+        panelA.style.display = 'block';
+
         if (success) {
           state.phase = 'success';
           exportBtn.classList.add('success');
