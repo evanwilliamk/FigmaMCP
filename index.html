@@ -2319,10 +2319,7 @@
       // Check if options icon was clicked
       const clickedOptions = e.target.closest('.platform-row__options-icon');
 
-      // Check if checkbox was clicked (NOT logo anymore - logo should select)
-      const clickedCheckbox = e.target.closest('.platform-row__checkbox');
-
-      console.log('Option B click:', platformId, 'isSelected:', isSelected, 'clickedCheckbox:', !!clickedCheckbox, 'clickedOptions:', !!clickedOptions);
+      console.log('Option B click:', platformId, 'isSelected:', isSelected, 'clickedOptions:', !!clickedOptions);
 
       if (clickedOptions && isSelected) {
         // Options icon clicked - navigate to options panel
@@ -2331,33 +2328,19 @@
         return;
       }
 
-      if (clickedCheckbox) {
-        // Clicking checkbox always toggles selection
-        if (isSelected) {
-          console.log('Deselecting:', platformId);
-          stateB.selected.delete(platformId);
-          row.classList.remove('selected');
-        } else {
-          console.log('Selecting via checkbox:', platformId);
-          stateB.selected.add(platformId);
-          row.classList.add('selected');
-          // Custom platform always opens options panel when selected
-          if (isCustom) {
-            setTimeout(() => showOptionsPanel(platformId), 100);
-          }
-        }
+      // Clicking row toggles selection (since checkboxes are hidden)
+      if (isSelected) {
+        console.log('Deselecting:', platformId);
+        stateB.selected.delete(platformId);
+        row.classList.remove('selected');
       } else {
-        // Clicking row body (anywhere except checkbox and options icon)
-        if (!isSelected) {
-          console.log('Selecting via row:', platformId);
-          stateB.selected.add(platformId);
-          row.classList.add('selected');
-          // Custom platform always opens options panel when selected
-          if (isCustom) {
-            setTimeout(() => showOptionsPanel(platformId), 100);
-          }
+        console.log('Selecting:', platformId);
+        stateB.selected.add(platformId);
+        row.classList.add('selected');
+        // Custom platform always opens options panel when selected
+        if (isCustom) {
+          setTimeout(() => showOptionsPanel(platformId), 100);
         }
-        // If already selected and clicked row (not checkbox), do nothing
       }
 
       updateB();
