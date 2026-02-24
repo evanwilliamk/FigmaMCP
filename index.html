@@ -692,31 +692,7 @@
     }
 
     .platform-list-b .platform-row__checkbox {
-      width: 18px;
-      height: 18px;
-      border-radius: 4px;
-      border: 2px solid var(--gray-300);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      background: white;
-      transition: background 0.1s, border-color 0.1s;
-      cursor: pointer;
-    }
-
-    .platform-list-b .platform-row__checkbox svg {
-      display: none;
-      pointer-events: none;
-    }
-
-    .platform-list-b .platform-row.selected .platform-row__checkbox {
-      background: var(--neutral);
-      border-color: var(--neutral);
-    }
-
-    .platform-list-b .platform-row.selected .platform-row__checkbox svg {
-      display: block;
+      display: none; /* Hidden per new design */
     }
 
     .platform-list-b .platform-row__name {
@@ -724,6 +700,7 @@
       font-size: 14px;
       font-weight: 400;
       color: var(--neutral);
+      order: 1; /* Second in order */
     }
 
     .platform-list-b .platform-row__logo {
@@ -735,6 +712,7 @@
       justify-content: center;
       flex-shrink: 0;
       overflow: hidden;
+      order: 0; /* First in order */
     }
 
     .platform-list-b .platform-row__logo-image {
@@ -751,6 +729,7 @@
       border: 1px solid var(--gray-300);
       border-radius: 4px;
       background: white;
+      order: 2; /* Last in order */
       color: var(--subdued);
       flex-shrink: 0;
       opacity: 0;
