@@ -1090,40 +1090,30 @@
     /* Export Modal */
     .export-modal {
       display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.4);
-      z-index: 10000;
-      align-items: center;
-      justify-content: center;
+      background: var(--gray-25);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      width: 344px;
+      padding: 24px;
+      flex-direction: column;
+      gap: 16px;
     }
 
     .export-modal.visible {
       display: flex;
     }
 
-    .export-modal__content {
-      background: white;
-      border-radius: 12px;
-      padding: 32px;
-      min-width: 400px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    }
-
     .export-modal__title {
       font-size: 20px;
       font-weight: 600;
       color: var(--neutral);
-      margin: 0 0 8px 0;
+      margin: 0;
     }
 
     .export-modal__message {
       font-size: 14px;
       color: var(--subdued);
-      margin: 0 0 24px 0;
+      margin: 0;
     }
 
     .export-modal__progress {
@@ -1151,7 +1141,7 @@
       height: 100%;
       background: var(--spectrum-blue);
       width: 0%;
-      transition: width 0.3s ease;
+      transition: width 0.1s linear;
     }
 
   </style>
@@ -1472,20 +1462,19 @@
   </button>
 
 </div>
-  </div>
 
   <!-- Export Modal for Option A -->
   <div class="export-modal" id="export-modal-a">
-    <div class="export-modal__content">
-      <h2 class="export-modal__title">Export in progress</h2>
-      <p class="export-modal__message" id="export-modal-message">Starting export...</p>
-      <div class="export-modal__progress">
-        <span class="export-modal__percentage" id="export-modal-percentage">0%</span>
-      </div>
-      <div class="export-modal__bar">
-        <div class="export-modal__bar-fill" id="export-modal-bar-fill"></div>
-      </div>
+    <h2 class="export-modal__title">Export in progress</h2>
+    <p class="export-modal__message" id="export-modal-message">Starting export...</p>
+    <div class="export-modal__progress">
+      <span class="export-modal__percentage" id="export-modal-percentage">0%</span>
     </div>
+    <div class="export-modal__bar">
+      <div class="export-modal__bar-fill" id="export-modal-bar-fill"></div>
+    </div>
+  </div>
+
   </div>
 
   <!-- Option B -->
@@ -2296,7 +2285,7 @@
 
         // Close modal and show panel again
         exportModal.classList.remove('visible');
-        panelA.style.display = 'block';
+        panelA.style.display = 'flex';
 
         if (success) {
           state.phase = 'success';
