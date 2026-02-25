@@ -1135,13 +1135,13 @@
     /* Export Modal */
     .export-modal {
       display: none;
-      background: var(--gray-25);
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-      width: 344px;
-      padding: 24px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      width: 380px;
+      padding: 28px;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
     }
 
     .export-modal.visible {
@@ -1149,36 +1149,37 @@
     }
 
     .export-modal__title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
       color: var(--neutral);
       margin: 0;
     }
 
     .export-modal__message {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--subdued);
       margin: 0;
+      line-height: 1.5;
     }
 
     .export-modal__progress {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     .export-modal__percentage {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--neutral);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--subdued);
     }
 
     .export-modal__bar {
       width: 100%;
-      height: 8px;
+      height: 6px;
       background: var(--gray-200);
-      border-radius: 4px;
+      border-radius: 3px;
       overflow: hidden;
     }
 
@@ -1188,7 +1189,25 @@
       background: var(--blue);
       width: 0%;
       transition: width 0.1s linear;
-      border-radius: 4px;
+      border-radius: 3px;
+    }
+
+    .export-modal__cancel {
+      align-self: flex-end;
+      padding: 8px 20px;
+      background: white;
+      border: 1px solid var(--gray-300);
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--neutral);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .export-modal__cancel:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-400);
     }
 
   </style>
@@ -1353,14 +1372,17 @@
 
   <!-- Export Modal for Option 1 -->
   <div class="export-modal" id="export-modal-1">
-    <h2 class="export-modal__title">Export in progress</h2>
-    <p class="export-modal__message" id="export-modal-message-1">Starting export...</p>
-    <div class="export-modal__progress">
-      <span class="export-modal__percentage" id="export-modal-percentage-1">0%</span>
+    <h2 class="export-modal__title">Exporting...</h2>
+    <div>
+      <div class="export-modal__progress">
+        <p class="export-modal__message" id="export-modal-message-1">Rendering for CTV channels...</p>
+        <span class="export-modal__percentage" id="export-modal-percentage-1">17%</span>
+      </div>
+      <div class="export-modal__bar">
+        <div class="export-modal__bar-fill" id="export-modal-bar-fill-1"></div>
+      </div>
     </div>
-    <div class="export-modal__bar">
-      <div class="export-modal__bar-fill" id="export-modal-bar-fill-1"></div>
-    </div>
+    <button class="export-modal__cancel" id="export-cancel-1">Cancel</button>
   </div>
 
 
