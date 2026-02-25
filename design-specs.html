@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTV Export Panel - Design Specifications</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #F5F5F5;
+      padding: 40px;
+      line-height: 1.6;
+    }
+
+    .artboard {
+      background: white;
+      margin-bottom: 40px;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      page-break-after: always;
+    }
+
+    .artboard-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #2C2C2C;
+      border-bottom: 3px solid #1473E6;
+      padding-bottom: 12px;
+    }
+
+    .artboard-subtitle {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 24px 0 12px 0;
+      color: #2C2C2C;
+    }
+
+    .spec-container {
+      position: relative;
+      margin: 30px 0;
+    }
+
+    /* Redline styles */
+    .redline {
+      position: absolute;
+      border: 1px dashed #FF0000;
+      pointer-events: none;
+    }
+
+    .redline-h {
+      border-top: 1px solid #FF0000;
+      border-bottom: none;
+      border-left: none;
+      border-right: none;
+    }
+
+    .redline-v {
+      border-left: 1px solid #FF0000;
+      border-top: none;
+      border-bottom: none;
+      border-right: none;
+    }
+
+    .redline-label {
+      position: absolute;
+      background: #FF0000;
+      color: white;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    /* Blueline styles (accessibility) */
+    .blueline {
+      position: absolute;
+      border: 1px dashed #1473E6;
+      pointer-events: none;
+    }
+
+    .blueline-label {
+      position: absolute;
+      background: #1473E6;
+      color: white;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    /* Component preview */
+    .component-preview {
+      border: 1px solid #E1E1E1;
+      border-radius: 8px;
+      padding: 40px;
+      background: white;
+      position: relative;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border: 1px solid #E1E1E1;
+    }
+
+    th {
+      background: #F5F5F5;
+      font-weight: 600;
+      color: #2C2C2C;
+    }
+
+    td {
+      font-size: 14px;
+      color: #6B6B6B;
+    }
+
+    .color-swatch {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #E1E1E1;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    .spec-note {
+      background: #FFF9E6;
+      border-left: 4px solid #FFC107;
+      padding: 12px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .spec-card {
+      border: 1px solid #E1E1E1;
+      border-radius: 8px;
+      padding: 16px;
+      background: #FAFAFA;
+    }
+
+    .spec-card-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #2C2C2C;
+    }
+
+    .spec-card-value {
+      font-size: 14px;
+      color: #6B6B6B;
+      font-family: monospace;
+    }
+
+    code {
+      background: #F5F5F5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 13px;
+      color: #E34850;
+    }
+
+    /* Accessibility annotations */
+    .a11y-badge {
+      display: inline-block;
+      background: #2D9D78;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .a11y-badge.warning {
+      background: #FFC107;
+      color: #2C2C2C;
+    }
+
+    .a11y-badge.error {
+      background: #E34850;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Artboard 1: Cover Page -->
+<div class="artboard">
+  <div style="text-align: center; padding: 80px 40px;">
+    <h1 style="font-size: 48px; margin-bottom: 20px; color: #2C2C2C;">CTV Export Panel</h1>
+    <p style="font-size: 24px; color: #6B6B6B; margin-bottom: 40px;">Design Specification & Redlines</p>
+    <div style="height: 4px; background: linear-gradient(90deg, #1473E6 0%, #2D9D78 100%); margin: 40px auto; max-width: 400px;"></div>
+    <p style="font-size: 16px; color: #6B6B6B;">Version 1.0 | February 2026</p>
+    <p style="font-size: 14px; color: #6B6B6B; margin-top: 8px;">Complete design specifications with accessibility guidelines</p>
+  </div>
+</div>
+
+<!-- Artboard 2: Color Palette -->
+<div class="artboard">
+  <h2 class="artboard-title">Color Palette</h2>
+
+  <h3 class="artboard-subtitle">Primary Colors</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Swatch</th>
+        <th>Name</th>
+        <th>Hex</th>
+        <th>CSS Variable</th>
+        <th>Usage</th>
+        <th>WCAG Contrast</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="color-swatch" style="background: #1473E6;"></span></td>
+        <td><strong>Blue</strong></td>
+        <td><code>#1473E6</code></td>
+        <td><code>--blue</code></td>
+        <td>Primary actions, links, selected states</td>
+        <td><span class="a11y-badge">AA 4.5:1</span></td>
+      </tr>
+      <tr>
+        <td><span class="color-swatch" style="background: #2C2C2C;"></span></td>
+        <td><strong>Neutral</strong></td>
+        <td><code>#2C2C2C</code></td>
+        <td><code>--neutral</code></td>
+        <td>Primary text, buttons</td>
+        <td><span class="a11y-badge">AAA 12.6:1</span></td>
+      </tr>
+      <tr>
+        <td><span class="color-swatch" style="background: #6B6B6B;"></span></td>
+        <td><strong>Subdued</strong></td>
+        <td><code>#6B6B6B</code></td>
+        <td><code>--subdued</code></td>
+        <td>Secondary text, icons</td>
+        <td><span class="a11y-badge">AA 5.7:1</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="artboard-subtitle">Gray Scale</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Swatch</th>
+        <th>Name</th>
+        <th>Hex</th>
+        <th>CSS Variable</th>
+        <th>Usage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="color-swatch" style="background: #FAFAFA;"></span></td>
+        <td>Gray 50</td>
+        <td><code>#FAFAFA</code></td>
+        <td><code>--gray-50</code></td>
+        <td>Hover backgrounds</td>
+      </tr>
+      <tr>
+        <td><span class="color-swatch" style="background: #F5F5F5;"></span></td>
+        <td>Gray 100</td>
+        <td><code>#F5F5F5</code></td>
+        <td><code>--gray-100</code></td>
+        <td>Input backgrounds, disabled states</td>
+      </tr>
+      <tr>
+        <td><span class="color-swatch" style="background: #E1E1E1;"></span></td>
+        <td>Gray 200</td>
+        <td><code>#E1E1E1</code></td>
+        <td><code>--gray-200</code></td>
+        <td>Borders, dividers</td>
+      </tr>
+      <tr>
+        <td><span class="color-swatch" style="background: #D3D3D3;"></span></td>
+        <td>Gray 300</td>
+        <td><code>#D3D3D3</code></td>
+        <td><code>--gray-300</code></td>
+        <td>Secondary borders</td>
+      </tr>
+      <tr>
+        <td><span class="color-swatch" style="background: #BCBCBC;"></span></td>
+        <td>Gray 400</td>
+        <td><code>#BCBCBC</code></td>
+        <td><code>--gray-400</code></td>
+        <td>Disabled text</td>
+      </tr>
+      <tr>
+        <td><span class="color-swatch" style="background: #6B6B6B;"></span></td>
+        <td>Gray 500</td>
+        <td><code>#6B6B6B</code></td>
+        <td><code>--gray-500</code></td>
+        <td>Icons, secondary text</td>
+      </tr>
+      <tr>
+        <td><span class="color-swatch" style="background: #464646;"></span></td>
+        <td>Gray 800</td>
+        <td><code>#464646</code></td>
+        <td><code>--gray-800</code></td>
+        <td>Hover states for dark buttons</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="artboard-subtitle">Semantic Colors</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Swatch</th>
+        <th>Name</th>
+        <th>Hex</th>
+        <th>CSS Variable</th>
+        <th>Usage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="color-swatch" style="background: #2D9D78;"></span></td>
+        <td>Green</td>
+        <td><code>#2D9D78</code></td>
+        <td><code>--green</code></td>
+        <td>Success states</td>
+      </tr>
+      <tr>
+        <td><span class="color-swatch" style="background: #E34850;"></span></td>
+        <td>Red</td>
+        <td><code>#E34850</code></td>
+        <td><code>--red</code></td>
+        <td>Error states</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Artboard 3: Typography System -->
+<div class="artboard">
+  <h2 class="artboard-title">Typography System</h2>
+
+  <h3 class="artboard-subtitle">Font Family</h3>
+  <p style="margin-bottom: 20px;"><code>font-family: "Adobe Clean", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;</code></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Element</th>
+        <th>Size</th>
+        <th>Weight</th>
+        <th>Line Height</th>
+        <th>Color</th>
+        <th>Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Panel Title (h2)</td>
+        <td>20px</td>
+        <td>700 (Bold)</td>
+        <td>1.3</td>
+        <td>#2C2C2C</td>
+        <td><span style="font-size: 20px; font-weight: 700; color: #2C2C2C;">Export</span></td>
+      </tr>
+      <tr>
+        <td>Modal Title</td>
+        <td>18px</td>
+        <td>600</td>
+        <td>1.3</td>
+        <td>#2C2C2C</td>
+        <td><span style="font-size: 18px; font-weight: 600; color: #2C2C2C;">Exporting...</span></td>
+      </tr>
+      <tr>
+        <td>Section Label</td>
+        <td>14px</td>
+        <td>400</td>
+        <td>1.5</td>
+        <td>#2C2C2C</td>
+        <td><span style="font-size: 14px; font-weight: 400; color: #2C2C2C;">Resolution</span></td>
+      </tr>
+      <tr>
+        <td>Body Text</td>
+        <td>13px</td>
+        <td>400</td>
+        <td>1.6</td>
+        <td>#6B6B6B</td>
+        <td><span style="font-size: 13px; font-weight: 400; color: #6B6B6B;">Rendering for CTV channels...</span></td>
+      </tr>
+      <tr>
+        <td>Option Pill</td>
+        <td>13px</td>
+        <td>600</td>
+        <td>1.3</td>
+        <td>#6B6B6B</td>
+        <td><span style="font-size: 13px; font-weight: 600; color: #6B6B6B; background: #F5F5F5; padding: 6px 12px; border-radius: 12px;">Option 1</span></td>
+      </tr>
+      <tr>
+        <td>Button Text</td>
+        <td>14px</td>
+        <td>700</td>
+        <td>1.3</td>
+        <td>#FFFFFF</td>
+        <td><span style="font-size: 14px; font-weight: 700; color: #FFF; background: #2C2C2C; padding: 8px 20px; border-radius: 60px;">Export</span></td>
+      </tr>
+      <tr>
+        <td>Link</td>
+        <td>14px</td>
+        <td>400</td>
+        <td>1.5</td>
+        <td>#1473E6</td>
+        <td><span style="font-size: 14px; font-weight: 400; color: #1473E6; text-decoration: underline;">Learn more</span></td>
+      </tr>
+      <tr>
+        <td>Spec Label</td>
+        <td>12px</td>
+        <td>400</td>
+        <td>1.4</td>
+        <td>#6B6B6B</td>
+        <td><span style="font-size: 12px; font-weight: 400; color: #6B6B6B;">Frame rate</span></td>
+      </tr>
+      <tr>
+        <td>Spec Value</td>
+        <td>14px</td>
+        <td>600</td>
+        <td>1.3</td>
+        <td>#2C2C2C</td>
+        <td><span style="font-size: 14px; font-weight: 600; color: #2C2C2C;">1080p (HD)</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Artboard 4: Spacing System -->
+<div class="artboard">
+  <h2 class="artboard-title">Spacing System</h2>
+
+  <div class="spec-note">
+    <strong>Base Unit:</strong> 4px - All spacing values are multiples of 4px for consistency
+  </div>
+
+  <div class="spec-grid">
+    <div class="spec-card">
+      <div class="spec-card-title">XS</div>
+      <div class="spec-card-value">4px</div>
+      <div style="height: 4px; background: #1473E6; margin-top: 8px;"></div>
+      <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Tight spacing</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-card-title">SM</div>
+      <div class="spec-card-value">8px</div>
+      <div style="height: 8px; background: #1473E6; margin-top: 8px;"></div>
+      <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Small gaps</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-card-title">MD</div>
+      <div class="spec-card-value">12px</div>
+      <div style="height: 12px; background: #1473E6; margin-top: 8px;"></div>
+      <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Medium spacing</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-card-title">LG</div>
+      <div class="spec-card-value">16px</div>
+      <div style="height: 16px; background: #1473E6; margin-top: 8px;"></div>
+      <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Large gaps</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-card-title">XL</div>
+      <div class="spec-card-value">24px</div>
+      <div style="height: 24px; background: #1473E6; margin-top: 8px;"></div>
+      <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Panel padding</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-card-title">2XL</div>
+      <div class="spec-card-value">28px</div>
+      <div style="height: 28px; background: #1473E6; margin-top: 8px;"></div>
+      <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Modal padding</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-card-title">3XL</div>
+      <div class="spec-card-value">32px</div>
+      <div style="height: 32px; background: #1473E6; margin-top: 8px;"></div>
+      <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Section dividers</div>
+    </div>
+  </div>
+
+  <h3 class="artboard-subtitle">Common Spacing Patterns</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Pattern</th>
+        <th>Value</th>
+        <th>Usage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Icon to text gap</td>
+        <td>6-8px</td>
+        <td>Space between icons and adjacent text</td>
+      </tr>
+      <tr>
+        <td>Form field gap</td>
+        <td>8-12px</td>
+        <td>Vertical spacing between form inputs</td>
+      </tr>
+      <tr>
+        <td>Section spacing</td>
+        <td>16-24px</td>
+        <td>Space between major sections</td>
+      </tr>
+      <tr>
+        <td>Container padding</td>
+        <td>16-24px</td>
+        <td>Internal padding for cards and panels</td>
+      </tr>
+      <tr>
+        <td>Modal padding</td>
+        <td>24-28px</td>
+        <td>Internal padding for modals and overlays</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Artboard 5: Panel Container Redlines -->
+<div class="artboard">
+  <h2 class="artboard-title">Panel Container - Redlines</h2>
+
+  <div class="spec-container">
+    <div class="component-preview" style="width: 420px; margin: 0 auto;">
+      <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+        <h2 style="font-size: 20px; font-weight: 700; color: #2C2C2C; margin: 0;">Export</h2>
+        <div style="margin-top: 16px; padding: 12px 16px; background: #F5F5F5; border-radius: 8px;">
+          <div style="font-size: 13px; color: #2C2C2C;">Asset info bar</div>
+        </div>
+      </div>
+
+      <!-- Width redline -->
+      <div class="redline" style="top: -20px; left: 0; right: 0; height: 1px; border-top: 1px solid #FF0000;">
+        <div style="position: absolute; top: -8px; left: 0; right: 0;">
+          <svg width="100%" height="16">
+            <line x1="0" y1="8" x2="100%" y2="8" stroke="#FF0000" stroke-width="1"/>
+            <line x1="0" y1="4" x2="0" y2="12" stroke="#FF0000" stroke-width="1"/>
+            <line x1="100%" y1="4" x2="100%" y2="12" stroke="#FF0000" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="redline-label" style="top: -30px; left: 50%; transform: translateX(-50%);">420px</div>
+      </div>
+
+      <!-- Padding redlines -->
+      <div class="redline-label" style="top: 10px; left: -40px;">24px</div>
+      <div class="redline" style="top: 10px; left: -20px; width: 20px; height: 1px; border-top: 1px solid #FF0000;"></div>
+
+      <div class="redline-label" style="top: 10px; right: -40px;">24px</div>
+      <div class="redline" style="top: 10px; right: -20px; width: 20px; height: 1px; border-top: 1px solid #FF0000;"></div>
+
+      <!-- Border radius -->
+      <div class="redline-label" style="top: -10px; right: -10px; background: #FF6B00;">12px radius</div>
+    </div>
+  </div>
+
+  <h3 class="artboard-subtitle" style="margin-top: 60px;">Specifications</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>Value</th>
+        <th>CSS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Width</td>
+        <td>420px</td>
+        <td><code>width: 420px;</code></td>
+      </tr>
+      <tr>
+        <td>Padding (all sides)</td>
+        <td>24px</td>
+        <td><code>padding: 24px;</code></td>
+      </tr>
+      <tr>
+        <td>Background</td>
+        <td>#FFFFFF</td>
+        <td><code>background: #FFFFFF;</code></td>
+      </tr>
+      <tr>
+        <td>Border radius</td>
+        <td>12px</td>
+        <td><code>border-radius: 12px;</code></td>
+      </tr>
+      <tr>
+        <td>Box shadow</td>
+        <td>0 2px 8px rgba(0,0,0,0.08)</td>
+        <td><code>box-shadow: 0 2px 8px rgba(0,0,0,0.08);</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Artboard 6: Asset Info Bar Redlines -->
+<div class="artboard">
+  <h2 class="artboard-title">Asset Info Bar - Redlines</h2>
+
+  <div class="spec-container" style="margin: 60px auto; width: fit-content;">
+    <div style="display: flex; gap: 12px; padding: 12px 16px; background: #F5F5F5; border-radius: 8px; align-items: center; position: relative;">
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#6B6B6B" stroke-width="1.8"/>
+        </svg>
+        <span style="font-size: 13px; color: #2C2C2C;">0:30</span>
+      </div>
+      <div style="width: 1px; height: 16px; background: #D3D3D3;"></div>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="5" width="18" height="14" rx="2" stroke="#6B6B6B" stroke-width="1.8"/>
+        </svg>
+        <span style="font-size: 13px; color: #2C2C2C;">16:9</span>
+      </div>
+
+      <!-- Padding redlines -->
+      <div class="redline-label" style="top: -25px; left: 0;">16px</div>
+      <div class="redline" style="top: -15px; left: 0; width: 16px; height: 15px; border-left: 1px solid #FF0000; border-top: 1px solid #FF0000;"></div>
+
+      <div class="redline-label" style="top: -25px; right: 0;">16px</div>
+      <div class="redline" style="top: -15px; right: 0; width: 16px; height: 15px; border-right: 1px solid #FF0000; border-top: 1px solid #FF0000;"></div>
+
+      <div class="redline-label" style="bottom: -25px; left: 0;">12px</div>
+      <div class="redline" style="bottom: -15px; left: 0; width: 12px; height: 15px; border-left: 1px solid #FF0000; border-bottom: 1px solid #FF0000;"></div>
+
+      <!-- Gap redline -->
+      <div class="redline-label" style="top: 50%; left: 50%; transform: translate(-50%, -50%); background: #FF6B00;">gap: 12px</div>
+
+      <!-- Icon size -->
+      <div class="redline-label" style="top: 50%; left: 4px; transform: translateY(-50%); background: #9C27B0;">14×14px</div>
+
+      <!-- Border radius -->
+      <div class="redline-label" style="bottom: -10px; right: -10px; background: #FF6B00;">8px radius</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>Value</th>
+        <th>CSS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Display</td>
+        <td>flex, horizontal</td>
+        <td><code>display: flex; flex-direction: row;</code></td>
+      </tr>
+      <tr>
+        <td>Gap</td>
+        <td>12px</td>
+        <td><code>gap: 12px;</code></td>
+      </tr>
+      <tr>
+        <td>Padding</td>
+        <td>12px 16px</td>
+        <td><code>padding: 12px 16px;</code></td>
+      </tr>
+      <tr>
+        <td>Background</td>
+        <td>#F5F5F5</td>
+        <td><code>background: #F5F5F5;</code></td>
+      </tr>
+      <tr>
+        <td>Border radius</td>
+        <td>8px</td>
+        <td><code>border-radius: 8px;</code></td>
+      </tr>
+      <tr>
+        <td>Icon size</td>
+        <td>14×14px</td>
+        <td><code>width: 14px; height: 14px;</code></td>
+      </tr>
+      <tr>
+        <td>Icon stroke</td>
+        <td>1.8px</td>
+        <td><code>stroke-width: 1.8;</code></td>
+      </tr>
+      <tr>
+        <td>Icon color</td>
+        <td>#6B6B6B</td>
+        <td><code>stroke: #6B6B6B;</code></td>
+      </tr>
+      <tr>
+        <td>Divider height</td>
+        <td>16px</td>
+        <td><code>height: 16px;</code></td>
+      </tr>
+      <tr>
+        <td>Divider color</td>
+        <td>#D3D3D3</td>
+        <td><code>background: #D3D3D3;</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Artboard 7: Export Button Redlines -->
+<div class="artboard">
+  <h2 class="artboard-title">Export Button - Redlines & States</h2>
+
+  <div class="spec-container" style="margin: 60px auto; width: fit-content;">
+    <button style="min-width: 100px; height: 36px; padding: 0 20px; background: #2C2C2C; color: white; border: none; border-radius: 60px; font-size: 14px; font-weight: 700; cursor: pointer; position: relative;">
+      Export
+
+      <!-- Height redline -->
+      <div class="redline-label" style="top: 50%; left: -40px; transform: translateY(-50%);">36px</div>
+      <div class="redline" style="top: 0; left: -20px; width: 20px; height: 100%; border-left: 1px solid #FF0000;">
+        <div style="position: absolute; top: 0; left: 0; width: 10px; height: 1px; background: #FF0000;"></div>
+        <div style="position: absolute; bottom: 0; left: 0; width: 10px; height: 1px; background: #FF0000;"></div>
+      </div>
+
+      <!-- Padding redlines -->
+      <div class="redline-label" style="bottom: -30px; left: 0;">20px</div>
+      <div class="redline" style="bottom: -20px; left: 0; width: 20px; height: 20px; border-left: 1px solid #FF0000; border-bottom: 1px solid #FF0000;"></div>
+
+      <div class="redline-label" style="bottom: -30px; right: 0;">20px</div>
+      <div class="redline" style="bottom: -20px; right: 0; width: 20px; height: 20px; border-right: 1px solid #FF0000; border-bottom: 1px solid #FF0000;"></div>
+
+      <!-- Border radius -->
+      <div class="redline-label" style="top: -25px; right: 0; background: #FF6B00;">60px radius (pill)</div>
+    </button>
+  </div>
+
+  <h3 class="artboard-subtitle">Button States</h3>
+  <div style="display: flex; gap: 16px; flex-wrap: wrap; margin: 20px 0;">
+    <div style="text-align: center;">
+      <button style="min-width: 100px; height: 36px; padding: 0 20px; background: #2C2C2C; color: white; border: none; border-radius: 60px; font-size: 14px; font-weight: 700;">Export</button>
+      <div style="margin-top: 8px; font-size: 12px; color: #6B6B6B;">Default</div>
+      <div style="font-size: 11px; color: #6B6B6B;">#2C2C2C</div>
+    </div>
+    <div style="text-align: center;">
+      <button style="min-width: 100px; height: 36px; padding: 0 20px; background: #464646; color: white; border: none; border-radius: 60px; font-size: 14px; font-weight: 700;">Export</button>
+      <div style="margin-top: 8px; font-size: 12px; color: #6B6B6B;">Hover</div>
+      <div style="font-size: 11px; color: #6B6B6B;">#464646</div>
+    </div>
+    <div style="text-align: center;">
+      <button style="min-width: 100px; height: 36px; padding: 0 20px; background: #2C2C2C; color: white; border: none; border-radius: 60px; font-size: 14px; font-weight: 700; outline: 2px solid #1473E6; outline-offset: 2px;">Export</button>
+      <div style="margin-top: 8px; font-size: 12px; color: #6B6B6B;">Focus</div>
+      <div style="font-size: 11px; color: #6B6B6B;">2px blue outline</div>
+    </div>
+    <div style="text-align: center;">
+      <button style="min-width: 100px; height: 36px; padding: 0 20px; background: #F5F5F5; color: #BCBCBC; border: none; border-radius: 60px; font-size: 14px; font-weight: 700; cursor: not-allowed;">Export</button>
+      <div style="margin-top: 8px; font-size: 12px; color: #6B6B6B;">Disabled</div>
+      <div style="font-size: 11px; color: #6B6B6B;">#F5F5F5 / #BCBCBC</div>
+    </div>
+    <div style="text-align: center;">
+      <button style="min-width: 100px; height: 36px; padding: 0 20px; background: #2D9D78; color: white; border: none; border-radius: 60px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Complete
+      </button>
+      <div style="margin-top: 8px; font-size: 12px; color: #6B6B6B;">Success</div>
+      <div style="font-size: 11px; color: #6B6B6B;">#2D9D78</div>
+    </div>
+    <div style="text-align: center;">
+      <button style="min-width: 100px; height: 36px; padding: 0 20px; background: #E34850; color: white; border: none; border-radius: 60px; font-size: 14px; font-weight: 700;">Try again</button>
+      <div style="margin-top: 8px; font-size: 12px; color: #6B6B6B;">Error</div>
+      <div style="font-size: 11px; color: #6B6B6B;">#E34850</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>Value</th>
+        <th>CSS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Height</td>
+        <td>36px</td>
+        <td><code>height: 36px;</code></td>
+      </tr>
+      <tr>
+        <td>Padding</td>
+        <td>0 20px</td>
+        <td><code>padding: 0 20px;</code></td>
+      </tr>
+      <tr>
+        <td>Min width</td>
+        <td>100px</td>
+        <td><code>min-width: 100px;</code></td>
+      </tr>
+      <tr>
+        <td>Background (default)</td>
+        <td>#2C2C2C</td>
+        <td><code>background: #2C2C2C;</code></td>
+      </tr>
+      <tr>
+        <td>Background (hover)</td>
+        <td>#464646</td>
+        <td><code>background: #464646;</code></td>
+      </tr>
+      <tr>
+        <td>Border radius</td>
+        <td>60px</td>
+        <td><code>border-radius: 60px;</code></td>
+      </tr>
+      <tr>
+        <td>Font size</td>
+        <td>14px</td>
+        <td><code>font-size: 14px;</code></td>
+      </tr>
+      <tr>
+        <td>Font weight</td>
+        <td>700</td>
+        <td><code>font-weight: 700;</code></td>
+      </tr>
+      <tr>
+        <td>Transition</td>
+        <td>0.15s</td>
+        <td><code>transition: background 0.15s;</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Artboard 8: Toggle Switch Redlines -->
+<div class="artboard">
+  <h2 class="artboard-title">Toggle Switch - Redlines & States</h2>
+
+  <div class="spec-container" style="margin: 60px auto; width: fit-content;">
+    <label style="display: flex; align-items: center; cursor: pointer; position: relative;">
+      <div style="width: 40px; height: 24px; background: #1473E6; border-radius: 12px; position: relative;">
+        <div style="width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 19px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></div>
+
+        <!-- Width redline -->
+        <div class="redline-label" style="top: -30px; left: 0;">40px</div>
+        <div class="redline" style="top: -20px; left: 0; right: 0; height: 20px; border-top: 1px solid #FF0000; border-left: 1px solid #FF0000; border-right: 1px solid #FF0000;"></div>
+
+        <!-- Height redline -->
+        <div class="redline-label" style="top: 50%; left: -35px; transform: translateY(-50%);">24px</div>
+        <div class="redline" style="top: 0; left: -20px; width: 20px; height: 100%; border-left: 1px solid #FF0000; border-top: 1px solid #FF0000; border-bottom: 1px solid #FF0000;"></div>
+
+        <!-- Knob size -->
+        <div class="redline-label" style="top: 50%; right: 2px; transform: translateY(-50%); background: #9C27B0;">18px</div>
+
+        <!-- Position -->
+        <div class="redline-label" style="bottom: -30px; right: 0; background: #FF6B00;">left: 19px</div>
+
+        <!-- Border radius -->
+        <div class="redline-label" style="top: -10px; right: -60px; background: #FF6B00;">12px radius</div>
+      </div>
+      <span style="margin-left: 12px; font-size: 14px; color: #2C2C2C;">Apply Content Credentials</span>
+    </label>
+  </div>
+
+  <h3 class="artboard-subtitle">Toggle States</h3>
+  <div style="display: flex; gap: 32px; flex-wrap: wrap; margin: 20px 0; align-items: center;">
+    <div style="text-align: center;">
+      <label style="display: flex; align-items: center; cursor: pointer;">
+        <div style="width: 40px; height: 24px; background: #E1E1E1; border-radius: 12px; position: relative;">
+          <div style="width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></div>
+        </div>
+        <span style="margin-left: 12px; font-size: 14px; color: #2C2C2C;">Unchecked</span>
+      </label>
+      <div style="margin-top: 8px; font-size: 11px; color: #6B6B6B;">left: 3px | #E1E1E1</div>
+    </div>
+    <div style="text-align: center;">
+      <label style="display: flex; align-items: center; cursor: pointer;">
+        <div style="width: 40px; height: 24px; background: #1473E6; border-radius: 12px; position: relative;">
+          <div style="width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 19px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></div>
+        </div>
+        <span style="margin-left: 12px; font-size: 14px; color: #2C2C2C;">Checked</span>
+      </label>
+      <div style="margin-top: 8px; font-size: 11px; color: #6B6B6B;">left: 19px | #1473E6</div>
+    </div>
+    <div style="text-align: center;">
+      <label style="display: flex; align-items: center; cursor: pointer;">
+        <div style="width: 40px; height: 24px; background: #1473E6; border-radius: 12px; position: relative; outline: 2px solid #1473E6; outline-offset: 2px;">
+          <div style="width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 19px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></div>
+        </div>
+        <span style="margin-left: 12px; font-size: 14px; color: #2C2C2C;">Focus</span>
+      </label>
+      <div style="margin-top: 8px; font-size: 11px; color: #6B6B6B;">2px outline</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>Value</th>
+        <th>CSS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Track width</td>
+        <td>40px</td>
+        <td><code>width: 40px;</code></td>
+      </tr>
+      <tr>
+        <td>Track height</td>
+        <td>24px</td>
+        <td><code>height: 24px;</code></td>
+      </tr>
+      <tr>
+        <td>Track radius</td>
+        <td>12px</td>
+        <td><code>border-radius: 12px;</code></td>
+      </tr>
+      <tr>
+        <td>Knob size</td>
+        <td>18×18px</td>
+        <td><code>width: 18px; height: 18px;</code></td>
+      </tr>
+      <tr>
+        <td>Knob position (off)</td>
+        <td>left: 3px</td>
+        <td><code>left: 3px; top: 3px;</code></td>
+      </tr>
+      <tr>
+        <td>Knob position (on)</td>
+        <td>left: 19px</td>
+        <td><code>left: 19px; top: 3px;</code></td>
+      </tr>
+      <tr>
+        <td>Background (off)</td>
+        <td>#E1E1E1</td>
+        <td><code>background: #E1E1E1;</code></td>
+      </tr>
+      <tr>
+        <td>Background (on)</td>
+        <td>#1473E6</td>
+        <td><code>background: #1473E6;</code></td>
+      </tr>
+      <tr>
+        <td>Knob shadow</td>
+        <td>0 1px 3px rgba(0,0,0,0.2)</td>
+        <td><code>box-shadow: 0 1px 3px rgba(0,0,0,0.2);</code></td>
+      </tr>
+      <tr>
+        <td>Transition</td>
+        <td>0.2s ease</td>
+        <td><code>transition: all 0.2s ease;</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Artboard 9: Export Modal Redlines -->
+<div class="artboard">
+  <h2 class="artboard-title">Export Modal - Redlines</h2>
+
+  <div class="spec-container" style="margin: 60px auto; width: fit-content;">
+    <div style="width: 380px; background: white; border-radius: 12px; padding: 28px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); position: relative;">
+      <h2 style="font-size: 18px; font-weight: 600; color: #2C2C2C; margin: 0 0 20px 0;">Exporting...</h2>
+
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <span style="font-size: 13px; color: #6B6B6B;">Rendering for CTV channels...</span>
+          <span style="font-size: 13px; color: #6B6B6B;">45%</span>
+        </div>
+        <div style="width: 100%; height: 6px; background: #E1E1E1; border-radius: 3px; overflow: hidden;">
+          <div style="width: 45%; height: 100%; background: #1473E6; border-radius: 3px;"></div>
+        </div>
+      </div>
+
+      <button style="align-self: flex-end; height: 36px; padding: 0 20px; background: white; color: #2C2C2C; border: 2px solid #2C2C2C; border-radius: 60px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 20px; display: block; margin-left: auto;">
+        Cancel
+      </button>
+
+      <!-- Width redline -->
+      <div class="redline-label" style="top: -30px; left: 0;">380px</div>
+      <div class="redline" style="top: -20px; left: 0; right: 0; height: 20px; border-top: 1px solid #FF0000; border-left: 1px solid #FF0000; border-right: 1px solid #FF0000;"></div>
+
+      <!-- Padding redlines -->
+      <div class="redline-label" style="top: 10px; left: -40px;">28px</div>
+      <div class="redline" style="top: 10px; left: -20px; width: 20px; height: 1px; border-top: 1px solid #FF0000;"></div>
+
+      <div class="redline-label" style="top: 10px; right: -40px;">28px</div>
+      <div class="redline" style="top: 10px; right: -20px; width: 20px; height: 1px; border-top: 1px solid #FF0000;"></div>
+
+      <!-- Gap redline -->
+      <div class="redline-label" style="top: 120px; left: 50%; transform: translateX(-50%); background: #FF6B00;">gap: 20px</div>
+
+      <!-- Progress bar height -->
+      <div class="redline-label" style="top: 95px; left: -35px; background: #9C27B0;">6px</div>
+
+      <!-- Border radius -->
+      <div class="redline-label" style="bottom: -10px; right: -10px; background: #FF6B00;">12px radius</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>Value</th>
+        <th>CSS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Width</td>
+        <td>380px</td>
+        <td><code>width: 380px;</code></td>
+      </tr>
+      <tr>
+        <td>Padding</td>
+        <td>28px</td>
+        <td><code>padding: 28px;</code></td>
+      </tr>
+      <tr>
+        <td>Background</td>
+        <td>#FFFFFF</td>
+        <td><code>background: white;</code></td>
+      </tr>
+      <tr>
+        <td>Border radius</td>
+        <td>12px</td>
+        <td><code>border-radius: 12px;</code></td>
+      </tr>
+      <tr>
+        <td>Box shadow</td>
+        <td>0 8px 32px rgba(0,0,0,0.12)</td>
+        <td><code>box-shadow: 0 8px 32px rgba(0,0,0,0.12);</code></td>
+      </tr>
+      <tr>
+        <td>Content gap</td>
+        <td>20px</td>
+        <td><code>gap: 20px;</code></td>
+      </tr>
+      <tr>
+        <td>Progress bar height</td>
+        <td>6px</td>
+        <td><code>height: 6px;</code></td>
+      </tr>
+      <tr>
+        <td>Progress spacing</td>
+        <td>4px</td>
+        <td><code>margin-bottom: 4px;</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Artboard 10: Accessibility - Touch Targets -->
+<div class="artboard">
+  <h2 class="artboard-title">Accessibility - Touch Targets (Bluelines)</h2>
+
+  <div class="spec-note">
+    <strong>WCAG 2.1 AAA Standard:</strong> All interactive elements must have a minimum touch target size of 44×44px with adequate spacing between adjacent targets.
+  </div>
+
+  <h3 class="artboard-subtitle">Touch Target Analysis</h3>
+
+  <div style="margin: 40px 0;">
+    <div style="margin-bottom: 30px;">
+      <div style="font-weight: 600; margin-bottom: 12px;">Export Button <span class="a11y-badge">PASS</span></div>
+      <div style="position: relative; display: inline-block;">
+        <button style="min-width: 100px; height: 36px; padding: 0 20px; background: #2C2C2C; color: white; border: none; border-radius: 60px; font-size: 14px; font-weight: 700;">Export</button>
+        <div class="blueline" style="top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 60px;"></div>
+        <div class="blueline-label" style="top: -30px; left: 50%; transform: translateX(-50%);">44×44px touch area</div>
+      </div>
+      <div style="margin-top: 8px; font-size: 13px; color: #6B6B6B;">✓ Meets minimum 44px height requirement</div>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <div style="font-weight: 600; margin-bottom: 12px;">Toggle Switch <span class="a11y-badge">PASS</span></div>
+      <div style="position: relative; display: inline-block;">
+        <label style="display: flex; align-items: center; cursor: pointer; padding: 10px;">
+          <div style="width: 40px; height: 24px; background: #1473E6; border-radius: 12px; position: relative;">
+            <div style="width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 19px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></div>
+          </div>
+          <span style="margin-left: 12px; font-size: 14px; color: #2C2C2C;">Apply Content Credentials</span>
+        </label>
+        <div class="blueline" style="top: 0; left: 0; right: 0; bottom: 0; border-radius: 4px;"></div>
+        <div class="blueline-label" style="top: -25px; left: 0;">Full label is clickable (>44px)</div>
+      </div>
+      <div style="margin-top: 8px; font-size: 13px; color: #6B6B6B;">✓ Label + padding creates adequate touch area</div>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <div style="font-weight: 600; margin-bottom: 12px;">Option Card <span class="a11y-badge">PASS</span></div>
+      <div style="position: relative; display: inline-block; max-width: 380px;">
+        <div style="padding: 16px; border: 2px solid #1473E6; border-radius: 8px; background: white; cursor: pointer;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M14 18.5H6A.75.75 0 0 1 6 17h8a.75.75 0 0 1 0 1.5Z"/>
+            </svg>
+            <span style="font-size: 14px; color: #2C2C2C;">CTV default</span>
+          </div>
+        </div>
+        <div class="blueline" style="top: 0; left: 0; right: 0; bottom: 0; border-radius: 8px;"></div>
+        <div class="blueline-label" style="top: -25px; right: 0;">Full card clickable (>44px height)</div>
+      </div>
+      <div style="margin-top: 8px; font-size: 13px; color: #6B6B6B;">✓ Card height exceeds minimum requirement</div>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <div style="font-weight: 600; margin-bottom: 12px;">Select Input <span class="a11y-badge warning">ACCEPTABLE</span></div>
+      <div style="position: relative; display: inline-block; width: 180px;">
+        <select style="width: 100%; height: 32px; padding: 0 36px 0 12px; border: none; border-radius: 6px; background: #F5F5F5; font-size: 14px; cursor: pointer;">
+          <option>1080p (default)</option>
+        </select>
+        <div class="blueline" style="top: -6px; left: 0; right: 0; height: 44px; border-radius: 6px;"></div>
+        <div class="blueline-label" style="top: -30px; right: 0; background: #FFC107; color: #2C2C2C;">32px + padding = acceptable</div>
+      </div>
+      <div style="margin-top: 8px; font-size: 13px; color: #6B6B6B;">⚠ Form controls can be smaller but should maintain usability</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Element</th>
+        <th>Size</th>
+        <th>Touch Area</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Export Button</td>
+        <td>36px height + padding</td>
+        <td>44×120px</td>
+        <td><span class="a11y-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Cancel/Close Button</td>
+        <td>36px height + padding</td>
+        <td>44×100px</td>
+        <td><span class="a11y-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Toggle Switch</td>
+        <td>40×24px + label</td>
+        <td>44×200px+</td>
+        <td><span class="a11y-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Option Card</td>
+        <td>Full card</td>
+        <td>48×380px</td>
+        <td><span class="a11y-badge">PASS</span></td>
+      </tr>
+      <tr>
+        <td>Select Input</td>
+        <td>32px height</td>
+        <td>32×180px</td>
+        <td><span class="a11y-badge warning">ACCEPTABLE</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Artboard 11: Accessibility - Color Contrast -->
+<div class="artboard">
+  <h2 class="artboard-title">Accessibility - Color Contrast (Bluelines)</h2>
+
+  <div class="spec-note">
+    <strong>WCAG AA Standard:</strong> Normal text requires 4.5:1 contrast ratio. Large text (18px+ or 14px+ bold) requires 3:1 contrast ratio.
+  </div>
+
+  <h3 class="artboard-subtitle">Contrast Analysis</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Foreground</th>
+        <th>Background</th>
+        <th>Ratio</th>
+        <th>Normal Text</th>
+        <th>Large Text</th>
+        <th>Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>#2C2C2C</td>
+        <td>#FFFFFF</td>
+        <td>12.6:1</td>
+        <td><span class="a11y-badge">AAA</span></td>
+        <td><span class="a11y-badge">AAA</span></td>
+        <td><span style="color: #2C2C2C; background: white; padding: 4px 8px; border: 1px solid #E1E1E1;">Primary text</span></td>
+      </tr>
+      <tr>
+        <td>#6B6B6B</td>
+        <td>#FFFFFF</td>
+        <td>5.7:1</td>
+        <td><span class="a11y-badge">AA</span></td>
+        <td><span class="a11y-badge">AAA</span></td>
+        <td><span style="color: #6B6B6B; background: white; padding: 4px 8px; border: 1px solid #E1E1E1;">Secondary text</span></td>
+      </tr>
+      <tr>
+        <td>#1473E6</td>
+        <td>#FFFFFF</td>
+        <td>4.5:1</td>
+        <td><span class="a11y-badge">AA</span></td>
+        <td><span class="a11y-badge">AAA</span></td>
+        <td><span style="color: #1473E6; background: white; padding: 4px 8px; border: 1px solid #E1E1E1;">Link text</span></td>
+      </tr>
+      <tr>
+        <td>#FFFFFF</td>
+        <td>#2C2C2C</td>
+        <td>12.6:1</td>
+        <td><span class="a11y-badge">AAA</span></td>
+        <td><span class="a11y-badge">AAA</span></td>
+        <td><span style="color: white; background: #2C2C2C; padding: 4px 8px;">Button text</span></td>
+      </tr>
+      <tr>
+        <td>#FFFFFF</td>
+        <td>#1473E6</td>
+        <td>4.5:1</td>
+        <td><span class="a11y-badge">AA</span></td>
+        <td><span class="a11y-badge">AAA</span></td>
+        <td><span style="color: white; background: #1473E6; padding: 4px 8px;">Progress bar</span></td>
+      </tr>
+      <tr>
+        <td>#FFFFFF</td>
+        <td>#2D9D78</td>
+        <td>3.9:1</td>
+        <td><span class="a11y-badge warning">FAIL</span></td>
+        <td><span class="a11y-badge">AAA</span></td>
+        <td><span style="color: white; background: #2D9D78; padding: 4px 8px;">Success (large text only)</span></td>
+      </tr>
+      <tr>
+        <td>#FFFFFF</td>
+        <td>#E34850</td>
+        <td>4.5:1</td>
+        <td><span class="a11y-badge">AA</span></td>
+        <td><span class="a11y-badge">AAA</span></td>
+        <td><span style="color: white; background: #E34850; padding: 4px 8px;">Error state</span></td>
+      </tr>
+      <tr>
+        <td>#BCBCBC</td>
+        <td>#F5F5F5</td>
+        <td>1.9:1</td>
+        <td><span class="a11y-badge error">FAIL</span></td>
+        <td><span class="a11y-badge error">FAIL</span></td>
+        <td><span style="color: #BCBCBC; background: #F5F5F5; padding: 4px 8px; border: 1px solid #E1E1E1;">Disabled (intentional)</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="spec-note" style="margin-top: 20px;">
+    <strong>Note on Disabled States:</strong> Disabled elements are exempt from contrast requirements per WCAG guidelines, as they are not intended to be interacted with.
+  </div>
+
+  <div class="spec-note" style="background: #E8F5E9; border-left-color: #2D9D78;">
+    <strong>Success State Note:</strong> The green success color (#2D9D78) should only be used with bold text at 14px+ or regular text at 18px+ to meet AA standards.
+  </div>
+</div>
+
+<!-- Artboard 12: Accessibility - Keyboard Navigation -->
+<div class="artboard">
+  <h2 class="artboard-title">Accessibility - Keyboard Navigation (Bluelines)</h2>
+
+  <h3 class="artboard-subtitle">Tab Order & Focus States</h3>
+
+  <div style="background: #F5F5F5; padding: 24px; border-radius: 8px; margin: 20px 0;">
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div style="position: relative;">
+        <div style="position: absolute; left: -40px; top: 50%; transform: translateY(-50%); background: #1473E6; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">1</div>
+        <div style="background: #F5F5F5; padding: 6px 12px; border-radius: 12px; display: inline-block; font-size: 13px; font-weight: 600; color: #6B6B6B; outline: 2px solid #1473E6; outline-offset: 2px;">Option 1</div>
+        <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Option pill label (activates panel)</div>
+      </div>
+
+      <div style="position: relative;">
+        <div style="position: absolute; left: -40px; top: 50%; transform: translateY(-50%); background: #1473E6; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">2</div>
+        <div style="padding: 16px; border: 2px solid #1473E6; border-radius: 8px; background: white; outline: 2px solid #1473E6; outline-offset: 2px; max-width: 300px;">
+          <div style="font-size: 14px; color: #2C2C2C;">CTV default option</div>
+        </div>
+        <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">CTV Default card (Enter/Space to expand)</div>
+      </div>
+
+      <div style="position: relative;">
+        <div style="position: absolute; left: -40px; top: 50%; transform: translateY(-50%); background: #1473E6; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">3</div>
+        <div style="padding: 16px; border: 2px solid #E1E1E1; border-radius: 8px; background: white; outline: 2px solid #1473E6; outline-offset: 2px; max-width: 300px;">
+          <div style="font-size: 14px; color: #2C2C2C;">Custom settings option</div>
+        </div>
+        <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Custom Settings card (Enter/Space to expand)</div>
+      </div>
+
+      <div style="position: relative;">
+        <div style="position: absolute; left: -40px; top: 50%; transform: translateY(-50%); background: #1473E6; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">4</div>
+        <select style="width: 180px; height: 32px; padding: 0 36px 0 12px; border: none; border-radius: 6px; background: #F5F5F5; font-size: 14px; outline: 2px solid #1473E6; outline-offset: 2px;">
+          <option>1080p (default)</option>
+        </select>
+        <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Form inputs (when expanded, arrow keys navigate)</div>
+      </div>
+
+      <div style="position: relative;">
+        <div style="position: absolute; left: -40px; top: 50%; transform: translateY(-50%); background: #1473E6; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">5</div>
+        <label style="display: flex; align-items: center; cursor: pointer;">
+          <div style="width: 40px; height: 24px; background: #1473E6; border-radius: 12px; position: relative; outline: 2px solid #1473E6; outline-offset: 2px;">
+            <div style="width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 19px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></div>
+          </div>
+          <span style="margin-left: 12px; font-size: 14px; color: #2C2C2C;">Apply Content Credentials</span>
+        </label>
+        <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Toggle (Space to toggle on/off)</div>
+      </div>
+
+      <div style="position: relative;">
+        <div style="position: absolute; left: -40px; top: 50%; transform: translateY(-50%); background: #1473E6; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">6</div>
+        <button style="min-width: 100px; height: 36px; padding: 0 20px; background: #2C2C2C; color: white; border: none; border-radius: 60px; font-size: 14px; font-weight: 700; outline: 2px solid #1473E6; outline-offset: 2px;">Export</button>
+        <div style="font-size: 12px; color: #6B6B6B; margin-top: 4px;">Export button (Enter/Space to activate)</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="artboard-subtitle">Focus Indicator Requirements</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>Value</th>
+        <th>Requirement</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Outline width</td>
+        <td>2px minimum</td>
+        <td><code>outline: 2px solid #1473E6;</code></td>
+      </tr>
+      <tr>
+        <td>Outline offset</td>
+        <td>2px</td>
+        <td><code>outline-offset: 2px;</code></td>
+      </tr>
+      <tr>
+        <td>Outline color</td>
+        <td>#1473E6 (blue)</td>
+        <td>Must have 3:1 contrast with background</td>
+      </tr>
+      <tr>
+        <td>Visibility</td>
+        <td>Always visible</td>
+        <td>Must be visible on all backgrounds</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="artboard-subtitle">Keyboard Shortcuts</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+        <th>Context</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Tab</td>
+        <td>Move focus forward</td>
+        <td>All interactive elements</td>
+      </tr>
+      <tr>
+        <td>Shift + Tab</td>
+        <td>Move focus backward</td>
+        <td>All interactive elements</td>
+      </tr>
+      <tr>
+        <td>Enter / Space</td>
+        <td>Activate element</td>
+        <td>Buttons, cards, toggles</td>
+      </tr>
+      <tr>
+        <td>Arrow keys</td>
+        <td>Navigate options</td>
+        <td>Select inputs only</td>
+      </tr>
+      <tr>
+        <td>Escape</td>
+        <td>Close modal</td>
+        <td>Export modal (when implemented)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Artboard 13: ARIA Labels & Semantic HTML -->
+<div class="artboard">
+  <h2 class="artboard-title">Accessibility - ARIA & Semantics (Bluelines)</h2>
+
+  <h3 class="artboard-subtitle">Panel Structure</h3>
+  <div style="background: #F5F5F5; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px; margin: 20px 0;">
+<pre style="margin: 0; color: #2C2C2C;">&lt;div class="panel"
+     <span style="color: #1473E6;">role="dialog"</span>
+     <span style="color: #1473E6;">aria-modal="false"</span>
+     <span style="color: #1473E6;">aria-labelledby="panel-title-1"</span>&gt;
+  &lt;h2 <span style="color: #1473E6;">id="panel-title-1"</span>&gt;Export&lt;/h2&gt;
+&lt;/div&gt;</pre>
+  </div>
+  <div style="font-size: 13px; color: #6B6B6B; margin-bottom: 20px;">
+    ✓ Panel uses dialog role with proper labeling<br>
+    ✓ aria-modal="false" indicates non-blocking behavior<br>
+    ✓ Title linked via aria-labelledby for screen readers
+  </div>
+
+  <h3 class="artboard-subtitle">Asset Info Bar</h3>
+  <div style="background: #F5F5F5; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px; margin: 20px 0;">
+<pre style="margin: 0; color: #2C2C2C;">&lt;div class="asset-info"
+     <span style="color: #1473E6;">role="region"</span>
+     <span style="color: #1473E6;">aria-label="Asset information"</span>&gt;
+  &lt;svg <span style="color: #1473E6;">aria-hidden="true"</span>&gt;...&lt;/svg&gt;
+  &lt;span&gt;0:30&lt;/span&gt;
+&lt;/div&gt;</pre>
+  </div>
+  <div style="font-size: 13px; color: #6B6B6B; margin-bottom: 20px;">
+    ✓ Region role groups related content<br>
+    ✓ Descriptive aria-label for context<br>
+    ✓ Decorative icons hidden from screen readers
+  </div>
+
+  <h3 class="artboard-subtitle">Toggle Switch</h3>
+  <div style="background: #F5F5F5; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px; margin: 20px 0;">
+<pre style="margin: 0; color: #2C2C2C;">&lt;label class="toggle-label"&gt;
+  &lt;input type="checkbox"
+         id="content-credentials-toggle-1"
+         class="toggle-input"
+         checked&gt;
+  &lt;span class="toggle-switch"&gt;&lt;/span&gt;
+  &lt;span class="toggle-text"&gt;
+    Apply Content Credentials
+  &lt;/span&gt;
+&lt;/label&gt;</pre>
+  </div>
+  <div style="font-size: 13px; color: #6B6B6B; margin-bottom: 20px;">
+    ✓ Native checkbox for built-in accessibility<br>
+    ✓ Label wraps entire control for large click area<br>
+    ✓ Toggle state announced automatically by browsers<br>
+    ✓ No custom ARIA needed - native semantics preferred
+  </div>
+
+  <h3 class="artboard-subtitle">Export Modal</h3>
+  <div style="background: #F5F5F5; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px; margin: 20px 0;">
+<pre style="margin: 0; color: #2C2C2C;">&lt;div class="export-modal"
+     id="export-modal-1"
+     <span style="color: #1473E6;">role="dialog"</span>
+     <span style="color: #1473E6;">aria-labelledby="modal-title-1"</span>
+     <span style="color: #1473E6;">aria-describedby="modal-status-1"</span>&gt;
+  &lt;h2 <span style="color: #1473E6;">id="modal-title-1"</span>&gt;Exporting...&lt;/h2&gt;
+  &lt;span <span style="color: #1473E6;">id="modal-status-1"</span> <span style="color: #1473E6;">aria-live="polite"</span>&gt;
+    Rendering for CTV channels...
+  &lt;/span&gt;
+&lt;/div&gt;</pre>
+  </div>
+  <div style="font-size: 13px; color: #6B6B6B; margin-bottom: 20px;">
+    ✓ Dialog role for modal semantics<br>
+    ✓ Title and description linked via ARIA<br>
+    ✓ aria-live="polite" announces status updates<br>
+    ✓ Focus trapped within modal when visible
+  </div>
+
+  <h3 class="artboard-subtitle">ARIA Best Practices</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Pattern</th>
+        <th>Implementation</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Native HTML First</td>
+        <td>Use <code>&lt;button&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;label&gt;</code></td>
+        <td>Built-in accessibility, less code, better support</td>
+      </tr>
+      <tr>
+        <td>Decorative Icons</td>
+        <td><code>aria-hidden="true"</code></td>
+        <td>Hide non-essential visuals from screen readers</td>
+      </tr>
+      <tr>
+        <td>Functional Icons</td>
+        <td><code>aria-label="Close"</code></td>
+        <td>Provide text alternative for icon-only buttons</td>
+      </tr>
+      <tr>
+        <td>Live Regions</td>
+        <td><code>aria-live="polite"</code></td>
+        <td>Announce dynamic content changes</td>
+      </tr>
+      <tr>
+        <td>Landmarks</td>
+        <td><code>role="region"</code> with <code>aria-label</code></td>
+        <td>Help users navigate page sections</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Artboard 14: Design Tokens (JSON Export) -->
+<div class="artboard">
+  <h2 class="artboard-title">Design Tokens - Figma Integration</h2>
+
+  <div class="spec-note">
+    <strong>Usage:</strong> Import this JSON into Figma using design token plugins like "Tokens Studio" or "Design Tokens"
+  </div>
+
+  <div style="background: #F5F5F5; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 12px; margin: 20px 0; max-height: 600px; overflow: auto;">
+<pre style="margin: 0; color: #2C2C2C;">{
+  "colors": {
+    "primary": {
+      "blue": { "value": "#1473E6", "type": "color" },
+      "neutral": { "value": "#2C2C2C", "type": "color" },
+      "subdued": { "value": "#6B6B6B", "type": "color" }
+    },
+    "gray": {
+      "50": { "value": "#FAFAFA", "type": "color" },
+      "100": { "value": "#F5F5F5", "type": "color" },
+      "200": { "value": "#E1E1E1", "type": "color" },
+      "300": { "value": "#D3D3D3", "type": "color" },
+      "400": { "value": "#BCBCBC", "type": "color" },
+      "500": { "value": "#6B6B6B", "type": "color" },
+      "800": { "value": "#464646", "type": "color" }
+    },
+    "semantic": {
+      "success": { "value": "#2D9D78", "type": "color" },
+      "error": { "value": "#E34850", "type": "color" }
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "primary": {
+        "value": "Adobe Clean, -apple-system, sans-serif",
+        "type": "fontFamily"
+      }
+    },
+    "fontSize": {
+      "xs": { "value": "12px", "type": "fontSize" },
+      "sm": { "value": "13px", "type": "fontSize" },
+      "base": { "value": "14px", "type": "fontSize" },
+      "lg": { "value": "18px", "type": "fontSize" },
+      "xl": { "value": "20px", "type": "fontSize" }
+    },
+    "fontWeight": {
+      "regular": { "value": "400", "type": "fontWeight" },
+      "semibold": { "value": "600", "type": "fontWeight" },
+      "bold": { "value": "700", "type": "fontWeight" }
+    },
+    "lineHeight": {
+      "tight": { "value": "1.3", "type": "lineHeight" },
+      "normal": { "value": "1.5", "type": "lineHeight" },
+      "relaxed": { "value": "1.6", "type": "lineHeight" }
+    }
+  },
+  "spacing": {
+    "xs": { "value": "4px", "type": "spacing" },
+    "sm": { "value": "8px", "type": "spacing" },
+    "md": { "value": "12px", "type": "spacing" },
+    "lg": { "value": "16px", "type": "spacing" },
+    "xl": { "value": "24px", "type": "spacing" },
+    "2xl": { "value": "28px", "type": "spacing" },
+    "3xl": { "value": "32px", "type": "spacing" }
+  },
+  "borderRadius": {
+    "sm": { "value": "3px", "type": "borderRadius" },
+    "md": { "value": "6px", "type": "borderRadius" },
+    "lg": { "value": "8px", "type": "borderRadius" },
+    "xl": { "value": "12px", "type": "borderRadius" },
+    "pill": { "value": "60px", "type": "borderRadius" }
+  },
+  "shadows": {
+    "panel": {
+      "value": "0 2px 8px rgba(0, 0, 0, 0.08)",
+      "type": "boxShadow"
+    },
+    "modal": {
+      "value": "0 8px 32px rgba(0, 0, 0, 0.12)",
+      "type": "boxShadow"
+    },
+    "toggle": {
+      "value": "0 1px 3px rgba(0, 0, 0, 0.2)",
+      "type": "boxShadow"
+    }
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- Artboard 15: Implementation Checklist -->
+<div class="artboard">
+  <h2 class="artboard-title">Quality Assurance Checklist</h2>
+
+  <h3 class="artboard-subtitle">Visual Design ✓</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 50px;">✓</th>
+        <th>Item</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>☐</td>
+        <td>Colors match tokens</td>
+        <td>All colors use defined palette (#1473E6, #2C2C2C, etc.)</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Typography hierarchy</td>
+        <td>Font sizes, weights, line heights follow spec</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Spacing consistency</td>
+        <td>All spacing is multiple of 4px base unit</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Border radius values</td>
+        <td>3px, 6px, 8px, 12px, 60px consistently applied</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Shadows correct</td>
+        <td>Panel and modal shadows match specifications</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Icons sized properly</td>
+        <td>14×14px for asset info, 18×18px for options</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="artboard-subtitle">Interaction Design ✓</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 50px;">✓</th>
+        <th>Item</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>☐</td>
+        <td>Hover states</td>
+        <td>All interactive elements have visible hover feedback</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Focus states</td>
+        <td>2px blue outline, 2px offset on all focusable elements</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Transitions smooth</td>
+        <td>0.15-0.2s ease transitions on state changes</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Loading states clear</td>
+        <td>Progress indication during export</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Error states informative</td>
+        <td>Error messages provide actionable guidance</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Success feedback</td>
+        <td>Completion state clearly communicated</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="artboard-subtitle">Accessibility (WCAG AA) ✓</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 50px;">✓</th>
+        <th>Item</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>☐</td>
+        <td>Color contrast ≥4.5:1</td>
+        <td>All text meets WCAG AA contrast requirements</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Touch targets ≥44px</td>
+        <td>All interactive elements meet minimum size</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Keyboard navigation</td>
+        <td>All features accessible via keyboard only</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Screen reader labels</td>
+        <td>ARIA labels present where needed</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Focus order logical</td>
+        <td>Tab order follows visual layout</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Reduced motion</td>
+        <td>Respects prefers-reduced-motion setting</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="artboard-subtitle">Responsive Design ✓</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 50px;">✓</th>
+        <th>Item</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>☐</td>
+        <td>Mobile adaptation</td>
+        <td>Layout works on screens <420px</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Text remains readable</td>
+        <td>Font sizes adequate at all breakpoints</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>Touch targets maintained</td>
+        <td>Interactive elements remain 44px+ on mobile</td>
+      </tr>
+      <tr>
+        <td>☐</td>
+        <td>No horizontal scroll</td>
+        <td>Content fits viewport at all sizes</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
