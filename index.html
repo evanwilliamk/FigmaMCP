@@ -86,7 +86,7 @@
       background: var(--gray-25);
       border-radius: 8px;
       box-shadow: var(--shadow);
-      width: 344px;
+      width: 480px;
       padding: 24px;
       display: none;
       flex-direction: column;
@@ -230,6 +230,41 @@
     .platform-check svg { display: none; }
     .platform-row.selected .platform-check svg { display: block; }
 
+    /* Custom Radio Buttons */
+    input[type="radio"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--gray-400);
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    input[type="radio"]:hover {
+      border-color: var(--gray-500);
+    }
+
+    input[type="radio"]:checked {
+      border-color: var(--neutral);
+      background: var(--neutral);
+    }
+
+    input[type="radio"]:checked::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: white;
+    }
+
     /* Logo */
     .platform-logo {
       width: 40px; height: 40px;
@@ -340,7 +375,13 @@
       outline: none;
       background-color: white;
       background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      box-shadow: 0 0 0 2px var(--neutral);
+      box-shadow: 0 0 0 2px var(--blue);
+    }
+
+    /* Blue focus state for all select elements */
+    select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--blue);
     }
 
     /* Custom Dropdown Menu */
@@ -866,13 +907,17 @@
 
     /* ── Button ── */
     .btn-primary {
-      width: 100%; height: 36px;
+      width: auto;
+      min-width: 100px;
+      height: 36px;
       background: var(--neutral); color: #fff;
       border: none; border-radius: 60px;
       font-family: var(--font); font-size: 14px; font-weight: 700;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 8px;
       transition: background 0.15s, opacity 0.15s;
+      padding: 0 20px;
+      margin-left: auto;
     }
     .btn-primary span {
       display: flex;
@@ -1212,45 +1257,95 @@
       </div>
 
       <!-- Custom Settings Panel (hidden by default) -->
-      <div id="custom-settings-1" style="display: none; flex-direction: column; gap: 16px; margin-top: 16px; padding: 16px; border: 1px solid var(--gray-300); border-radius: 8px; background: var(--gray-50);">
+      <div id="custom-settings-1" style="display: none; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; padding: 16px; border: 1px solid var(--gray-300); border-radius: 8px; background: var(--gray-50);">
 
         <!-- Resolution -->
         <div>
-          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--subdued); margin-bottom: 8px;">Resolution</label>
-          <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 14px; background: white;">
-            <option value="1080p">1080p (HD)</option>
-            <option value="4k">4K (UHD) — Samsung, LG, Apple TV 4K, Fire TV 4K only</option>
+          <label style="display: block; font-size: 14px; font-weight: 400; color: var(--neutral); margin-bottom: 8px; font-family: var(--font);">Resolution</label>
+          <select style="width: 100%; height: 32px; padding: 0 36px 0 12px; border: none; border-radius: 6px; background-color: var(--gray-100); background-image: url(&quot;data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;); background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/-%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; font-size: 14px; color: var(--neutral); font-weight: 400; font-family: var(--font); cursor: pointer; appearance: none;">
+            <option value="1080p">1080p (default)</option>
+            <option value="4k">4K</option>
           </select>
+          <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: var(--subdued); font-family: var(--font);">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
+              <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <span>Recommended</span>
+          </div>
         </div>
 
         <!-- File Format -->
         <div>
-          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--subdued); margin-bottom: 8px;">File format</label>
-          <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 14px; background: white;">
+          <label style="display: block; font-size: 14px; font-weight: 400; color: var(--neutral); margin-bottom: 8px; font-family: var(--font);">File format</label>
+          <select style="width: 100%; height: 32px; padding: 0 36px 0 12px; border: none; border-radius: 6px; background-color: var(--gray-100); background-image: url(&quot;data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;); background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/-%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; font-size: 14px; color: var(--neutral); font-weight: 400; font-family: var(--font); cursor: pointer; appearance: none;">
             <option value="mp4-h264">MP4 (H.264)</option>
-            <option value="mp4-h265">MP4 (H.265) — Required for 4K</option>
+            <option value="mp4-h265">MP4 (H.265)</option>
             <option value="mov">MOV</option>
           </select>
+          <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: var(--subdued); font-family: var(--font);">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
+              <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <span>Recommended</span>
+          </div>
+        </div>
+
+        <!-- Frame Rate -->
+        <div>
+          <label style="display: block; font-size: 14px; font-weight: 400; color: var(--neutral); margin-bottom: 8px; font-family: var(--font);">Frame rate</label>
+          <select style="width: 100%; height: 32px; padding: 0 36px 0 12px; border: none; border-radius: 6px; background-color: var(--gray-100); background-image: url(&quot;data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;); background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/-%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; font-size: 14px; color: var(--neutral); font-weight: 400; font-family: var(--font); cursor: pointer; appearance: none;">
+            <option value="29.97">29.97</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="30">30</option>
+          </select>
+          <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: var(--subdued); font-family: var(--font);">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
+              <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <span>Recommended</span>
+          </div>
         </div>
 
         <!-- Bitrate -->
         <div>
-          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--subdued); margin-bottom: 8px;">Bitrate</label>
-          <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 14px; background: white;">
-            <option value="low">Low (6-10 Mbps) — Basic HD</option>
-            <option value="medium">Medium (15-20 Mbps) — Standard HD</option>
-            <option value="high" selected>High (25-30 Mbps) — Premium HD</option>
-            <option value="ultra">Ultra (40+ Mbps) — 4K quality</option>
+          <label style="display: block; font-size: 14px; font-weight: 400; color: var(--neutral); margin-bottom: 8px; font-family: var(--font);">Bitrate</label>
+          <select style="width: 100%; height: 32px; padding: 0 36px 0 12px; border: none; border-radius: 6px; background-color: var(--gray-100); background-image: url(&quot;data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;); background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/-%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; font-size: 14px; color: var(--neutral); font-weight: 400; font-family: var(--font); cursor: pointer; appearance: none;">
+            <option value="20">20 Mbps</option>
+            <option value="25">25 Mbps</option>
+            <option value="30">30 Mbps</option>
           </select>
+          <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: var(--subdued); font-family: var(--font);">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
+              <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <span>Recommended</span>
+          </div>
         </div>
 
       </div>
 
       <!-- Export Button -->
-      <button class="btn-primary" id="export-btn-1" style="margin-top: 16px;">
+      <button class="btn-primary" id="export-btn-1" style="margin-top: 24px;">
         <span>Export</span>
       </button>
 
+    </div>
+  </div>
+
+  <!-- Export Modal for Option 1 -->
+  <div class="export-modal" id="export-modal-1">
+    <h2 class="export-modal__title">Export in progress</h2>
+    <p class="export-modal__message" id="export-modal-message-1">Starting export...</p>
+    <div class="export-modal__progress">
+      <span class="export-modal__percentage" id="export-modal-percentage-1">0%</span>
+    </div>
+    <div class="export-modal__bar">
+      <div class="export-modal__bar-fill" id="export-modal-bar-fill-1"></div>
     </div>
   </div>
 
@@ -1262,7 +1357,6 @@
       <!-- Header -->
       <div class="panel-header">
         <h2 id="panel-title-2">Export</h2>
-        <p>We'll make sure the export is compliant to all platforms.</p>
       </div>
 
       <!-- Asset info bar -->
@@ -1291,70 +1385,96 @@
         </div>
       </div>
 
-      <!-- CTV Default Badge -->
-      <div style="margin-top: 16px; display: flex; align-items: center; gap: 8px; padding: 12px; background: var(--gray-100); border-radius: 6px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
-          <path d="M8 21h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <span style="font-weight: 600; font-size: 14px; color: var(--neutral);">CTV default</span>
-        <div style="margin-left: auto; display: flex; gap: 4px; align-items: center;">
-          <div style="width: 24px; height: 24px; border-radius: 50%; background: #CB2128; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-            <img src="logos/roku.png" alt="Roku" style="width: 18px; height: 18px; object-fit: contain;">
+      <!-- CTV Default Option -->
+      <div id="ctv-default-option-2" style="margin-top: 16px; padding: 16px; border: 2px solid var(--neutral); border-radius: 8px; background: white; cursor: pointer;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M14 18.5H6A.75.75 0 0 1 6 17h8a.75.75 0 0 1 0 1.5Zm2.75-2.5H3.25C2.01 16 1 14.99 1 13.75v-8.5C1 4.01 2.01 3 3.25 3h13.5C17.99 3 19 4.01 19 5.25v8.5c0 1.24-1.01 2.25-2.25 2.25ZM3.25 4.5a.751.751 0 0 0-.75.75v8.5c0 .413.337.75.75.75h13.5c.413 0 .75-.337.75-.75v-8.5a.751.751 0 0 0-.75-.75H3.25Z"/>
+          </svg>
+          <span style="font-weight: 400; font-size: 14px; color: var(--neutral); flex: 1;">CTV default</span>
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: #CB2128; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <img src="logos/roku.png" alt="Roku" style="width: 20px; height: 20px; object-fit: contain;">
+            </div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: #FF9900; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <img src="logos/fire.png" alt="Fire TV" style="width: 20px; height: 20px; object-fit: contain;">
+            </div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: #1CE783; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <img src="logos/hulu.png" alt="Hulu" style="width: 20px; height: 20px; object-fit: contain;">
+            </div>
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--neutral); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600;">
+              +9
+            </div>
           </div>
-          <div style="width: 24px; height: 24px; border-radius: 50%; background: #FF9900; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-            <img src="logos/fire.png" alt="Fire TV" style="width: 18px; height: 18px; object-fit: contain;">
+          <svg id="ctv-chevron-2" width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink: 0; color: var(--gray-500); transition: transform 0.2s ease;">
+            <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- CTV Default Specs (collapsed by default) -->
+        <div id="ctv-specs-2" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--gray-200);">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <div style="font-size: 12px; color: var(--subdued); margin-bottom: 4px;">Resolution</div>
+              <div style="font-size: 14px; font-weight: 600; color: var(--neutral);">1080p (HD)</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: var(--subdued); margin-bottom: 4px;">Format</div>
+              <div style="font-size: 14px; font-weight: 600; color: var(--neutral);">MP4 (H.264)</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: var(--subdued); margin-bottom: 4px;">Bitrate</div>
+              <div style="font-size: 14px; font-weight: 600; color: var(--neutral);">20 Mbps</div>
+            </div>
+            <div>
+              <div style="font-size: 12px; color: var(--subdued); margin-bottom: 4px;">Frame rate</div>
+              <div style="font-size: 14px; font-weight: 600; color: var(--neutral);">29.97 fps</div>
+            </div>
           </div>
-          <div style="width: 24px; height: 24px; border-radius: 50%; background: #1CE783; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-            <img src="logos/hulu.png" alt="Hulu" style="width: 18px; height: 18px; object-fit: contain;">
-          </div>
-          <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--neutral); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600;">
-            +9
+          <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--gray-200);">
+            <div style="font-size: 12px; color: var(--subdued); margin-bottom: 4px;">Optimized for...</div>
+            <div style="font-size: 13px; color: var(--neutral); line-height: 1.6;">Hulu, Paramount, FireTV, ESPN+, AppleTV+,Hulu, Hulu, Paramount, FireTV, ESPN+, AppleTV+</div>
           </div>
         </div>
       </div>
 
-      <!-- Recommended Option -->
-      <div id="recommended-option-2" style="margin-top: 16px; padding: 12px 16px; border: 2px solid var(--blue); border-radius: 8px; background: white; cursor: pointer; display: flex; align-items: center; gap: 12px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="10" fill="var(--blue)"/>
-          <path d="M8 12l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Recommended Label (non-interactive) -->
+      <div style="margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
+          <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         </svg>
-        <span style="font-weight: 600; font-size: 14px; color: var(--neutral);">Recommended for all CTV platforms</span>
+        <span style="font-size: 13px; color: var(--subdued);">Recommended for all CTV platforms</span>
       </div>
 
       <!-- Custom Option -->
-      <div id="custom-option-2" style="margin-top: 12px; padding: 16px; border: 2px solid var(--gray-300); border-radius: 8px; background: white; cursor: pointer;">
+      <div id="custom-option-2" style="margin-top: 12px; padding: 16px; border: 2px solid var(--gray-200); border-radius: 8px; background: white; cursor: pointer;">
 
         <!-- Custom Header -->
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" id="custom-checkbox-2">
-            <circle cx="12" cy="12" r="10" stroke="var(--gray-400)" stroke-width="2"/>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M1.75 6.771h2.669a3.25 3.25 0 0 0 3.154 2.5 3.25 3.25 0 0 0 3.154-2.5h7.523a.75.75 0 0 0 0-1.5h-7.523a3.25 3.25 0 0 0-3.154-2.5 3.25 3.25 0 0 0-3.154 2.5H1.75a.75.75 0 0 0 0 1.5Zm5.823-2.5c.965 0 1.75.786 1.75 1.75 0 .965-.785 1.75-1.75 1.75s-1.75-.785-1.75-1.75c0-.964.785-1.75 1.75-1.75Zm10.677 9h-2.523a3.25 3.25 0 0 0-3.154-2.5 3.25 3.25 0 0 0-3.154 2.5H1.75a.75.75 0 0 0 0 1.5h7.669a3.25 3.25 0 0 0 3.154 2.5 3.25 3.25 0 0 0 3.154-2.5h2.523a.75.75 0 0 0 0-1.5Zm-5.677 2.5c-.965 0-1.75-.785-1.75-1.75 0-.964.785-1.75 1.75-1.75s1.75.786 1.75 1.75c0 .965-.785 1.75-1.75 1.75Z"/>
           </svg>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2l2 7h7l-5.5 4.5L17 21l-5-4-5 4 1.5-7.5L3 9h7z" stroke="currentColor" stroke-width="1.8"/>
-          </svg>
-          <span style="font-weight: 600; font-size: 14px; color: var(--neutral);">Custom</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" id="custom-chevron-2" style="margin-left: auto; transform: rotate(0deg); transition: transform 0.2s ease;">
-            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <span style="font-weight: 400; font-size: 14px; color: var(--neutral);">Custom settings</span>
+          <svg id="custom-chevron-2" width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left: auto; flex-shrink: 0; color: var(--gray-500); opacity: 0; transition: transform 0.2s ease, opacity 0.2s ease;">
+            <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
 
-        <!-- Custom Settings Grid (collapsed by default) -->
+        <!-- Custom Settings Grid (closed by default, opens when selected) -->
         <div id="custom-settings-2" style="display: none; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--gray-200);">
 
           <!-- Resolution -->
           <div>
-            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--subdued); margin-bottom: 8px;">Resolution</label>
-            <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 13px; background: white;">
+            <label style="display: block; font-size: 14px; font-weight: 400; color: var(--neutral); margin-bottom: 8px; font-family: var(--font);">Resolution</label>
+            <select style="width: 100%; height: 32px; padding: 0 36px 0 12px; border: none; border-radius: 6px; background-color: var(--gray-100); background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/-%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; font-size: 14px; color: var(--neutral); font-weight: 400; font-family: var(--font); cursor: pointer; appearance: none;">
               <option value="1080p">1080p (default)</option>
               <option value="4k">4K</option>
             </select>
-            <div style="display: flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 12px; color: var(--blue);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: var(--subdued); font-family: var(--font);">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
+                <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
               </svg>
               <span>Recommended</span>
             </div>
@@ -1362,16 +1482,16 @@
 
           <!-- File Format -->
           <div>
-            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--subdued); margin-bottom: 8px;">File format</label>
-            <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 13px; background: white;">
+            <label style="display: block; font-size: 14px; font-weight: 400; color: var(--neutral); margin-bottom: 8px; font-family: var(--font);">File format</label>
+            <select style="width: 100%; height: 32px; padding: 0 36px 0 12px; border: none; border-radius: 6px; background-color: var(--gray-100); background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/-%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; font-size: 14px; color: var(--neutral); font-weight: 400; font-family: var(--font); cursor: pointer; appearance: none;">
               <option value="mp4-h264">MP4 (H.264)</option>
               <option value="mp4-h265">MP4 (H.265)</option>
               <option value="mov">MOV</option>
             </select>
-            <div style="display: flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 12px; color: var(--blue);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: var(--subdued); font-family: var(--font);">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
+                <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
               </svg>
               <span>Recommended</span>
             </div>
@@ -1379,17 +1499,17 @@
 
           <!-- Frame Rate -->
           <div>
-            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--subdued); margin-bottom: 8px;">Frame rate</label>
-            <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 13px; background: white;">
+            <label style="display: block; font-size: 14px; font-weight: 400; color: var(--neutral); margin-bottom: 8px; font-family: var(--font);">Frame rate</label>
+            <select style="width: 100%; height: 32px; padding: 0 36px 0 12px; border: none; border-radius: 6px; background-color: var(--gray-100); background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/-%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; font-size: 14px; color: var(--neutral); font-weight: 400; font-family: var(--font); cursor: pointer; appearance: none;">
               <option value="29.97">29.97</option>
               <option value="24">24</option>
               <option value="25">25</option>
               <option value="30">30</option>
             </select>
-            <div style="display: flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 12px; color: var(--blue);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: var(--subdued); font-family: var(--font);">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
+                <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
               </svg>
               <span>Recommended</span>
             </div>
@@ -1397,16 +1517,16 @@
 
           <!-- Bitrate -->
           <div>
-            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--subdued); margin-bottom: 8px;">Bitrate</label>
-            <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 13px; background: white;">
+            <label style="display: block; font-size: 14px; font-weight: 400; color: var(--neutral); margin-bottom: 8px; font-family: var(--font);">Bitrate</label>
+            <select style="width: 100%; height: 32px; padding: 0 36px 0 12px; border: none; border-radius: 6px; background-color: var(--gray-100); background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23505050' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/-%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; font-size: 14px; color: var(--neutral); font-weight: 400; font-family: var(--font); cursor: pointer; appearance: none;">
               <option value="20">20 Mbps</option>
               <option value="25">25 Mbps</option>
               <option value="30">30 Mbps</option>
             </select>
-            <div style="display: flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 12px; color: var(--blue);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: var(--subdued); font-family: var(--font);">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7" stroke="var(--blue)" stroke-width="1.5" fill="none"/>
+                <path d="M5 8l2 2 4-4" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
               </svg>
               <span>Recommended</span>
             </div>
@@ -1417,7 +1537,7 @@
       </div>
 
       <!-- Export Button -->
-      <button class="btn-primary" id="export-btn-2" style="margin-top: 16px;">
+      <button class="btn-primary" id="export-btn-2" style="margin-top: 24px;">
         <span>Export</span>
       </button>
 
@@ -2364,66 +2484,181 @@
   radioInputs1.forEach(radio => {
     radio.addEventListener('change', () => {
       if (customRadio1.checked) {
-        customSettings1.style.display = 'flex';
+        customSettings1.style.display = 'grid';
       } else {
         customSettings1.style.display = 'none';
       }
     });
   });
 
+  // ── Option 1: Export Flow ──
+  const exportBtn1 = document.getElementById('export-btn-1');
+  // panel1 is already declared at top of script
+  const exportModal1 = document.getElementById('export-modal-1');
+  const modalMessage1 = document.getElementById('export-modal-message-1');
+  const modalPercentage1 = document.getElementById('export-modal-percentage-1');
+  const modalBarFill1 = document.getElementById('export-modal-bar-fill-1');
+
+  let state1 = { phase: 'idle' };
+
+  function startExport1() {
+    if (state1.phase !== 'idle') return;
+    state1.phase = 'loading';
+
+    // Hide the panel and show the export modal
+    panel1.style.display = 'none';
+    exportModal1.classList.add('visible');
+
+    // Reset modal state
+    modalMessage1.textContent = 'Starting export...';
+    modalPercentage1.textContent = '0%';
+    modalBarFill1.style.width = '0%';
+
+    let pct = 0;
+    const interval = setInterval(() => {
+      pct += Math.random() * 18 + 4;
+      if (pct > 97) pct = 97;
+      modalBarFill1.style.width = pct + '%';
+      modalPercentage1.textContent = Math.round(pct) + '%';
+      modalMessage1.textContent = `Exporting for CTV platforms...`;
+    }, 300);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      modalBarFill1.style.width = '100%';
+      modalPercentage1.textContent = '100%';
+      setTimeout(() => {
+        const success = Math.random() > 0.1;
+
+        // Close modal and show panel again
+        exportModal1.classList.remove('visible');
+        panel1.style.display = 'flex';
+
+        if (success) {
+          state1.phase = 'success';
+          exportBtn1.classList.add('success');
+          exportBtn1.disabled = true;
+          exportBtn1.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Export complete</span>`;
+        } else {
+          state1.phase = 'error';
+          exportBtn1.classList.add('error');
+          exportBtn1.disabled = false;
+          exportBtn1.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+              <path d="M12 9v4M12 16h.01" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Export failed — Try again</span>`;
+        }
+      }, 400);
+    }, 3200);
+  }
+
+  function resetToIdle1() {
+    state1.phase = 'idle';
+    exportBtn1.classList.remove('success', 'error', 'loading');
+    exportBtn1.innerHTML = '<span>Export</span>';
+    exportBtn1.disabled = false;
+  }
+
+  exportBtn1.addEventListener('click', () => {
+    if (state1.phase === 'error') {
+      resetToIdle1();
+      startExport1();
+    } else {
+      startExport1();
+    }
+  });
+
   // ── Option 2: Toggle Logic ──
-  const recommendedOption2 = document.getElementById('recommended-option-2');
+  const ctvDefaultOption2 = document.getElementById('ctv-default-option-2');
+  const ctvChevron2 = document.getElementById('ctv-chevron-2');
+  const ctvSpecs2 = document.getElementById('ctv-specs-2');
   const customOption2 = document.getElementById('custom-option-2');
-  const customCheckbox2 = document.getElementById('custom-checkbox-2');
   const customChevron2 = document.getElementById('custom-chevron-2');
   const customSettings2 = document.getElementById('custom-settings-2');
 
-  let option2State = 'recommended'; // 'recommended' or 'custom'
-  let customExpanded2 = false;
+  let option2State = 'ctv-default'; // 'ctv-default' or 'custom'
+  let ctvExpanded2 = false;
+  let customExpanded2 = false; // Custom starts closed
 
-  // Recommended option click
-  recommendedOption2.addEventListener('click', () => {
-    option2State = 'recommended';
+  // CTV Default option click
+  ctvDefaultOption2.addEventListener('click', (e) => {
+    // If already selected, toggle expansion
+    if (option2State === 'ctv-default') {
+      ctvExpanded2 = !ctvExpanded2;
 
-    // Update recommended option styling
-    recommendedOption2.style.borderColor = 'var(--blue)';
-    recommendedOption2.querySelector('circle').setAttribute('fill', 'var(--blue)');
+      if (ctvExpanded2) {
+        ctvSpecs2.style.display = 'block';
+        ctvChevron2.style.transform = 'rotate(180deg)';
+      } else {
+        ctvSpecs2.style.display = 'none';
+        ctvChevron2.style.transform = 'rotate(0deg)';
+      }
+    } else {
+      // Switch to CTV default
+      option2State = 'ctv-default';
 
-    // Update custom option styling
-    customOption2.style.borderColor = 'var(--gray-300)';
-    customCheckbox2.querySelector('circle').setAttribute('stroke', 'var(--gray-400)');
-    customCheckbox2.querySelector('circle').setAttribute('fill', 'none');
+      // Update option styling
+      ctvDefaultOption2.style.borderColor = 'var(--neutral)';
+      customOption2.style.borderColor = 'var(--gray-200)';
 
-    // Collapse custom settings
-    customExpanded2 = false;
-    customSettings2.style.display = 'none';
-    customChevron2.style.transform = 'rotate(0deg)';
+      // Show CTV chevron, hide custom chevron
+      ctvChevron2.style.opacity = '1';
+      customChevron2.style.opacity = '0';
+
+      // Collapse custom settings
+      customExpanded2 = false;
+      customSettings2.style.display = 'none';
+      customChevron2.style.transform = 'rotate(0deg)';
+
+      // Don't auto-expand CTV specs when switching
+      ctvExpanded2 = false;
+      ctvSpecs2.style.display = 'none';
+      ctvChevron2.style.transform = 'rotate(0deg)';
+    }
   });
 
   // Custom option click
   customOption2.addEventListener('click', (e) => {
     // If clicking the header area (not inside the settings grid)
     if (!customSettings2.contains(e.target)) {
-      option2State = 'custom';
-      customExpanded2 = !customExpanded2;
+      // If already selected, toggle expansion
+      if (option2State === 'custom') {
+        customExpanded2 = !customExpanded2;
 
-      // Update recommended option styling
-      recommendedOption2.style.borderColor = 'var(--gray-300)';
-      recommendedOption2.querySelector('circle').setAttribute('fill', 'none');
-      recommendedOption2.querySelector('circle').setAttribute('stroke', 'var(--gray-400)');
+        if (customExpanded2) {
+          customSettings2.style.display = 'grid';
+          customChevron2.style.transform = 'rotate(180deg)';
+        } else {
+          customSettings2.style.display = 'none';
+          customChevron2.style.transform = 'rotate(0deg)';
+        }
+      } else {
+        // Switch to custom
+        option2State = 'custom';
 
-      // Update custom option styling
-      customOption2.style.borderColor = 'var(--blue)';
-      customCheckbox2.querySelector('circle').setAttribute('stroke', 'var(--blue)');
-      customCheckbox2.querySelector('circle').setAttribute('fill', 'var(--blue)');
+        // Update option styling
+        ctvDefaultOption2.style.borderColor = 'var(--gray-200)';
+        customOption2.style.borderColor = 'var(--neutral)';
 
-      // Toggle settings visibility
-      if (customExpanded2) {
+        // Hide CTV chevron, show custom chevron
+        ctvChevron2.style.opacity = '0';
+        customChevron2.style.opacity = '1';
+
+        // Collapse CTV specs
+        ctvExpanded2 = false;
+        ctvSpecs2.style.display = 'none';
+        ctvChevron2.style.transform = 'rotate(0deg)';
+
+        // Auto-expand custom settings when switching
+        customExpanded2 = true;
         customSettings2.style.display = 'grid';
         customChevron2.style.transform = 'rotate(180deg)';
-      } else {
-        customSettings2.style.display = 'none';
-        customChevron2.style.transform = 'rotate(0deg)';
       }
     }
   });
