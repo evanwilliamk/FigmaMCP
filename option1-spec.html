@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTV Export Panel - Option 1 Design Specification</title>
+
+  <!-- Figma MCP Script -->
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js"></script>
+
+  <style>
+    /* Design Tokens - Exact from implementation */
+    :root {
+      --font: 'Adobe Clean', 'Source Sans 3', system-ui, sans-serif;
+      --neutral:  #292929;
+      --subdued:  #505050;
+      --blue:     #274dea;
+      --green:    #12805c;
+      --red:      #d7373f;
+      --gray-25:  #FAFAFA;
+      --gray-50:  #FAFAFA;
+      --gray-100: #E9E9E9;
+      --gray-200: #D1D1D1;
+      --gray-300: #C8C8C8;
+      --gray-400: #B0B0B0;
+      --gray-500: #909090;
+      --shadow:   0px 2px 8px 0px rgba(0,0,0,0.16);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font);
+      background: #f0f0f0;
+      padding: 40px;
+      color: var(--neutral);
+    }
+
+    .spec-container {
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    .spec-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--neutral);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .spec-section {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    .section-label {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--neutral);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .states-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 32px;
+    }
+
+    .state-item {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .state-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--subdued);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Panel styles - exact from implementation */
+    .panel {
+      background: var(--gray-25);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      width: 480px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+    }
+
+    .panel-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--neutral);
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      cursor: pointer;
+    }
+
+    .radio-label input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .radio-label span {
+      font-size: 14px;
+      color: var(--neutral);
+      user-select: none;
+    }
+
+    /* Custom settings panel - exact from implementation line 1276 */
+    .custom-settings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 16px;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      background: var(--gray-50);
+    }
+
+    .custom-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .custom-field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--neutral);
+    }
+
+    .custom-select {
+      width: 100%;
+      height: 32px;
+      padding: 0 36px 0 12px;
+      border: none;
+      border-radius: 6px;
+      background-color: var(--gray-100);
+      font-size: 14px;
+      color: var(--neutral);
+      font-weight: 400;
+      font-family: var(--font);
+      cursor: pointer;
+      appearance: none;
+      position: relative;
+      display: flex;
+      align-items: center;
+      text-align: left;
+    }
+
+    .custom-select:hover {
+      background-color: var(--gray-200);
+    }
+
+    .custom-select:focus {
+      outline: none;
+      background-color: white;
+      box-shadow: 0 0 0 2px var(--neutral);
+    }
+
+    .custom-recommended {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--subdued);
+    }
+
+    .chevron-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--gray-500);
+    }
+
+    /* Dropdown menu */
+    .dropdown-container {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      padding: 8px;
+      z-index: 1000;
+      margin-top: 4px;
+    }
+
+    .dropdown-option {
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--neutral);
+      transition: background 0.13s;
+      text-align: left;
+      min-height: 32px;
+    }
+
+    .dropdown-option:hover {
+      background: var(--gray-100);
+    }
+
+    .dropdown-option.selected {
+      background: var(--gray-100);
+    }
+
+    .check-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .check-icon.hidden {
+      opacity: 0;
+    }
+
+    /* Toggle switch - exact dimensions */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+    }
+
+    .toggle-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--neutral);
+    }
+
+    .toggle-switch {
+      width: 26px;
+      height: 16px;
+      border: 2px solid var(--neutral);
+      border-radius: 20px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .toggle-switch.checked {
+      background: var(--neutral);
+      border-color: var(--neutral);
+    }
+
+    .toggle-knob {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--neutral);
+      position: absolute;
+      left: 1px;
+      top: 1px;
+      transition: all 0.2s;
+    }
+
+    .toggle-switch.checked .toggle-knob {
+      background: white;
+      left: 11px;
+    }
+
+    /* Button styles - exact from implementation */
+    .btn-primary {
+      width: 100%;
+      height: 36px;
+      border-radius: 60px;
+      border: none;
+      background: var(--neutral);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.13s;
+      font-family: var(--font);
+    }
+
+    .btn-primary:hover {
+      background: #000000;
+    }
+
+    .btn-primary:disabled {
+      background: var(--gray-200);
+      color: var(--gray-400);
+      cursor: not-allowed;
+    }
+
+    .btn-primary.success {
+      background: var(--green);
+    }
+
+    .btn-primary.error {
+      background: var(--red);
+    }
+
+    /* Export modal */
+    .export-modal {
+      width: 380px;
+      padding: 28px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--neutral);
+    }
+
+    .progress-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: var(--gray-200);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 10px;
+      transition: width 0.3s;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      color: var(--subdued);
+      text-align: center;
+    }
+
+    .checkmark-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    /* Redlines - measurement annotations */
+    .measurements-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      background: #fff5f5;
+      padding: 16px;
+      border-radius: 8px;
+      border: 2px solid #ff0000;
+      margin-top: 16px;
+    }
+
+    .measurement-item {
+      font-size: 13px;
+      font-family: monospace;
+      color: var(--neutral);
+      display: flex;
+      gap: 8px;
+    }
+
+    .measurement-item strong {
+      color: #ff0000;
+      min-width: 120px;
+    }
+
+    /* Bluelines - accessibility annotations */
+    .blueline {
+      position: relative;
+      border: 2px solid #274dea;
+      padding: 12px;
+      margin: 16px 0;
+      border-radius: 8px;
+      background: rgba(39, 77, 234, 0.05);
+    }
+
+    .blueline-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .blueline-item {
+      font-size: 13px;
+      color: var(--neutral);
+      padding: 4px 0;
+      display: flex;
+      gap: 8px;
+    }
+
+    .blueline-item strong {
+      color: var(--blue);
+      min-width: 140px;
+    }
+  </style>
+</head>
+<body>
+  <div class="spec-container">
+    <h1 class="spec-title">CTV Export Panel - Option 1 Design Specification</h1>
+
+    <!-- SECTION 1: Radio Selection States -->
+    <div class="spec-section">
+      <div class="section-label">1. Radio Selection States</div>
+      <div class="states-grid">
+        <!-- 1A: CTV Selected -->
+        <div class="state-item">
+          <div class="state-name">1A. CTV Channels Selected (Default)</div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Export</h3>
+            </div>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="export-1a" checked>
+                <span>CTV channels (default)</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="export-1a">
+                <span>Custom settings</span>
+              </label>
+            </div>
+          </div>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Radio size:</strong> 16px × 16px</div>
+            <div class="measurement-item"><strong>Radio gap:</strong> 12px</div>
+            <div class="measurement-item"><strong>Label size:</strong> 14px</div>
+            <div class="measurement-item"><strong>Vertical gap:</strong> 4px</div>
+          </div>
+        </div>
+
+        <!-- 1B: Custom Selected -->
+        <div class="state-item">
+          <div class="state-name">1B. Custom Settings Selected</div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Export</h3>
+            </div>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="export-1b">
+                <span>CTV channels (default)</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="export-1b" checked>
+                <span>Custom settings</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessibility Annotations -->
+      <div class="blueline">
+        <div class="blueline-title">♿ Accessibility - Radio Buttons</div>
+        <div class="blueline-item"><strong>Role:</strong> radio</div>
+        <div class="blueline-item"><strong>Keyboard:</strong> Arrow keys to navigate, Space to select</div>
+        <div class="blueline-item"><strong>Screen reader:</strong> Announces "Radio button, CTV channels (default), checked"</div>
+        <div class="blueline-item"><strong>Focus indicator:</strong> Browser default focus ring</div>
+        <div class="blueline-item"><strong>Group label:</strong> Should have fieldset with legend "Export type"</div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Custom Settings Panel States -->
+    <div class="spec-section">
+      <div class="section-label">2. Custom Settings Panel States</div>
+      <div class="states-grid">
+        <!-- 2A: Collapsed -->
+        <div class="state-item">
+          <div class="state-name">2A. Custom Settings - Collapsed (Hidden)</div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Export</h3>
+            </div>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="export-2a">
+                <span>CTV channels (default)</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="export-2a" checked>
+                <span>Custom settings</span>
+              </label>
+            </div>
+            <!-- No custom settings panel shown -->
+          </div>
+        </div>
+
+        <!-- 2B: Expanded -->
+        <div class="state-item">
+          <div class="state-name">2B. Custom Settings - Expanded</div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Export</h3>
+            </div>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="export-2b">
+                <span>CTV channels (default)</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="export-2b" checked>
+                <span>Custom settings</span>
+              </label>
+            </div>
+            <div class="custom-settings">
+              <!-- Resolution -->
+              <div class="custom-field">
+                <label>Resolution</label>
+                <div style="position: relative;">
+                  <div class="custom-select">1080p (default)</div>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="custom-recommended">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Recommended</span>
+                </div>
+              </div>
+
+              <!-- File Format -->
+              <div class="custom-field">
+                <label>File format</label>
+                <div style="position: relative;">
+                  <div class="custom-select">MP4 (H.264)</div>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="custom-recommended">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Recommended</span>
+                </div>
+              </div>
+
+              <!-- Frame Rate -->
+              <div class="custom-field">
+                <label>Frame rate</label>
+                <div style="position: relative;">
+                  <div class="custom-select">29.97</div>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="custom-recommended">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Recommended</span>
+                </div>
+              </div>
+
+              <!-- Bitrate -->
+              <div class="custom-field">
+                <label>Bitrate</label>
+                <div style="position: relative;">
+                  <div class="custom-select">20 Mbps</div>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="custom-recommended">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Recommended</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Redlines for Custom Settings Panel -->
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Panel width:</strong> 480px (inherits from parent)</div>
+            <div class="measurement-item"><strong>Content width:</strong> 448px (480 - 32px padding)</div>
+            <div class="measurement-item"><strong>Padding:</strong> 16px</div>
+            <div class="measurement-item"><strong>Grid columns:</strong> 1fr 1fr (2 equal columns)</div>
+            <div class="measurement-item"><strong>Grid gap:</strong> 8px</div>
+            <div class="measurement-item"><strong>Column width:</strong> 224px each</div>
+            <div class="measurement-item"><strong>Border:</strong> 1px solid #C8C8C8</div>
+            <div class="measurement-item"><strong>Border radius:</strong> 8px</div>
+            <div class="measurement-item"><strong>Background:</strong> #FAFAFA</div>
+            <div class="measurement-item"><strong>Margin top:</strong> 12px</div>
+            <div class="measurement-item"><strong>Select height:</strong> 32px</div>
+            <div class="measurement-item"><strong>Select padding:</strong> 0 36px 0 12px</div>
+            <div class="measurement-item"><strong>Select bg:</strong> #E9E9E9</div>
+            <div class="measurement-item"><strong>Select radius:</strong> 6px</div>
+            <div class="measurement-item"><strong>Label size:</strong> 14px</div>
+            <div class="measurement-item"><strong>Label margin:</strong> 0 0 8px 0</div>
+            <div class="measurement-item"><strong>Recommended size:</strong> 13px</div>
+            <div class="measurement-item"><strong>Recommended gap:</strong> 6px</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessibility Annotations -->
+      <div class="blueline">
+        <div class="blueline-title">♿ Accessibility - Custom Settings Panel</div>
+        <div class="blueline-item"><strong>Display control:</strong> Conditional visibility based on radio selection</div>
+        <div class="blueline-item"><strong>Animation:</strong> Should fade in smoothly (display: none → display: grid)</div>
+        <div class="blueline-item"><strong>Focus management:</strong> First dropdown should receive focus when panel opens</div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Dropdown States (Resolution) -->
+    <div class="spec-section">
+      <div class="section-label">3. Dropdown States - Resolution Example</div>
+      <div class="states-grid">
+        <!-- 3A: Closed -->
+        <div class="state-item">
+          <div class="state-name">3A. Dropdown - Closed (Default)</div>
+          <div style="width: 224px;">
+            <div class="custom-field">
+              <label>Resolution</label>
+              <div style="position: relative;">
+                <div class="custom-select">1080p (default)</div>
+                <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Width:</strong> 100% (224px in grid)</div>
+            <div class="measurement-item"><strong>Height:</strong> 32px</div>
+            <div class="measurement-item"><strong>Background:</strong> #E9E9E9</div>
+            <div class="measurement-item"><strong>Border radius:</strong> 6px</div>
+            <div class="measurement-item"><strong>Font size:</strong> 14px</div>
+            <div class="measurement-item"><strong>Padding:</strong> 0 36px 0 12px</div>
+          </div>
+        </div>
+
+        <!-- 3B: Hover -->
+        <div class="state-item">
+          <div class="state-name">3B. Dropdown - Hover</div>
+          <div style="width: 224px;">
+            <div class="custom-field">
+              <label>Resolution</label>
+              <div style="position: relative;">
+                <div class="custom-select" style="background-color: var(--gray-200);">1080p (default)</div>
+                <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Background:</strong> #D1D1D1 (hover)</div>
+            <div class="measurement-item"><strong>Transition:</strong> 0.13s</div>
+          </div>
+        </div>
+
+        <!-- 3C: Focus -->
+        <div class="state-item">
+          <div class="state-name">3C. Dropdown - Focus</div>
+          <div style="width: 224px;">
+            <div class="custom-field">
+              <label>Resolution</label>
+              <div style="position: relative;">
+                <div class="custom-select" style="background-color: white; box-shadow: 0 0 0 2px var(--neutral);">1080p (default)</div>
+                <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Background:</strong> white (focus)</div>
+            <div class="measurement-item"><strong>Box shadow:</strong> 0 0 0 2px #292929</div>
+            <div class="measurement-item"><strong>Outline:</strong> none</div>
+          </div>
+        </div>
+
+        <!-- 3D: Open -->
+        <div class="state-item">
+          <div class="state-name">3D. Dropdown - Open with Menu</div>
+          <div style="width: 224px;">
+            <div class="custom-field">
+              <label>Resolution</label>
+              <div class="dropdown-container">
+                <div style="position: relative;">
+                  <div class="custom-select" style="background-color: white; box-shadow: 0 0 0 2px var(--neutral);">1080p (default)</div>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" style="transform: translateY(-50%) rotate(180deg);">
+                    <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="dropdown-menu">
+                  <div class="dropdown-option selected">
+                    <svg class="check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>1080p (default)</span>
+                  </div>
+                  <div class="dropdown-option">
+                    <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>720p</span>
+                  </div>
+                  <div class="dropdown-option">
+                    <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>4K</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Menu width:</strong> 100% (matches trigger)</div>
+            <div class="measurement-item"><strong>Menu padding:</strong> 8px</div>
+            <div class="measurement-item"><strong>Menu radius:</strong> 8px</div>
+            <div class="measurement-item"><strong>Menu shadow:</strong> 0 4px 16px rgba(0,0,0,0.15)</div>
+            <div class="measurement-item"><strong>Option height:</strong> min 32px</div>
+            <div class="measurement-item"><strong>Option padding:</strong> 6px 12px</div>
+            <div class="measurement-item"><strong>Option radius:</strong> 6px</div>
+            <div class="measurement-item"><strong>Option gap:</strong> 8px (icon to text)</div>
+            <div class="measurement-item"><strong>Chevron rotate:</strong> 180deg when open</div>
+            <div class="measurement-item"><strong>z-index:</strong> 1000</div>
+          </div>
+        </div>
+
+        <!-- 3E: Option Hover -->
+        <div class="state-item">
+          <div class="state-name">3E. Dropdown - Option Hover</div>
+          <div style="width: 224px;">
+            <div class="custom-field">
+              <label>Resolution</label>
+              <div class="dropdown-container">
+                <div style="position: relative;">
+                  <div class="custom-select" style="background-color: white; box-shadow: 0 0 0 2px var(--neutral);">1080p (default)</div>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" style="transform: translateY(-50%) rotate(180deg);">
+                    <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="dropdown-menu">
+                  <div class="dropdown-option selected">
+                    <svg class="check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>1080p (default)</span>
+                  </div>
+                  <div class="dropdown-option" style="background: var(--gray-100);">
+                    <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>720p</span>
+                  </div>
+                  <div class="dropdown-option">
+                    <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>4K</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Hover bg:</strong> #E9E9E9</div>
+            <div class="measurement-item"><strong>Transition:</strong> 0.13s</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessibility Annotations -->
+      <div class="blueline">
+        <div class="blueline-title">♿ Accessibility - Dropdown</div>
+        <div class="blueline-item"><strong>Role:</strong> combobox / listbox pattern</div>
+        <div class="blueline-item"><strong>ARIA expanded:</strong> aria-expanded="false" when closed, "true" when open</div>
+        <div class="blueline-item"><strong>ARIA controls:</strong> aria-controls="[menu-id]"</div>
+        <div class="blueline-item"><strong>ARIA selected:</strong> Selected option has aria-selected="true"</div>
+        <div class="blueline-item"><strong>Keyboard:</strong> Space/Enter to open, Arrow keys to navigate, Escape to close</div>
+        <div class="blueline-item"><strong>Focus trap:</strong> Focus stays within menu when open</div>
+        <div class="blueline-item"><strong>Screen reader:</strong> "Resolution, combobox, 1080p selected, press Space to open"</div>
+        <div class="blueline-item"><strong>Visual indicator:</strong> Checkmark shows selected state</div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: All Dropdown Options -->
+    <div class="spec-section">
+      <div class="section-label">4. All Dropdown Options Reference</div>
+
+      <!-- 4A: Resolution -->
+      <div style="margin-bottom: 24px;">
+        <div class="state-name">4A. Resolution Dropdown Options</div>
+        <div style="width: 224px; margin-top: 12px;">
+          <div class="dropdown-menu" style="position: relative;">
+            <div class="dropdown-option selected">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>1080p (default)</span>
+            </div>
+            <div class="dropdown-option">
+              <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>720p</span>
+            </div>
+            <div class="dropdown-option">
+              <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>4K</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4B: File Format -->
+      <div style="margin-bottom: 24px;">
+        <div class="state-name">4B. File Format Dropdown Options</div>
+        <div style="width: 224px; margin-top: 12px;">
+          <div class="dropdown-menu" style="position: relative;">
+            <div class="dropdown-option selected">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>MP4 (H.264)</span>
+            </div>
+            <div class="dropdown-option">
+              <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>MP4 (H.265)</span>
+            </div>
+            <div class="dropdown-option">
+              <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>MOV</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4C: Frame Rate -->
+      <div style="margin-bottom: 24px;">
+        <div class="state-name">4C. Frame Rate Dropdown Options</div>
+        <div style="width: 224px; margin-top: 12px;">
+          <div class="dropdown-menu" style="position: relative;">
+            <div class="dropdown-option selected">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>29.97</span>
+            </div>
+            <div class="dropdown-option">
+              <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>24</span>
+            </div>
+            <div class="dropdown-option">
+              <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>25</span>
+            </div>
+            <div class="dropdown-option">
+              <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4D: Bitrate -->
+      <div style="margin-bottom: 24px;">
+        <div class="state-name">4D. Bitrate Dropdown Options</div>
+        <div style="width: 224px; margin-top: 12px;">
+          <div class="dropdown-menu" style="position: relative;">
+            <div class="dropdown-option selected">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>20 Mbps</span>
+            </div>
+            <div class="dropdown-option">
+              <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>25 Mbps</span>
+            </div>
+            <div class="dropdown-option">
+              <svg class="check-icon hidden" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-6" stroke="#274dea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>30 Mbps</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: Toggle States -->
+    <div class="spec-section">
+      <div class="section-label">5. Content Credentials Toggle States</div>
+      <div class="states-grid">
+        <!-- 5A: Unchecked -->
+        <div class="state-item">
+          <div class="state-name">5A. Toggle - Unchecked (Default)</div>
+          <div class="toggle-container" style="width: 432px;">
+            <span class="toggle-label">Include Content Credentials</span>
+            <div class="toggle-switch">
+              <div class="toggle-knob"></div>
+            </div>
+          </div>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Toggle width:</strong> 26px</div>
+            <div class="measurement-item"><strong>Toggle height:</strong> 16px</div>
+            <div class="measurement-item"><strong>Border:</strong> 2px solid #292929</div>
+            <div class="measurement-item"><strong>Border radius:</strong> 20px</div>
+            <div class="measurement-item"><strong>Knob size:</strong> 10px × 10px</div>
+            <div class="measurement-item"><strong>Knob position:</strong> left 1px, top 1px</div>
+            <div class="measurement-item"><strong>Background:</strong> white</div>
+            <div class="measurement-item"><strong>Knob color:</strong> #292929</div>
+          </div>
+        </div>
+
+        <!-- 5B: Checked -->
+        <div class="state-item">
+          <div class="state-name">5B. Toggle - Checked</div>
+          <div class="toggle-container" style="width: 432px;">
+            <span class="toggle-label">Include Content Credentials</span>
+            <div class="toggle-switch checked">
+              <div class="toggle-knob"></div>
+            </div>
+          </div>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Background:</strong> #292929 (checked)</div>
+            <div class="measurement-item"><strong>Border:</strong> 2px solid #292929</div>
+            <div class="measurement-item"><strong>Knob position:</strong> left 11px, top 1px</div>
+            <div class="measurement-item"><strong>Knob color:</strong> white</div>
+            <div class="measurement-item"><strong>Transition:</strong> all 0.2s</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessibility Annotations -->
+      <div class="blueline">
+        <div class="blueline-title">♿ Accessibility - Toggle Switch</div>
+        <div class="blueline-item"><strong>Role:</strong> switch</div>
+        <div class="blueline-item"><strong>ARIA checked:</strong> aria-checked="false" or "true"</div>
+        <div class="blueline-item"><strong>ARIA label:</strong> "Include Content Credentials"</div>
+        <div class="blueline-item"><strong>Keyboard:</strong> Space to toggle, Tab to focus</div>
+        <div class="blueline-item"><strong>Focus indicator:</strong> Should have visible focus ring (2px offset)</div>
+        <div class="blueline-item"><strong>Screen reader:</strong> "Include Content Credentials, switch, off" / "on"</div>
+        <div class="blueline-item"><strong>Motion:</strong> Smooth transition animation (0.2s)</div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: Export Button States -->
+    <div class="spec-section">
+      <div class="section-label">6. Export Button States</div>
+      <div class="states-grid">
+        <!-- 6A: Default -->
+        <div class="state-item">
+          <div class="state-name">6A. Button - Default</div>
+          <button class="btn-primary">Export</button>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Width:</strong> 100% (432px in panel)</div>
+            <div class="measurement-item"><strong>Height:</strong> 36px</div>
+            <div class="measurement-item"><strong>Background:</strong> #292929</div>
+            <div class="measurement-item"><strong>Color:</strong> white</div>
+            <div class="measurement-item"><strong>Border radius:</strong> 60px</div>
+            <div class="measurement-item"><strong>Font size:</strong> 14px</div>
+            <div class="measurement-item"><strong>Font weight:</strong> 700</div>
+            <div class="measurement-item"><strong>Border:</strong> none</div>
+          </div>
+        </div>
+
+        <!-- 6B: Hover -->
+        <div class="state-item">
+          <div class="state-name">6B. Button - Hover</div>
+          <button class="btn-primary" style="background: #000000;">Export</button>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Background:</strong> #000000 (hover)</div>
+            <div class="measurement-item"><strong>Transition:</strong> all 0.13s</div>
+          </div>
+        </div>
+
+        <!-- 6C: Disabled -->
+        <div class="state-item">
+          <div class="state-name">6C. Button - Disabled</div>
+          <button class="btn-primary" disabled>Export</button>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Background:</strong> #D1D1D1</div>
+            <div class="measurement-item"><strong>Color:</strong> #B0B0B0</div>
+            <div class="measurement-item"><strong>Cursor:</strong> not-allowed</div>
+          </div>
+        </div>
+
+        <!-- 6D: Success -->
+        <div class="state-item">
+          <div class="state-name">6D. Button - Success State</div>
+          <button class="btn-primary success">Export complete</button>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Background:</strong> #12805c (green)</div>
+            <div class="measurement-item"><strong>Color:</strong> white</div>
+          </div>
+        </div>
+
+        <!-- 6E: Error -->
+        <div class="state-item">
+          <div class="state-name">6E. Button - Error State</div>
+          <button class="btn-primary error">Export failed</button>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Background:</strong> #d7373f (red)</div>
+            <div class="measurement-item"><strong>Color:</strong> white</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessibility Annotations -->
+      <div class="blueline">
+        <div class="blueline-title">♿ Accessibility - Export Button</div>
+        <div class="blueline-item"><strong>Role:</strong> button (native)</div>
+        <div class="blueline-item"><strong>ARIA disabled:</strong> aria-disabled="true" when disabled</div>
+        <div class="blueline-item"><strong>ARIA live:</strong> aria-live="polite" for status changes</div>
+        <div class="blueline-item"><strong>Keyboard:</strong> Enter or Space to activate</div>
+        <div class="blueline-item"><strong>Focus indicator:</strong> Browser default focus ring</div>
+        <div class="blueline-item"><strong>Screen reader:</strong> "Export, button" / "Export complete, button" / "Export failed, button"</div>
+        <div class="blueline-item"><strong>Color contrast:</strong>
+          - Default: 12.5:1 (white on #292929) ✓ WCAG AAA
+          - Success: 5.8:1 (white on #12805c) ✓ WCAG AA
+          - Error: 5.9:1 (white on #d7373f) ✓ WCAG AA
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 7: Export Modal States -->
+    <div class="spec-section">
+      <div class="section-label">7. Export Modal States</div>
+      <div class="states-grid">
+        <!-- 7A: In Progress -->
+        <div class="state-item">
+          <div class="state-name">7A. Modal - Export In Progress (45%)</div>
+          <div class="export-modal">
+            <h4 class="modal-title">Exporting...</h4>
+            <div class="progress-container">
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 45%;"></div>
+              </div>
+              <div class="progress-text">45%</div>
+            </div>
+          </div>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Modal width:</strong> 380px</div>
+            <div class="measurement-item"><strong>Padding:</strong> 28px</div>
+            <div class="measurement-item"><strong>Border radius:</strong> 12px</div>
+            <div class="measurement-item"><strong>Box shadow:</strong> 0 8px 24px rgba(0,0,0,0.2)</div>
+            <div class="measurement-item"><strong>Gap:</strong> 20px</div>
+            <div class="measurement-item"><strong>Progress height:</strong> 6px</div>
+            <div class="measurement-item"><strong>Progress bg:</strong> #D1D1D1</div>
+            <div class="measurement-item"><strong>Progress fill:</strong> #274dea</div>
+            <div class="measurement-item"><strong>Title size:</strong> 18px</div>
+            <div class="measurement-item"><strong>Title weight:</strong> 600</div>
+          </div>
+        </div>
+
+        <!-- 7B: Complete -->
+        <div class="state-item">
+          <div class="state-name">7B. Modal - Export Complete (100%)</div>
+          <div class="export-modal">
+            <div class="checkmark-icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M6 16l8 8 12-12" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h4 class="modal-title">Export complete</h4>
+            <div class="progress-container">
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 100%;"></div>
+              </div>
+              <div class="progress-text">100%</div>
+            </div>
+          </div>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Checkmark size:</strong> 64px × 64px</div>
+            <div class="measurement-item"><strong>Checkmark bg:</strong> #12805c (green)</div>
+            <div class="measurement-item"><strong>Checkmark icon:</strong> 32px × 32px</div>
+            <div class="measurement-item"><strong>Progress width:</strong> 100%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessibility Annotations -->
+      <div class="blueline">
+        <div class="blueline-title">♿ Accessibility - Export Modal</div>
+        <div class="blueline-item"><strong>Role:</strong> dialog</div>
+        <div class="blueline-item"><strong>ARIA modal:</strong> aria-modal="true"</div>
+        <div class="blueline-item"><strong>ARIA labelledby:</strong> Points to modal title</div>
+        <div class="blueline-item"><strong>ARIA live:</strong> aria-live="polite" on progress updates</div>
+        <div class="blueline-item"><strong>Focus trap:</strong> Focus should be trapped within modal</div>
+        <div class="blueline-item"><strong>Focus management:</strong> Focus moves to modal when opened</div>
+        <div class="blueline-item"><strong>Backdrop:</strong> Should have semi-transparent backdrop (rgba(0,0,0,0.5))</div>
+        <div class="blueline-item"><strong>Screen reader:</strong> "Exporting dialog, 45 percent complete" → "Export complete dialog"</div>
+        <div class="blueline-item"><strong>Progress updates:</strong> Announce percentage changes every 10%</div>
+      </div>
+    </div>
+
+    <!-- SECTION 8: Full Panel States -->
+    <div class="spec-section">
+      <div class="section-label">8. Complete Panel States</div>
+      <div class="states-grid">
+        <!-- 8A: Default View -->
+        <div class="state-item">
+          <div class="state-name">8A. Full Panel - Default View (CTV Selected)</div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Export</h3>
+            </div>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="export-8a" checked>
+                <span>CTV channels (default)</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="export-8a">
+                <span>Custom settings</span>
+              </label>
+            </div>
+            <div style="height: 1px; background: var(--gray-100); margin: 8px 0;"></div>
+            <div class="toggle-container">
+              <span class="toggle-label">Include Content Credentials</span>
+              <div class="toggle-switch">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+            <button class="btn-primary">Export</button>
+          </div>
+          <div class="measurements-grid">
+            <div class="measurement-item"><strong>Panel width:</strong> 480px</div>
+            <div class="measurement-item"><strong>Panel padding:</strong> 24px</div>
+            <div class="measurement-item"><strong>Panel gap:</strong> 8px (between children)</div>
+            <div class="measurement-item"><strong>Panel radius:</strong> 8px</div>
+            <div class="measurement-item"><strong>Panel shadow:</strong> 0px 2px 8px rgba(0,0,0,0.16)</div>
+            <div class="measurement-item"><strong>Panel bg:</strong> #FAFAFA</div>
+            <div class="measurement-item"><strong>Divider height:</strong> 1px</div>
+            <div class="measurement-item"><strong>Divider color:</strong> #E9E9E9</div>
+            <div class="measurement-item"><strong>Divider margin:</strong> 8px 0</div>
+          </div>
+        </div>
+
+        <!-- 8B: Custom Settings Expanded -->
+        <div class="state-item">
+          <div class="state-name">8B. Full Panel - Custom Settings Expanded</div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Export</h3>
+            </div>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="export-8b">
+                <span>CTV channels (default)</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="export-8b" checked>
+                <span>Custom settings</span>
+              </label>
+            </div>
+            <div class="custom-settings">
+              <div class="custom-field">
+                <label>Resolution</label>
+                <div style="position: relative;">
+                  <div class="custom-select">1080p (default)</div>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="custom-recommended">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Recommended</span>
+                </div>
+              </div>
+              <div class="custom-field">
+                <label>File format</label>
+                <div style="position: relative;">
+                  <div class="custom-select">MP4 (H.264)</div>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="custom-recommended">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Recommended</span>
+                </div>
+              </div>
+              <div class="custom-field">
+                <label>Frame rate</label>
+                <div style="position: relative;">
+                  <div class="custom-select">29.97</div>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="custom-recommended">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Recommended</span>
+                </div>
+              </div>
+              <div class="custom-field">
+                <label>Bitrate</label>
+                <div style="position: relative;">
+                  <div class="custom-select">20 Mbps</div>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="custom-recommended">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Recommended</span>
+                </div>
+              </div>
+            </div>
+            <div style="height: 1px; background: var(--gray-100); margin: 8px 0;"></div>
+            <div class="toggle-container">
+              <span class="toggle-label">Include Content Credentials</span>
+              <div class="toggle-switch checked">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+            <button class="btn-primary">Export</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessibility Annotations -->
+      <div class="blueline">
+        <div class="blueline-title">♿ Accessibility - Overall Panel</div>
+        <div class="blueline-item"><strong>Role:</strong> region or dialog (depending on context)</div>
+        <div class="blueline-item"><strong>ARIA label:</strong> "Export settings"</div>
+        <div class="blueline-item"><strong>Landmark:</strong> Could be wrapped in &lt;aside&gt; or &lt;section&gt;</div>
+        <div class="blueline-item"><strong>Tab order:</strong> Radio buttons → Dropdowns (if visible) → Toggle → Export button</div>
+        <div class="blueline-item"><strong>Focus management:</strong> Logical tab order top to bottom</div>
+        <div class="blueline-item"><strong>Heading hierarchy:</strong> h3 for "Export" (adjust based on page context)</div>
+        <div class="blueline-item"><strong>Color contrast:</strong> All text meets WCAG AA minimum (4.5:1 for small text)</div>
+        <div class="blueline-item"><strong>Responsive behavior:</strong> Fixed width 480px (consider breakpoints for mobile)</div>
+      </div>
+    </div>
+
+    <!-- SECTION 9: Color Palette -->
+    <div class="spec-section">
+      <div class="section-label">9. Color Palette & Design Tokens</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+        <div style="padding: 16px; background: var(--neutral); color: white; border-radius: 8px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">--neutral</div>
+          <div style="font-family: monospace; font-size: 13px;">#292929</div>
+        </div>
+        <div style="padding: 16px; background: var(--subdued); color: white; border-radius: 8px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">--subdued</div>
+          <div style="font-family: monospace; font-size: 13px;">#505050</div>
+        </div>
+        <div style="padding: 16px; background: var(--blue); color: white; border-radius: 8px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">--blue</div>
+          <div style="font-family: monospace; font-size: 13px;">#274dea</div>
+        </div>
+        <div style="padding: 16px; background: var(--green); color: white; border-radius: 8px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">--green</div>
+          <div style="font-family: monospace; font-size: 13px;">#12805c</div>
+        </div>
+        <div style="padding: 16px; background: var(--red); color: white; border-radius: 8px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">--red</div>
+          <div style="font-family: monospace; font-size: 13px;">#d7373f</div>
+        </div>
+        <div style="padding: 16px; background: var(--gray-25); border: 1px solid var(--gray-200); border-radius: 8px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">--gray-25/50</div>
+          <div style="font-family: monospace; font-size: 13px;">#FAFAFA</div>
+        </div>
+        <div style="padding: 16px; background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 8px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">--gray-100</div>
+          <div style="font-family: monospace; font-size: 13px;">#E9E9E9</div>
+        </div>
+        <div style="padding: 16px; background: var(--gray-200); border-radius: 8px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">--gray-200</div>
+          <div style="font-family: monospace; font-size: 13px;">#D1D1D1</div>
+        </div>
+        <div style="padding: 16px; background: var(--gray-300); border-radius: 8px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">--gray-300</div>
+          <div style="font-family: monospace; font-size: 13px;">#C8C8C8</div>
+        </div>
+        <div style="padding: 16px; background: var(--gray-400); color: white; border-radius: 8px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">--gray-400</div>
+          <div style="font-family: monospace; font-size: 13px;">#B0B0B0</div>
+        </div>
+        <div style="padding: 16px; background: var(--gray-500); color: white; border-radius: 8px;">
+          <div style="font-weight: 700; margin-bottom: 4px;">--gray-500</div>
+          <div style="font-family: monospace; font-size: 13px;">#909090</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 10: Typography Scale -->
+    <div class="spec-section">
+      <div class="section-label">10. Typography Scale</div>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="padding: 12px; background: var(--gray-50); border-radius: 6px; border-left: 4px solid var(--blue);">
+          <div style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">Panel Title - 18px / 700</div>
+          <div style="font-size: 13px; color: var(--subdued); font-family: monospace;">font-size: 18px; font-weight: 700;</div>
+        </div>
+        <div style="padding: 12px; background: var(--gray-50); border-radius: 6px; border-left: 4px solid var(--blue);">
+          <div style="font-size: 14px; font-weight: 400; margin-bottom: 4px;">Body Text / Labels - 14px / 400</div>
+          <div style="font-size: 13px; color: var(--subdued); font-family: monospace;">font-size: 14px; font-weight: 400;</div>
+        </div>
+        <div style="padding: 12px; background: var(--gray-50); border-radius: 6px; border-left: 4px solid var(--blue);">
+          <div style="font-size: 14px; font-weight: 700; margin-bottom: 4px;">Button Text - 14px / 700</div>
+          <div style="font-size: 13px; color: var(--subdued); font-family: monospace;">font-size: 14px; font-weight: 700;</div>
+        </div>
+        <div style="padding: 12px; background: var(--gray-50); border-radius: 6px; border-left: 4px solid var(--blue);">
+          <div style="font-size: 13px; font-weight: 400; margin-bottom: 4px;">Helper Text / Recommended - 13px / 400</div>
+          <div style="font-size: 13px; color: var(--subdued); font-family: monospace;">font-size: 13px; font-weight: 400;</div>
+        </div>
+        <div style="padding: 12px; background: var(--gray-50); border-radius: 6px; border-left: 4px solid var(--blue);">
+          <div style="font-size: 12px; font-weight: 600; margin-bottom: 4px;">Section Labels - 12px / 600 / UPPERCASE</div>
+          <div style="font-size: 13px; color: var(--subdued); font-family: monospace;">font-size: 12px; font-weight: 600; text-transform: uppercase;</div>
+        </div>
+      </div>
+      <div class="blueline" style="margin-top: 24px;">
+        <div class="blueline-title">Typography Notes</div>
+        <div class="blueline-item"><strong>Font Family:</strong> 'Adobe Clean', 'Source Sans 3', system-ui, sans-serif</div>
+        <div class="blueline-item"><strong>Line Height:</strong> Use default browser line-height for better readability</div>
+        <div class="blueline-item"><strong>Letter Spacing:</strong> 0.5px for uppercase section labels</div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
