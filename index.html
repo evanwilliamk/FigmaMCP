@@ -2596,14 +2596,12 @@
   // Close/Cancel button handler
   modalCancelBtn1.addEventListener('click', () => {
     if (state1.phase === 'complete') {
-      // Close modal and reset
+      // Close modal only, don't show panel
       exportModal1.classList.remove('visible');
-      panel1.style.display = 'flex';
       resetToIdle1();
     } else if (state1.phase === 'loading') {
-      // Cancel export
+      // Cancel export and don't show panel
       exportModal1.classList.remove('visible');
-      panel1.style.display = 'flex';
       resetToIdle1();
     }
   });
