@@ -1155,16 +1155,9 @@
       margin: 0;
     }
 
-    .export-modal__message {
-      font-size: 13px;
-      color: var(--subdued);
-      margin: 0;
-      line-height: 1.5;
-    }
-
     .export-modal__progress {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       margin-bottom: 4px;
     }
@@ -1194,20 +1187,24 @@
 
     .export-modal__cancel {
       align-self: flex-end;
-      padding: 8px 20px;
-      background: white;
-      border: 1px solid var(--gray-300);
-      border-radius: 6px;
+      height: 36px;
+      padding: 0 20px;
+      background: var(--neutral);
+      color: #fff;
+      border: none;
+      border-radius: 60px;
       font-size: 14px;
-      font-weight: 500;
-      color: var(--neutral);
+      font-weight: 700;
+      font-family: var(--font);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .export-modal__cancel:hover {
-      background: var(--gray-50);
-      border-color: var(--gray-400);
+      background: var(--gray-800);
     }
 
   </style>
@@ -1375,7 +1372,6 @@
     <h2 class="export-modal__title">Exporting...</h2>
     <div>
       <div class="export-modal__progress">
-        <p class="export-modal__message" id="export-modal-message-1">Rendering for CTV channels...</p>
         <span class="export-modal__percentage" id="export-modal-percentage-1">17%</span>
       </div>
       <div class="export-modal__bar">
