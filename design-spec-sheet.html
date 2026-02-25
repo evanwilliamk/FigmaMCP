@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTV Export Panel - Design Specifications</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #F0F0F0;
+      padding: 40px;
+    }
+
+    .spec-sheet {
+      background: white;
+      padding: 40px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .header {
+      border-bottom: 4px solid #1473E6;
+      padding-bottom: 20px;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      color: #2C2C2C;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: #6B6B6B;
+    }
+
+    .section {
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2C2C2C;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #E1E1E1;
+    }
+
+    .states-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .state-item {
+      text-align: center;
+    }
+
+    .state-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6B6B6B;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .state-preview {
+      background: #FAFAFA;
+      border: 1px solid #E1E1E1;
+      border-radius: 8px;
+      padding: 24px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .spec-annotation {
+      position: absolute;
+      font-size: 10px;
+      font-weight: 600;
+      background: #FF0000;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    .spec-annotation.blue {
+      background: #1473E6;
+    }
+
+    .spec-annotation.purple {
+      background: #9C27B0;
+    }
+
+    .spec-annotation.orange {
+      background: #FF6B00;
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 24px;
+      font-size: 13px;
+    }
+
+    .spec-table th {
+      background: #F5F5F5;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #2C2C2C;
+      border: 1px solid #E1E1E1;
+    }
+
+    .spec-table td {
+      padding: 12px;
+      border: 1px solid #E1E1E1;
+      color: #6B6B6B;
+    }
+
+    .spec-table code {
+      background: #F5F5F5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 12px;
+      color: #E34850;
+    }
+
+    .full-panel-preview {
+      border: 2px solid #E1E1E1;
+      border-radius: 12px;
+      padding: 24px;
+      background: white;
+      position: relative;
+      margin: 24px 0;
+    }
+
+    /* Component styles matching the actual design */
+    .btn-primary {
+      min-width: 100px;
+      height: 36px;
+      padding: 0 20px;
+      background: #2C2C2C;
+      color: white;
+      border: none;
+      border-radius: 60px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover { background: #464646; }
+    .btn-primary.disabled { background: #F5F5F5; color: #BCBCBC; cursor: not-allowed; }
+    .btn-primary.success { background: #2D9D78; }
+    .btn-primary.error { background: #E34850; }
+
+    .btn-outline {
+      height: 36px;
+      padding: 0 20px;
+      background: white;
+      color: #2C2C2C;
+      border: 2px solid #2C2C2C;
+      border-radius: 60px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toggle-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .toggle-track {
+      width: 40px;
+      height: 24px;
+      border-radius: 12px;
+      background: #E1E1E1;
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .toggle-track.checked {
+      background: #1473E6;
+    }
+
+    .toggle-knob {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: white;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: left 0.2s;
+    }
+
+    .toggle-track.checked .toggle-knob {
+      left: 19px;
+    }
+
+    .option-card {
+      padding: 16px;
+      border: 2px solid #D3D3D3;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .option-card.selected {
+      border-color: #1473E6;
+    }
+
+    .asset-info {
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #F5F5F5;
+      border-radius: 8px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .divider-v {
+      width: 1px;
+      height: 16px;
+      background: #D3D3D3;
+    }
+
+    .select-input {
+      width: 180px;
+      height: 32px;
+      padding: 0 12px;
+      border: none;
+      border-radius: 6px;
+      background: #F5F5F5;
+      font-size: 14px;
+      color: #2C2C2C;
+      cursor: pointer;
+    }
+
+    .export-modal {
+      width: 380px;
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #E1E1E1;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #1473E6;
+      border-radius: 3px;
+    }
+
+    .color-swatch {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      border: 1px solid #E1E1E1;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+<div class="spec-sheet">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>CTV Export Panel — Design Specifications</h1>
+    <p>Complete component states, variants, and measurements | Version 1.0 | February 2026</p>
+  </div>
+
+  <!-- 1. EXPORT BUTTON STATES -->
+  <div class="section">
+    <h2 class="section-title">1. Export Button States</h2>
+
+    <div class="states-grid">
+      <div class="state-item">
+        <div class="state-label">1A. Default / Idle</div>
+        <div class="state-preview">
+          <button class="btn-primary">Export</button>
+          <span class="spec-annotation" style="top: -12px; left: 50%; transform: translateX(-50%);">36px</span>
+          <span class="spec-annotation orange" style="bottom: -12px; left: 0;">20px</span>
+          <span class="spec-annotation orange" style="bottom: -12px; right: 0;">20px</span>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">1B. Hover</div>
+        <div class="state-preview">
+          <button class="btn-primary" style="background: #464646;">Export</button>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">1C. Focus</div>
+        <div class="state-preview">
+          <button class="btn-primary" style="outline: 2px solid #1473E6; outline-offset: 2px;">Export</button>
+          <span class="spec-annotation blue" style="top: -12px; right: -12px;">2px outline</span>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">1D. Disabled</div>
+        <div class="state-preview">
+          <button class="btn-primary disabled">Export</button>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">1E. Success</div>
+        <div class="state-preview">
+          <button class="btn-primary success">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12l5 5L20 7" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Export complete
+          </button>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">1F. Error</div>
+        <div class="state-preview">
+          <button class="btn-primary error">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/>
+              <path d="M12 9v4M12 16h.01" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Export failed — Try again
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>Background</th>
+          <th>Text Color</th>
+          <th>Border</th>
+          <th>Cursor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Default</td>
+          <td><code>#2C2C2C</code></td>
+          <td><code>#FFFFFF</code></td>
+          <td>none</td>
+          <td>pointer</td>
+        </tr>
+        <tr>
+          <td>Hover</td>
+          <td><code>#464646</code></td>
+          <td><code>#FFFFFF</code></td>
+          <td>none</td>
+          <td>pointer</td>
+        </tr>
+        <tr>
+          <td>Focus</td>
+          <td><code>#2C2C2C</code></td>
+          <td><code>#FFFFFF</code></td>
+          <td><code>2px solid #1473E6, offset 2px</code></td>
+          <td>pointer</td>
+        </tr>
+        <tr>
+          <td>Disabled</td>
+          <td><code>#F5F5F5</code></td>
+          <td><code>#BCBCBC</code></td>
+          <td>none</td>
+          <td>not-allowed</td>
+        </tr>
+        <tr>
+          <td>Success</td>
+          <td><code>#2D9D78</code></td>
+          <td><code>#FFFFFF</code></td>
+          <td>none</td>
+          <td>default</td>
+        </tr>
+        <tr>
+          <td>Error</td>
+          <td><code>#E34850</code></td>
+          <td><code>#FFFFFF</code></td>
+          <td>none</td>
+          <td>pointer</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="spec-table" style="margin-top: 16px;">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Value</th>
+          <th>CSS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Height</td>
+          <td>36px</td>
+          <td><code>height: 36px;</code></td>
+        </tr>
+        <tr>
+          <td>Padding</td>
+          <td>0 20px</td>
+          <td><code>padding: 0 20px;</code></td>
+        </tr>
+        <tr>
+          <td>Border radius</td>
+          <td>60px</td>
+          <td><code>border-radius: 60px;</code></td>
+        </tr>
+        <tr>
+          <td>Font size</td>
+          <td>14px</td>
+          <td><code>font-size: 14px;</code></td>
+        </tr>
+        <tr>
+          <td>Font weight</td>
+          <td>700</td>
+          <td><code>font-weight: 700;</code></td>
+        </tr>
+        <tr>
+          <td>Transition</td>
+          <td>0.15s</td>
+          <td><code>transition: background 0.15s;</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2. TOGGLE SWITCH STATES -->
+  <div class="section">
+    <h2 class="section-title">2. Toggle Switch States</h2>
+
+    <div class="states-grid">
+      <div class="state-item">
+        <div class="state-label">2A. Unchecked</div>
+        <div class="state-preview">
+          <div class="toggle-switch">
+            <div class="toggle-track">
+              <div class="toggle-knob"></div>
+            </div>
+            <span style="font-size: 14px; color: #2C2C2C;">Apply Content Credentials</span>
+          </div>
+          <span class="spec-annotation" style="top: 50%; left: 24px; transform: translateY(-50%);">40px</span>
+          <span class="spec-annotation purple" style="top: 50%; left: 32px; transform: translateY(-50%);">18px</span>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">2B. Checked</div>
+        <div class="state-preview">
+          <div class="toggle-switch">
+            <div class="toggle-track checked">
+              <div class="toggle-knob"></div>
+            </div>
+            <span style="font-size: 14px; color: #2C2C2C;">Apply Content Credentials</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">2C. Focus (Unchecked)</div>
+        <div class="state-preview">
+          <div class="toggle-switch">
+            <div class="toggle-track" style="outline: 2px solid #1473E6; outline-offset: 2px;">
+              <div class="toggle-knob"></div>
+            </div>
+            <span style="font-size: 14px; color: #2C2C2C;">Apply Content Credentials</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">2D. Focus (Checked)</div>
+        <div class="state-preview">
+          <div class="toggle-switch">
+            <div class="toggle-track checked" style="outline: 2px solid #1473E6; outline-offset: 2px;">
+              <div class="toggle-knob"></div>
+            </div>
+            <span style="font-size: 14px; color: #2C2C2C;">Apply Content Credentials</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Unchecked</th>
+          <th>Checked</th>
+          <th>CSS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Track width</td>
+          <td>40px</td>
+          <td>40px</td>
+          <td><code>width: 40px;</code></td>
+        </tr>
+        <tr>
+          <td>Track height</td>
+          <td>24px</td>
+          <td>24px</td>
+          <td><code>height: 24px;</code></td>
+        </tr>
+        <tr>
+          <td>Track background</td>
+          <td><code>#E1E1E1</code></td>
+          <td><code>#1473E6</code></td>
+          <td><code>background: var(--color);</code></td>
+        </tr>
+        <tr>
+          <td>Knob size</td>
+          <td>18×18px</td>
+          <td>18×18px</td>
+          <td><code>width: 18px; height: 18px;</code></td>
+        </tr>
+        <tr>
+          <td>Knob position</td>
+          <td>left: 3px</td>
+          <td>left: 19px</td>
+          <td><code>left: 3px | 19px;</code></td>
+        </tr>
+        <tr>
+          <td>Border radius</td>
+          <td>12px</td>
+          <td>12px</td>
+          <td><code>border-radius: 12px;</code></td>
+        </tr>
+        <tr>
+          <td>Transition</td>
+          <td colspan="2">0.2s ease</td>
+          <td><code>transition: all 0.2s ease;</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3. OPTION CARD STATES -->
+  <div class="section">
+    <h2 class="section-title">3. Option Card States</h2>
+
+    <div class="states-grid">
+      <div class="state-item">
+        <div class="state-label">3A. Default (Unselected)</div>
+        <div class="state-preview" style="padding: 16px;">
+          <div class="option-card">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M14 18.5H6A.75.75 0 0 1 6 17h8a.75.75 0 0 1 0 1.5Z"/>
+            </svg>
+            <span style="font-size: 14px; color: #2C2C2C;">CTV default</span>
+          </div>
+          <span class="spec-annotation" style="top: -12px; left: 50%; transform: translateX(-50%);">2px border</span>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">3B. Selected</div>
+        <div class="state-preview" style="padding: 16px;">
+          <div class="option-card selected">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="#1473E6">
+              <path d="M14 18.5H6A.75.75 0 0 1 6 17h8a.75.75 0 0 1 0 1.5Z"/>
+            </svg>
+            <span style="font-size: 14px; color: #2C2C2C;">CTV default</span>
+          </div>
+          <span class="spec-annotation blue" style="top: -12px; right: 0;">Blue border</span>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">3C. Hover (Unselected)</div>
+        <div class="state-preview" style="padding: 16px;">
+          <div class="option-card" style="border-color: #6B6B6B;">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M14 18.5H6A.75.75 0 0 1 6 17h8a.75.75 0 0 1 0 1.5Z"/>
+            </svg>
+            <span style="font-size: 14px; color: #2C2C2C;">CTV default</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">3D. Focus</div>
+        <div class="state-preview" style="padding: 16px;">
+          <div class="option-card selected" style="outline: 2px solid #1473E6; outline-offset: 2px;">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="#1473E6">
+              <path d="M14 18.5H6A.75.75 0 0 1 6 17h8a.75.75 0 0 1 0 1.5Z"/>
+            </svg>
+            <span style="font-size: 14px; color: #2C2C2C;">CTV default</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>State</th>
+          <th>Border Color</th>
+          <th>Border Width</th>
+          <th>Background</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Default</td>
+          <td><code>#D3D3D3</code></td>
+          <td>2px</td>
+          <td><code>#FFFFFF</code></td>
+        </tr>
+        <tr>
+          <td>Selected</td>
+          <td><code>#1473E6</code></td>
+          <td>2px</td>
+          <td><code>#FFFFFF</code></td>
+        </tr>
+        <tr>
+          <td>Hover</td>
+          <td><code>#6B6B6B</code></td>
+          <td>2px</td>
+          <td><code>#FFFFFF</code></td>
+        </tr>
+        <tr>
+          <td>Focus</td>
+          <td><code>#1473E6</code> + outline</td>
+          <td>2px + 2px outline</td>
+          <td><code>#FFFFFF</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4. EXPORT MODAL STATES -->
+  <div class="section">
+    <h2 class="section-title">4. Export Modal States</h2>
+
+    <div class="states-grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+      <div class="state-item">
+        <div class="state-label">4A. Exporting (In Progress)</div>
+        <div class="state-preview" style="background: transparent; border: none; padding: 0;">
+          <div class="export-modal">
+            <h2 style="font-size: 18px; font-weight: 600; color: #2C2C2C; margin-bottom: 20px;">Exporting...</h2>
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 13px; color: #6B6B6B;">Rendering for CTV channels...</span>
+                <span style="font-size: 13px; color: #6B6B6B;">45%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 45%;"></div>
+              </div>
+            </div>
+            <button class="btn-outline" style="margin-top: 20px; margin-left: auto; display: flex;">Cancel</button>
+          </div>
+          <span class="spec-annotation" style="top: -12px; left: 0;">380px</span>
+          <span class="spec-annotation orange" style="top: 20px; right: -40px;">28px padding</span>
+          <span class="spec-annotation purple" style="bottom: 120px; right: -30px;">6px height</span>
+        </div>
+      </div>
+
+      <div class="state-item">
+        <div class="state-label">4B. Complete</div>
+        <div class="state-preview" style="background: transparent; border: none; padding: 0;">
+          <div class="export-modal">
+            <h2 style="font-size: 18px; font-weight: 600; color: #2C2C2C; margin-bottom: 20px;">Exporting...</h2>
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 13px; color: #6B6B6B;">Export complete</span>
+                <span style="font-size: 13px; color: #6B6B6B;">100%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+            <button class="btn-outline" style="margin-top: 20px; margin-left: auto; display: flex;">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Value</th>
+          <th>CSS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Width</td>
+          <td>380px</td>
+          <td><code>width: 380px;</code></td>
+        </tr>
+        <tr>
+          <td>Padding</td>
+          <td>28px</td>
+          <td><code>padding: 28px;</code></td>
+        </tr>
+        <tr>
+          <td>Border radius</td>
+          <td>12px</td>
+          <td><code>border-radius: 12px;</code></td>
+        </tr>
+        <tr>
+          <td>Box shadow</td>
+          <td>0 8px 32px rgba(0,0,0,0.12)</td>
+          <td><code>box-shadow: 0 8px 32px rgba(0,0,0,0.12);</code></td>
+        </tr>
+        <tr>
+          <td>Title size</td>
+          <td>18px, weight 600</td>
+          <td><code>font-size: 18px; font-weight: 600;</code></td>
+        </tr>
+        <tr>
+          <td>Status text</td>
+          <td>13px, color #6B6B6B</td>
+          <td><code>font-size: 13px; color: #6B6B6B;</code></td>
+        </tr>
+        <tr>
+          <td>Progress bar height</td>
+          <td>6px</td>
+          <td><code>height: 6px;</code></td>
+        </tr>
+        <tr>
+          <td>Progress bar color</td>
+          <td>#1473E6</td>
+          <td><code>background: #1473E6;</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. FULL PANEL STATES -->
+  <div class="section">
+    <h2 class="section-title">5. Complete Panel States</h2>
+
+    <div class="state-item" style="margin-bottom: 32px;">
+      <div class="state-label">5A. Default (No Selection)</div>
+      <div class="full-panel-preview" style="max-width: 420px; margin: 24px auto;">
+        <h2 style="font-size: 20px; font-weight: 700; color: #2C2C2C; margin-bottom: 16px;">Export</h2>
+
+        <div class="asset-info" style="margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="#6B6B6B" stroke-width="1.8"/>
+            </svg>
+            <span>0:30</span>
+          </div>
+          <div class="divider-v"></div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="5" width="18" height="14" rx="2" stroke="#6B6B6B" stroke-width="1.8"/>
+            </svg>
+            <span>16:9</span>
+          </div>
+        </div>
+
+        <div class="option-card" style="margin-bottom: 4px;">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M14 18.5H6A.75.75 0 0 1 6 17h8a.75.75 0 0 1 0 1.5Z"/>
+          </svg>
+          <span style="font-size: 14px; color: #2C2C2C; flex: 1;">CTV default</span>
+          <img src="data:image/svg+xml,%3Csvg width='120' height='28' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='120' height='28' fill='%23E1E1E1' rx='4'/%3E%3C/svg%3E" alt="platforms" style="height: 28px;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 4.5L6 8.5L10 4.5" stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="7" stroke="#1473E6" stroke-width="1.5"/>
+            <path d="M5 8l2 2 4-4" stroke="#1473E6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span style="font-size: 13px; color: #6B6B6B;">Recommended for all CTV platforms</span>
+        </div>
+
+        <div class="option-card">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M1.75 6.771h2.669a3.25 3.25 0 0 0 3.154 2.5"/>
+          </svg>
+          <span style="font-size: 14px; color: #2C2C2C;">Custom settings</span>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <div class="toggle-switch" style="margin-bottom: 8px;">
+            <div class="toggle-track checked">
+              <div class="toggle-knob"></div>
+            </div>
+            <span style="font-size: 14px; color: #2C2C2C;">Apply Content Credentials</span>
+          </div>
+          <a href="#" style="font-size: 14px; color: #1473E6; text-decoration: none; margin-left: 52px;">Learn more about Content Credentials</a>
+        </div>
+
+        <button class="btn-primary" style="margin-top: 24px; width: 100%;">Export</button>
+
+        <span class="spec-annotation" style="top: -12px; left: 0;">420px</span>
+        <span class="spec-annotation orange" style="top: 20px; left: -40px;">24px</span>
+      </div>
+    </div>
+
+    <div class="state-item" style="margin-bottom: 32px;">
+      <div class="state-label">5B. CTV Default Selected & Expanded</div>
+      <div class="full-panel-preview" style="max-width: 420px; margin: 24px auto;">
+        <h2 style="font-size: 20px; font-weight: 700; color: #2C2C2C; margin-bottom: 16px;">Export</h2>
+
+        <div class="asset-info" style="margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="#6B6B6B" stroke-width="1.8"/>
+            </svg>
+            <span>0:30</span>
+          </div>
+          <div class="divider-v"></div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="5" width="18" height="14" rx="2" stroke="#6B6B6B" stroke-width="1.8"/>
+            </svg>
+            <span>16:9</span>
+          </div>
+        </div>
+
+        <div style="padding: 16px; border: 2px solid #1473E6; border-radius: 8px; background: white; margin-bottom: 4px;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="#1473E6">
+              <path d="M14 18.5H6A.75.75 0 0 1 6 17h8a.75.75 0 0 1 0 1.5Z"/>
+            </svg>
+            <span style="font-size: 14px; color: #2C2C2C; flex: 1;">CTV default</span>
+            <img src="data:image/svg+xml,%3Csvg width='120' height='28' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='120' height='28' fill='%23E1E1E1' rx='4'/%3E%3C/svg%3E" alt="platforms" style="height: 28px;">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="transform: rotate(180deg);">
+              <path d="M2 4.5L6 8.5L10 4.5" stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div style="border-top: 1px solid #E1E1E1; padding-top: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+              <div>
+                <div style="font-size: 12px; color: #6B6B6B; margin-bottom: 4px;">Resolution</div>
+                <div style="font-size: 14px; font-weight: 600; color: #2C2C2C;">1080p (HD)</div>
+              </div>
+              <div>
+                <div style="font-size: 12px; color: #6B6B6B; margin-bottom: 4px;">Format</div>
+                <div style="font-size: 14px; font-weight: 600; color: #2C2C2C;">MP4 (H.264)</div>
+              </div>
+              <div>
+                <div style="font-size: 12px; color: #6B6B6B; margin-bottom: 4px;">Bitrate</div>
+                <div style="font-size: 14px; font-weight: 600; color: #2C2C2C;">20 Mbps</div>
+              </div>
+              <div>
+                <div style="font-size: 12px; color: #6B6B6B; margin-bottom: 4px;">Frame rate</div>
+                <div style="font-size: 14px; font-weight: 600; color: #2C2C2C;">29.97 fps</div>
+              </div>
+            </div>
+            <div style="border-top: 1px solid #E1E1E1; padding-top: 12px;">
+              <div style="font-size: 12px; color: #6B6B6B; margin-bottom: 4px;">Optimized for...</div>
+              <div style="font-size: 13px; color: #2C2C2C;">Hulu, Paramount, FireTV, ESPN+, AppleTV+</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="7" stroke="#1473E6" stroke-width="1.5"/>
+            <path d="M5 8l2 2 4-4" stroke="#1473E6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span style="font-size: 13px; color: #6B6B6B;">Recommended for all CTV platforms</span>
+        </div>
+
+        <div class="option-card">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M1.75 6.771h2.669a3.25 3.25 0 0 0 3.154 2.5"/>
+          </svg>
+          <span style="font-size: 14px; color: #2C2C2C;">Custom settings</span>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <div class="toggle-switch" style="margin-bottom: 8px;">
+            <div class="toggle-track checked">
+              <div class="toggle-knob"></div>
+            </div>
+            <span style="font-size: 14px; color: #2C2C2C;">Apply Content Credentials</span>
+          </div>
+          <a href="#" style="font-size: 14px; color: #1473E6; text-decoration: none; margin-left: 52px;">Learn more about Content Credentials</a>
+        </div>
+
+        <button class="btn-primary" style="margin-top: 24px; width: 100%;">Export</button>
+      </div>
+    </div>
+
+    <div class="state-item">
+      <div class="state-label">5C. Custom Settings Selected & Expanded</div>
+      <div class="full-panel-preview" style="max-width: 420px; margin: 24px auto;">
+        <h2 style="font-size: 20px; font-weight: 700; color: #2C2C2C; margin-bottom: 16px;">Export</h2>
+
+        <div class="asset-info" style="margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="#6B6B6B" stroke-width="1.8"/>
+            </svg>
+            <span>0:30</span>
+          </div>
+          <div class="divider-v"></div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="5" width="18" height="14" rx="2" stroke="#6B6B6B" stroke-width="1.8"/>
+            </svg>
+            <span>16:9</span>
+          </div>
+        </div>
+
+        <div class="option-card" style="margin-bottom: 4px;">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M14 18.5H6A.75.75 0 0 1 6 17h8a.75.75 0 0 1 0 1.5Z"/>
+          </svg>
+          <span style="font-size: 14px; color: #2C2C2C; flex: 1;">CTV default</span>
+          <img src="data:image/svg+xml,%3Csvg width='120' height='28' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='120' height='28' fill='%23E1E1E1' rx='4'/%3E%3C/svg%3E" alt="platforms" style="height: 28px;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 4.5L6 8.5L10 4.5" stroke="#6B6B6B" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="7" stroke="#1473E6" stroke-width="1.5"/>
+            <path d="M5 8l2 2 4-4" stroke="#1473E6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span style="font-size: 13px; color: #6B6B6B;">Recommended for all CTV platforms</span>
+        </div>
+
+        <div style="padding: 16px; border: 2px solid #1473E6; border-radius: 8px; background: white; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="#1473E6">
+              <path d="M1.75 6.771h2.669a3.25 3.25 0 0 0 3.154 2.5"/>
+            </svg>
+            <span style="font-size: 14px; color: #2C2C2C;">Custom settings</span>
+          </div>
+
+          <div style="border-top: 1px solid #E1E1E1; padding-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div>
+              <label style="display: block; font-size: 14px; color: #2C2C2C; margin-bottom: 8px;">Resolution</label>
+              <select class="select-input" style="width: 100%;">
+                <option>1080p (default)</option>
+              </select>
+              <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: #6B6B6B;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="#1473E6" stroke-width="1.5"/>
+                  <path d="M5 8l2 2 4-4" stroke="#1473E6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Recommended</span>
+              </div>
+            </div>
+            <div>
+              <label style="display: block; font-size: 14px; color: #2C2C2C; margin-bottom: 8px;">File format</label>
+              <select class="select-input" style="width: 100%;">
+                <option>MP4 (H.264)</option>
+              </select>
+              <div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: #6B6B6B;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="#1473E6" stroke-width="1.5"/>
+                  <path d="M5 8l2 2 4-4" stroke="#1473E6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Recommended</span>
+              </div>
+            </div>
+            <div>
+              <label style="display: block; font-size: 14px; color: #2C2C2C; margin-bottom: 8px;">Frame rate</label>
+              <select class="select-input" style="width: 100%;">
+                <option>29.97</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 14px; color: #2C2C2C; margin-bottom: 8px;">Bitrate</label>
+              <select class="select-input" style="width: 100%;">
+                <option>20 Mbps</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <div class="toggle-switch" style="margin-bottom: 8px;">
+            <div class="toggle-track checked">
+              <div class="toggle-knob"></div>
+            </div>
+            <span style="font-size: 14px; color: #2C2C2C;">Apply Content Credentials</span>
+          </div>
+          <a href="#" style="font-size: 14px; color: #1473E6; text-decoration: none; margin-left: 52px;">Learn more about Content Credentials</a>
+        </div>
+
+        <button class="btn-primary" style="margin-top: 24px; width: 100%;">Export</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. COLOR PALETTE -->
+  <div class="section">
+    <h2 class="section-title">6. Color Palette</h2>
+
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>Swatch</th>
+          <th>Name</th>
+          <th>Hex</th>
+          <th>CSS Variable</th>
+          <th>Usage</th>
+          <th>WCAG Contrast (on white)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="color-swatch" style="background: #1473E6;"></span></td>
+          <td>Blue</td>
+          <td><code>#1473E6</code></td>
+          <td><code>--blue</code></td>
+          <td>Primary actions, links, selected</td>
+          <td>AA 4.5:1</td>
+        </tr>
+        <tr>
+          <td><span class="color-swatch" style="background: #2C2C2C;"></span></td>
+          <td>Neutral</td>
+          <td><code>#2C2C2C</code></td>
+          <td><code>--neutral</code></td>
+          <td>Primary text, buttons</td>
+          <td>AAA 12.6:1</td>
+        </tr>
+        <tr>
+          <td><span class="color-swatch" style="background: #6B6B6B;"></span></td>
+          <td>Subdued</td>
+          <td><code>#6B6B6B</code></td>
+          <td><code>--subdued</code></td>
+          <td>Secondary text, icons</td>
+          <td>AA 5.7:1</td>
+        </tr>
+        <tr>
+          <td><span class="color-swatch" style="background: #F5F5F5;"></span></td>
+          <td>Gray 100</td>
+          <td><code>#F5F5F5</code></td>
+          <td><code>--gray-100</code></td>
+          <td>Input backgrounds</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><span class="color-swatch" style="background: #E1E1E1;"></span></td>
+          <td>Gray 200</td>
+          <td><code>#E1E1E1</code></td>
+          <td><code>--gray-200</code></td>
+          <td>Borders, dividers</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><span class="color-swatch" style="background: #D3D3D3;"></span></td>
+          <td>Gray 300</td>
+          <td><code>#D3D3D3</code></td>
+          <td><code>--gray-300</code></td>
+          <td>Secondary borders</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><span class="color-swatch" style="background: #2D9D78;"></span></td>
+          <td>Green</td>
+          <td><code>#2D9D78</code></td>
+          <td><code>--green</code></td>
+          <td>Success states</td>
+          <td>AA (large text only)</td>
+        </tr>
+        <tr>
+          <td><span class="color-swatch" style="background: #E34850;"></span></td>
+          <td>Red</td>
+          <td><code>#E34850</code></td>
+          <td><code>--red</code></td>
+          <td>Error states</td>
+          <td>AA 4.5:1</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 7. SPACING & LAYOUT -->
+  <div class="section">
+    <h2 class="section-title">7. Spacing & Layout</h2>
+
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>Token</th>
+          <th>Value</th>
+          <th>Usage</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>XS</td>
+          <td>4px</td>
+          <td>Tight spacing, icon gaps</td>
+          <td>Progress bar spacing</td>
+        </tr>
+        <tr>
+          <td>SM</td>
+          <td>8px</td>
+          <td>Small gaps, form field spacing</td>
+          <td>Custom settings grid gap</td>
+        </tr>
+        <tr>
+          <td>MD</td>
+          <td>12px</td>
+          <td>Medium spacing, component gaps</td>
+          <td>Asset info bar gap, option card gap</td>
+        </tr>
+        <tr>
+          <td>LG</td>
+          <td>16px</td>
+          <td>Large gaps, section spacing</td>
+          <td>Asset info padding, CTV option padding</td>
+        </tr>
+        <tr>
+          <td>XL</td>
+          <td>24px</td>
+          <td>Panel padding, major sections</td>
+          <td>Panel container padding, button margin-top</td>
+        </tr>
+        <tr>
+          <td>2XL</td>
+          <td>28px</td>
+          <td>Modal padding</td>
+          <td>Export modal padding</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="spec-table" style="margin-top: 16px;">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Value</th>
+          <th>Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Panel width</td>
+          <td>420px</td>
+          <td>Fixed width for all panels</td>
+        </tr>
+        <tr>
+          <td>Modal width</td>
+          <td>380px</td>
+          <td>Export modal width</td>
+        </tr>
+        <tr>
+          <td>Button height</td>
+          <td>36px</td>
+          <td>All primary and outline buttons</td>
+        </tr>
+        <tr>
+          <td>Input height</td>
+          <td>32px</td>
+          <td>Select inputs, form fields</td>
+        </tr>
+        <tr>
+          <td>Toggle height</td>
+          <td>24px</td>
+          <td>Toggle switch track height</td>
+        </tr>
+        <tr>
+          <td>Icon size (small)</td>
+          <td>14×14px</td>
+          <td>Asset info bar icons</td>
+        </tr>
+        <tr>
+          <td>Icon size (medium)</td>
+          <td>16×16px</td>
+          <td>Checkmarks, badges</td>
+        </tr>
+        <tr>
+          <td>Icon size (large)</td>
+          <td>18×18px</td>
+          <td>Option card icons</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>
