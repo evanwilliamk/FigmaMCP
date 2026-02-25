@@ -1189,75 +1189,60 @@
         </div>
       </div>
 
-      <!-- Radio Options -->
-      <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 16px;">
+      <!-- Radio List -->
+      <div role="radiogroup" style="margin-top: 16px;">
 
-        <!-- CTV Platforms (Recommended) Radio -->
-        <label class="radio-option" style="display: flex; gap: 12px; cursor: pointer; padding: 16px; border: 2px solid var(--gray-300); border-radius: 8px; background: white;">
-          <input type="radio" name="export-type-1" value="ctv" checked style="margin-top: 2px;">
-          <div style="flex: 1;">
-            <div style="font-weight: 600; color: var(--neutral); margin-bottom: 4px;">CTV Platforms (recommended)</div>
-            <div style="font-size: 13px; color: var(--subdued); margin-bottom: 12px;">Works on all 12 major CTV platforms</div>
-            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
-              <div style="display: flex; justify-content: space-between;">
-                <span style="color: var(--subdued);">Resolution</span>
-                <span style="font-weight: 600; color: var(--neutral);">1080p (HD)</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span style="color: var(--subdued);">File format</span>
-                <span style="font-weight: 600; color: var(--neutral);">MP4 (H.264)</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span style="color: var(--subdued);">Bitrate</span>
-                <span style="font-weight: 600; color: var(--neutral);">25mbps (High)</span>
-              </div>
-            </div>
-          </div>
+        <!-- CTV default Radio -->
+        <label style="display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; cursor: pointer;">
+          <input type="radio" name="export-type-1" value="ctv" checked id="ctv-radio-1" style="margin-top: 2px; width: 16px; height: 16px; cursor: pointer;">
+          <span style="font-size: 14px; color: var(--neutral); user-select: none;">CTV default</span>
         </label>
 
-        <!-- Custom Radio -->
-        <label class="radio-option" style="display: flex; gap: 12px; cursor: pointer; padding: 16px; border: 2px solid var(--gray-300); border-radius: 8px; background: white;">
-          <input type="radio" name="export-type-1" value="custom" id="custom-radio-1" style="margin-top: 2px;">
-          <div style="flex: 1;">
-            <div style="font-weight: 600; color: var(--neutral); margin-bottom: 4px;">Custom</div>
-            <div style="font-size: 13px; color: var(--subdued); margin-bottom: 12px;">Configure your own export settings</div>
-
-            <!-- Custom Settings (hidden by default) -->
-            <div id="custom-settings-1" style="display: none; flex-direction: column; gap: 16px;">
-
-              <!-- Resolution -->
-              <div>
-                <label style="display: block; font-size: 13px; color: var(--subdued); margin-bottom: 8px;">Resolution</label>
-                <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 14px; background: white;">
-                  <option value="1080p">1080p (HD)</option>
-                  <option value="4k">4K (UHD) — Samsung, LG, Apple TV 4K, Fire TV 4K only</option>
-                </select>
-              </div>
-
-              <!-- File Format -->
-              <div>
-                <label style="display: block; font-size: 13px; color: var(--subdued); margin-bottom: 8px;">File format</label>
-                <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 14px; background: white;">
-                  <option value="mp4-h264">MP4 (H.264)</option>
-                  <option value="mp4-h265">MP4 (H.265) — Required for 4K</option>
-                  <option value="mov">MOV</option>
-                </select>
-              </div>
-
-              <!-- Bitrate -->
-              <div>
-                <label style="display: block; font-size: 13px; color: var(--subdued); margin-bottom: 8px;">Bitrate</label>
-                <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 14px; background: white;">
-                  <option value="low">Low (6-10 Mbps) — Basic HD</option>
-                  <option value="medium">Medium (15-20 Mbps) — Standard HD</option>
-                  <option value="high" selected>High (25-30 Mbps) — Premium HD</option>
-                  <option value="ultra">Ultra (40+ Mbps) — 4K quality</option>
-                </select>
-              </div>
-
-            </div>
-          </div>
+        <!-- Custom settings Radio -->
+        <label style="display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; cursor: pointer;">
+          <input type="radio" name="export-type-1" value="custom" id="custom-radio-1" style="margin-top: 2px; width: 16px; height: 16px; cursor: pointer;">
+          <span style="font-size: 14px; color: var(--neutral); user-select: none;">Custom settings</span>
         </label>
+
+        <!-- Help Text -->
+        <p style="font-size: 13px; color: var(--subdued); margin-top: 8px; margin-bottom: 0;">
+          Choose "CTV Default" for recommended settings for all CTV platforms.
+        </p>
+
+      </div>
+
+      <!-- Custom Settings Panel (hidden by default) -->
+      <div id="custom-settings-1" style="display: none; flex-direction: column; gap: 16px; margin-top: 16px; padding: 16px; border: 1px solid var(--gray-300); border-radius: 8px; background: var(--gray-50);">
+
+        <!-- Resolution -->
+        <div>
+          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--subdued); margin-bottom: 8px;">Resolution</label>
+          <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 14px; background: white;">
+            <option value="1080p">1080p (HD)</option>
+            <option value="4k">4K (UHD) — Samsung, LG, Apple TV 4K, Fire TV 4K only</option>
+          </select>
+        </div>
+
+        <!-- File Format -->
+        <div>
+          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--subdued); margin-bottom: 8px;">File format</label>
+          <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 14px; background: white;">
+            <option value="mp4-h264">MP4 (H.264)</option>
+            <option value="mp4-h265">MP4 (H.265) — Required for 4K</option>
+            <option value="mov">MOV</option>
+          </select>
+        </div>
+
+        <!-- Bitrate -->
+        <div>
+          <label style="display: block; font-size: 13px; font-weight: 600; color: var(--subdued); margin-bottom: 8px;">Bitrate</label>
+          <select style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 14px; background: white;">
+            <option value="low">Low (6-10 Mbps) — Basic HD</option>
+            <option value="medium">Medium (15-20 Mbps) — Standard HD</option>
+            <option value="high" selected>High (25-30 Mbps) — Premium HD</option>
+            <option value="ultra">Ultra (40+ Mbps) — 4K quality</option>
+          </select>
+        </div>
 
       </div>
 
