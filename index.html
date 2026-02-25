@@ -1189,22 +1189,23 @@
       align-self: flex-end;
       height: 36px;
       padding: 0 20px;
-      background: var(--neutral);
-      color: #fff;
-      border: none;
+      background: white;
+      color: var(--neutral);
+      border: 2px solid var(--neutral);
       border-radius: 60px;
       font-size: 14px;
       font-weight: 700;
       font-family: var(--font);
       cursor: pointer;
-      transition: background 0.15s;
+      transition: all 0.15s;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .export-modal__cancel:hover {
-      background: var(--gray-800);
+      background: var(--gray-50);
+      border-color: var(--gray-800);
     }
 
   </style>
@@ -2528,7 +2529,6 @@
   const exportBtn1 = document.getElementById('export-btn-1');
   // panel1 is already declared at top of script
   const exportModal1 = document.getElementById('export-modal-1');
-  const modalMessage1 = document.getElementById('export-modal-message-1');
   const modalPercentage1 = document.getElementById('export-modal-percentage-1');
   const modalBarFill1 = document.getElementById('export-modal-bar-fill-1');
 
@@ -2543,7 +2543,6 @@
     exportModal1.classList.add('visible');
 
     // Reset modal state
-    modalMessage1.textContent = 'Starting export...';
     modalPercentage1.textContent = '0%';
     modalBarFill1.style.width = '0%';
 
@@ -2553,7 +2552,6 @@
       if (pct > 97) pct = 97;
       modalBarFill1.style.width = pct + '%';
       modalPercentage1.textContent = Math.round(pct) + '%';
-      modalMessage1.textContent = `Exporting for CTV platforms...`;
     }, 300);
 
     setTimeout(() => {
